@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int    @id @default(autoincrement())
+  name         String
+  email        String @unique
+  passwordHash String // Store encrypted passwords
+
+  // Storage
+  storageQuota BigInt @default(5368709120) // 5GB in bytes(binary)
+  usedStorage  BigInt @default(0)
+
+  // Relations
+  files   File[]
+  folders Folder[]
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model File {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  size BigInt // Use BigInt for future-proofing
+  type String // mime-type 
+  url  String
+
+  // Metadata
+  uploadedAt DateTime  @default(now())
+  deletedAt  DateTime?
+
+  // Relations
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  folder   Folder? @relation(fields: [folderId], references: [id])
+  folderId Int?
+}
+
+model Folder {
+  id   Int    @id @default(autoincrement())
+  name String 
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  files File[]
+
+  // Self-relation
+  parent Folder? @relation("SubFolders", fields: [parentId], references: [id])
+  children Folder[] @relation("SubFolders")
+  parentId Int?
+
+  // Constraints: User can't have two parent folders with the same name
+  @@unique([name, userId, parentId])
+}

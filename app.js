@@ -1,7 +1,66 @@
 const express = require('express')
+// const app = express()
+const path = require('node:path')
+const session = require('express-session')
+const passport = require('passport')
+
+/**
+ * -------------- GENERAL SETUP ----------------
+ */
+
+// Import dotenv
+require('dotenv').config()
+
+// Create express app
 const app = express()
 
-app.get('/', (req, res) => res.send('Hello, world!'))
+// EJS setup
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'ejs')
+
+// Setup for static files
+const assetsPath = path.join(__dirname, 'public')
+app.use(express.static(assetsPath))
+
+// Middleware to process request body
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+/**
+ * -------------- ROUTES ----------------
+ */
+
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user
+  next()
+})
+
+/**
+ * -------------- ERROR HANDLER MIDDLEWARE ----------------
+ */
+
+app.use((err, req, res, next) => {
+  console.error(err)
+
+  // Error data
+  const statusCode = err.statusCode || 500
+
+  let errorTitle = 'Connection Terminated'
+  let errorMessage =
+    'The requested operation could not be completed.'
+
+  if (err.title && statusCode !== 500) {
+    errorTitle = err.title
+    errorMessage = err.message
+  }
+
+  res.status(statusCode).render('pages/error', {
+    title: 'Error',
+    errorCode: statusCode,
+    errorTitle,
+    errorMessage,
+  })
+})
 
 /**
  * -------------- SERVER ----------------

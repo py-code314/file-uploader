@@ -27,7 +27,7 @@ app.use(express.static(assetsPath))
 
 // Middleware to process request body
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true })) // To parse login form data
 
 /**
  * -------------- SESSION SETUP ----------------
@@ -49,6 +49,13 @@ app.use(
     }),
   }),
 )
+
+/**
+ * -------------- PASSPORT AUTHENTICATION ----------------
+ */
+
+require('./config/passport')
+app.use(passport.session())
 
 /**
  * -------------- ROUTES ----------------

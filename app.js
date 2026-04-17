@@ -6,6 +6,7 @@ const { prisma } = require('./lib/prisma.js')
 const passport = require('passport')
 // Import routers
 const homeRouter = require('./routes/homeRoutes')
+const signUpRouter = require('./routes/signUpRoutes')
 
 /**
  * -------------- GENERAL SETUP ----------------
@@ -67,6 +68,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/', homeRouter)
+app.use('/signUp', signUpRouter)
 
 
 /**

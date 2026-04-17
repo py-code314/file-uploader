@@ -72,3 +72,10 @@ model Folder {
   // Constraints: User can't have two parent folders with the same name
   @@unique([name, userId, parentId])
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   
+  expiresAt   DateTime
+}

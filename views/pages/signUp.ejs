@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head -->
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <!-- Main content-->
+    <main class="main">
+      <div class="wrapper">
+        <div class="signup">
+          <h2 class="signup__header sub-title">Create Account</h2>
+        
+          <form class="form" action="/signUp" method="POST">
+            <p class="form__required">
+              <strong class="form__asterisk">*</strong> All fields are
+              required.
+            </p>
+
+            <div class="form__control">
+              <label class="form__label" for="email">Email</label>
+              <input
+                class="form__input"
+                id="email"
+                name="email"
+                placeholder="Email"
+                type="email"
+                autocomplete="email"
+                required
+                 />
+              <span class="form__error">
+                <% if (locals.errors) { %>
+                  <% errors.forEach(error => { %>
+                    <% if (error.path === 'email') { %>
+                      <%= error.msg %>
+                    <% } %>
+                  <% }) %>
+                <% } %>
+              </span>
+            </div>
+
+            <div class="form__control">
+              <label class="form__label" for="firstName">First Name</label>
+              <input
+                class="form__input"
+                name="firstName"
+                id="firstName"
+                type="text"
+                placeholder="First Name"
+                autocomplete="given-name"
+                required
+                 />
+              <span class="form__error">
+                <% if (locals.errors) { %>
+                  <% errors.forEach(error => { %>
+                    <% if (error.path === 'firstName') { %>
+                      <%= error.msg %>
+                    <% } %>
+                  <% }) %>
+                <% } %>
+              </span>
+            </div>
+
+            <div class="form__control">
+              <label class="form__label" for="lastName">Last Name</label>
+              <input
+                class="form__input"
+                name="lastName"
+                id="lastName"
+                type="text"
+                placeholder="Last Name"
+                autocomplete="family-name"
+                required
+                 />
+              <span class="form__error">
+                <% if (locals.errors) { %>
+                  <% errors.forEach(error => { %>
+                    <% if (error.path === 'lastName') { %>
+                      <%= error.msg %>
+                    <% } %>
+                  <% }) %>
+                <% } %>
+              </span>
+            </div>
+
+            <div class="form__control">
+              <label class="form__label" for="password">Password</label>
+              <ul class="password-requirements">
+                <li>At least 8 characters</li>
+                <li>One uppercase letter (A-Z)</li>
+                <li>One number (0-9)</li>
+                <li>One special character (!@#$%^&*)</li>
+              </ul>
+              <input
+                class="form__input"
+                id="password"
+                name="password"
+                type="password"
+                min="8"
+                placeholder="Password"
+                pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$"
+                required
+                 />
+              <span class="form__error">
+                <% if (locals.errors) { %>
+                  <% errors.forEach(error => { %>
+                    <% if (error.path === 'password') { %>
+                      <%= error.msg %>
+                    <% } %>
+                  <% }) %>
+                <% } %>
+              </span>
+            </div>
+
+            <div class="form__control">
+              <label class="form__label" for="confirmPassword">Confirm Password</label>
+              <input
+                class="form__input"
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                min="8"
+                placeholder="Confirm password"
+                pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$"
+                required
+                 />
+              <span class="form__error">
+                <% if (locals.errors) { %>
+                  <% errors.forEach(error => { %>
+                    <% if (error.path === 'confirmPassword') { %>
+                      <%= error.msg %>
+                    <% } %>
+                  <% }) %>
+                <% } %>
+              </span>
+            </div>
+            
+            <button class="btn btn--cta btn--form" type="submit">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <%- include('../partials/footer.ejs') %>
+  </body>
+</html>

@@ -1,11 +1,11 @@
 const express = require('express')
-// const app = express()
 const path = require('node:path')
-// const session = require('express-session')
 const expressSession = require('express-session')
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store')
 const { prisma } = require('./lib/prisma.js')
 const passport = require('passport')
+// Import routers
+const homeRouter = require('./routes/homeRoutes')
 
 /**
  * -------------- GENERAL SETUP ----------------
@@ -66,10 +66,8 @@ app.use((req, res, next) => {
   next()
 })
 
-// app.get('/test-session', (req, res) => {
-//   req.session.viewCount = (req.session.viewCount || 0) + 1
-//   res.send(`Views: ${req.session.viewCount}`)
-// })
+app.use('/', homeRouter)
+
 
 /**
  * -------------- ERROR HANDLER MIDDLEWARE ----------------

@@ -10,13 +10,21 @@
     </div>
   </div>
 
-  <!-- Menu -->
-  <ul class="menu">
-    <li class="menu__item">
-      <a class="menu__link link link--login" href="/logIn">Log In</a>
-    </li>
-    <li class="menu__item">
-      <a class="menu__link link link--login" href="/signUp">Sign Up</a>
-    </li>
-  </ul>
+  <nav>
+    <% if(locals.currentUser) { %>
+      <ul>
+        <li class="menu__item"><a class="menu__link" href=""><%= currentUser.name %></a></li>
+        <li>
+          <form action="/logOut" method="post">
+            <button class=" btn btn--logout" type="submit">Log Out</button>
+          </form>
+        </li>
+      </ul>
+    <% } else { %>
+      <ul>
+        <li class="menu__item"><a class="menu__link link link--login" href="/logIn">Log In</a></li>
+        <li class="menu__item"><a class="menu__link link link--login" href="/signUp">Sign Up</a></li>
+      </ul>
+    <% } %>
+  </nav>
 </header>

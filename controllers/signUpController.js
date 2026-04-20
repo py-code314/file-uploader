@@ -30,7 +30,7 @@ const validateUser = [
         },
       })
       if (user) {
-        throw new Error(`Username ${existsErr}`)
+        throw new Error(`Email is ${existsErr}`)
       }
 
       return true

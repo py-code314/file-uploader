@@ -1,12 +1,19 @@
-const {prisma} = require('./lib/prisma.js') 
+const { prisma } = require('./lib/prisma.js')
 
 async function main() {
-
   // Add multiple records
   const createMany = await prisma.user.createMany({
     data: [
-      { name: 'Bob', email: 'bob@prisma.io', passwordHash: 'dkreir343493439cnndfd' },
-      { name: 'Yewande', email: 'yewande@prisma.io', passwordHash: 'cmvcvnfjir494939dkfdfd*$*$$*' },
+      {
+        name: 'Bob',
+        email: 'bob@prisma.io',
+        passwordHash: 'dkreir343493439cnndfd',
+      },
+      {
+        name: 'Yewande',
+        email: 'yewande@prisma.io',
+        passwordHash: 'cmvcvnfjir494939dkfdfd*$*$$*',
+      },
     ],
     skipDuplicates: true, // Skip records with duplicate unique fields
   })

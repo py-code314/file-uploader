@@ -1,16 +1,11 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-// const pool = require('../db/pool')
 const bcrypt = require('bcryptjs')
 const { prisma } = require('../lib/prisma.js')
 
 /* Verify email and password before logging in */
 const verifyCallback = async (email, password, done) => {
   try {
-    // const { rows } = await pool.query(
-    //   'SELECT * FROM users WHERE email = $1',
-    //   [email],
-    // )
 
     const user = await prisma.user.findUnique({ where: {email} })
     

@@ -7,6 +7,7 @@ const passport = require('passport')
 // Import routers
 const homeRouter = require('./routes/homeRoutes')
 const signUpRouter = require('./routes/signUpRoutes')
+const logInRouter = require('./routes/logInRoutes')
 
 /**
  * -------------- GENERAL SETUP ----------------

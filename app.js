@@ -69,6 +69,7 @@ app.use((req, res, next) => {
 
 app.use('/', homeRouter)
 app.use('/signUp', signUpRouter)
+app.use('/logIn', logInRouter)
 
 
 /**

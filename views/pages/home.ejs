@@ -12,7 +12,7 @@
         <div>
           <form action="/upload" method="post" enctype="multipart/form-data">
             <div class="form__control">
-              <label for="fileUpload">Select file to upload:</label>
+              <label for="fileUpload">Select files to upload (Allowed files: images, audio & video files, .doc & .docx files, and pdf)</label>
               <!-- Many mobile devices also let the user take a picture with the camera when 'image/*' is used -->
               <input type="file" id="fileUpload" name="fileUpload" accept=".doc, .docx, .pdf, image/*, audio/*, video/*" multiple />
             </div>
@@ -31,4 +31,143 @@
 
     
   </body>
+
+  <script>
+    const fileInput = document.querySelector("#fileUpload");
+    const preview = document.querySelector(".preview");
+
+    fileInput.style.opacity = 0;
+
+    fileInput.addEventListener("change", updateImageDisplay);
+
+    // Show previews of files being uploaded
+    function updateImageDisplay() {
+      while (preview.firstChild) {
+        preview.removeChild(preview.firstChild);
+      }
+
+      const currentFiles = fileInput.files;
+
+      if (currentFiles.length === 0) {
+        const para = document.createElement("p");
+        para.textContent = "No files currently selected for upload";
+        preview.appendChild(para);
+      } else {
+        const list = document.createElement("ol");
+        preview.appendChild(list);
+
+        for (const file of currentFiles) {
+          const listItem = document.createElement("li");
+          const para = document.createElement("p");
+
+          if (validFileType(file)) {
+            para.textContent = `File name: ${file.name}, File size: ${returnFileSize(
+              file.size,
+            )}.`;
+
+            const fileType = file.type
+            const fileURL = URL.createObjectURL(file)
+
+            if(fileType.startsWith('image/')) {
+              const image = document.createElement("img");
+              image.src = fileURL;
+              image.alt = image.title = file.name;
+              image.style.width = "50px"
+              image.style.height = "50px"
+
+              listItem.appendChild(image);
+              listItem.appendChild(para);
+            } else if (fileType.startsWith('audio/')) {
+
+              // Show music icon
+              // const icon = document.createElement("div");
+              // icon.textContent = "🎵";
+
+              // listItem.appendChild(icon);
+              // listItem.appendChild(para);
+
+              // User can listen to the file before uploading
+              const audio = document.createElement("audio");
+              audio.src = fileURL;
+              audio.controls = true; // Shows play/pause and volume
+              audio.style.width = "200px";
+              
+              listItem.appendChild(audio);
+              listItem.appendChild(para);
+            } else if (fileType.startsWith('video/')) {
+              const video = document.createElement("video")
+              video.src = fileURL
+              video.style.width = "50px"
+              video.style.height = "50px"
+              video.currentTime = 1; // Load the first frame as a "preview"
+
+              listItem.appendChild(video);
+              listItem.appendChild(para);
+            } else if (fileType === 'application/msword' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+              // Show doc icon
+              const icon = document.createElement("div");
+              icon.textContent = "📄";
+              icon.style.width = "50px"
+              icon.style.height = "50px"
+
+              listItem.appendChild(icon);
+              listItem.appendChild(para);
+            } else if (fileType === 'application/pdf') {
+              // Show pdf icon
+              const icon = document.createElement("div");
+              icon.textContent = "PDF";
+              icon.style.width = "50px"
+              icon.style.height = "50px"
+
+              listItem.appendChild(icon);
+              listItem.appendChild(para);
+            }
+            
+          } else {
+            para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
+            listItem.appendChild(para);
+          }
+
+          list.appendChild(listItem);
+        }
+      }
+    }
+
+
+    const fileTypes = [
+      "image/*",
+      "audio/*",
+      "video/*",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/pdf",
+    ];
+
+    // Return true or false based on the file type
+    function validFileType(file) {
+      const fileType = file.type
+
+      const isAllowed = fileTypes.some(type => {
+        if(type.endsWith('/*')) {
+          const prefix = type.split('/')[0]
+
+          return fileType.startsWith(prefix)
+        }
+
+        return fileType === type
+      })
+
+      return isAllowed
+    }
+
+    // Calculate file size
+    function returnFileSize(number) {
+      if (number < 1e3) {
+        return `${number} bytes`;
+      } else if (number >= 1e3 && number < 1e6) {
+        return `${(number / 1e3).toFixed(1)} KB`;
+      }
+      return `${(number / 1e6).toFixed(1)} MB`;
+    }
+    </script>
 </html>

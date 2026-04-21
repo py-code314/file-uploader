@@ -8,10 +8,27 @@
 
     <!-- Main content-->
     <main class="main">
-      <div></div>
+      <% if (locals.currentUser) { %>
+        <div>
+          <form action="/upload" method="post" enctype="multipart/form-data">
+            <div class="form__control">
+              <label for="fileUpload">Select file to upload:</label>
+              <!-- Many mobile devices also let the user take a picture with the camera when 'image/*' is used -->
+              <input type="file" id="fileUpload" name="fileUpload" accept=".doc, .docx, .pdf, image/*, audio/*, video/*" multiple />
+            </div>
+            <div class="preview">
+              <p>No files currently selected for upload</p>
+            </div>
+            <button>Submit</button>
+          </form>
+        </div>
+      <% } %>
+      
     </main>
 
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
+
+    
   </body>
 </html>

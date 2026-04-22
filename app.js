@@ -9,6 +9,7 @@ const homeRouter = require('./routes/homeRoutes')
 const signUpRouter = require('./routes/signUpRoutes')
 const logInRouter = require('./routes/logInRoutes')
 const logOutRouter = require('./routes/logOutRoutes')
+const uploadRouter = require('./routes/uploadRoutes')
 
 /**
  * -------------- GENERAL SETUP ----------------
@@ -73,6 +74,7 @@ app.use('/', homeRouter)
 app.use('/signUp', signUpRouter)
 app.use('/logIn', logInRouter)
 app.use('/logOut', logOutRouter)
+app.use('/files', uploadRouter)
 
 
 /**

@@ -2,9 +2,11 @@ const express = require('express')
 const uploadRouter = express.Router()
 const { upload_get, upload_post } = require('../controllers/uploadController')
 const { isAuth } = require('../routes/auth')
+const upload = require('../middleware/upload')
+
 
 /* New message routes */
 uploadRouter.get('/upload', isAuth, upload_get) // protected route
-// uploadRouter.post('/upload', isAuth, upload_post)
+uploadRouter.post('/upload', isAuth, upload.array('fileUpload', 5), upload_post)
 
 module.exports = uploadRouter

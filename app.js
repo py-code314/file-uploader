@@ -4,6 +4,8 @@ const expressSession = require('express-session')
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store')
 const { prisma } = require('./lib/prisma.js')
 const passport = require('passport')
+// const multer = require('multer')
+// const upload = multer({ dest: './upload' })
 // Import routers
 const homeRouter = require('./routes/homeRoutes')
 const signUpRouter = require('./routes/signUpRoutes')
@@ -75,7 +77,6 @@ app.use('/signUp', signUpRouter)
 app.use('/logIn', logInRouter)
 app.use('/logOut', logOutRouter)
 app.use('/files', uploadRouter)
-
 
 /**
  * -------------- ERROR HANDLER MIDDLEWARE ----------------

@@ -1,8 +1,13 @@
 /* Show file upload form */
 async function upload_get(req, res) {
-  res.render('pages/upload', {
+  res.render('pages/fileForm', {
     title: 'Upload File',
   })
 }
 
-module.exports = {upload_get}
+async function upload_post(req, res) {
+  console.log(req.files)
+  res.send('File uploaded')
+}
+
+module.exports = { upload_get, upload_post }

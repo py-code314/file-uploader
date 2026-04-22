@@ -14,6 +14,7 @@
     <% if(locals.currentUser) { %>
       <ul>
         <li class="menu__item"><a class="menu__link" href=""><%= currentUser.name %></a></li>
+        <li class="menu__item"><a class="menu__link" href="/files/upload">Add File</a></li>
         <li>
           <form action="/logOut" method="post">
             <button class=" btn btn--logout" type="submit">Log Out</button>

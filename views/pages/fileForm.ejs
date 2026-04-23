@@ -8,19 +8,24 @@
 
     <!-- Main content-->
     <main class="main">
-        <div>
-          <form action="/files/upload" method="post" enctype="multipart/form-data">
-            <div class="form__control">
-              <label for="fileUpload">Select files to upload (Allowed files: images, audio & video files, .doc & .docx files, and pdf)</label>
-              <!-- Many mobile devices also let the user take a picture with the camera when 'image/*' is used -->
-              <input type="file" id="fileUpload" name="fileUpload" accept=".doc, .docx, .pdf, image/*, audio/*, video/*" multiple />
-            </div>
-            <div class="preview">
-              <p>No files currently selected for upload</p>
-            </div>
-            <button>Submit</button>
-          </form>
-        </div>
+      <!-- Show errors -->
+      <% if(locals.errors) { %>
+        <%- include('../partials/errors.ejs') %>
+      <% }  %>
+
+      <div>
+        <form action="/files/upload" method="post" enctype="multipart/form-data">
+          <div class="form__control">
+            <label for="fileUpload">Select files to upload (Allowed file types: images, audio & video files, .doc & .docx files, and .pdf) (Max size allowed per file: 20 MB)</label>
+            <!-- Many mobile devices also let the user take a picture with the camera when 'image/*' is used -->
+            <input type="file" id="fileUpload" name="fileUpload" accept=".doc, .docx, .pdf, image/*, audio/*, video/*" multiple />
+          </div>
+          <div class="preview">
+            <p>No files currently selected for upload</p>
+          </div>
+          <button>Submit</button>
+        </form>
+      </div>
     </main>
 
     <!-- Footer -->

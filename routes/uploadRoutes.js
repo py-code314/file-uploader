@@ -7,6 +7,6 @@ const upload = require('../middleware/upload')
 
 /* New message routes */
 uploadRouter.get('/upload', isAuth, upload_get) // protected route
-uploadRouter.post('/upload', isAuth, upload.array('fileUpload', 5), upload_post)
+uploadRouter.post('/upload', isAuth, upload_post)
 
 module.exports = uploadRouter

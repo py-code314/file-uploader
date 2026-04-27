@@ -12,6 +12,7 @@ const signUpRouter = require('./routes/signUpRoutes')
 const logInRouter = require('./routes/logInRoutes')
 const logOutRouter = require('./routes/logOutRoutes')
 const uploadRouter = require('./routes/uploadRoutes')
+const folderRouter = require('./routes/folderRoutes')
 
 /**
  * -------------- GENERAL SETUP ----------------
@@ -77,6 +78,7 @@ app.use('/signUp', signUpRouter)
 app.use('/logIn', logInRouter)
 app.use('/logOut', logOutRouter)
 app.use('/files', uploadRouter)
+app.use('/folders', folderRouter)
 
 /**
  * -------------- ERROR HANDLER MIDDLEWARE ----------------

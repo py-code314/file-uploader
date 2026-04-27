@@ -37,26 +37,21 @@
 
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
-
-    
   </body>
+  
   <script>
     const newFolderBtn = document.querySelector('.btn--newFolder')
-    // console.log('button:', newFolderBtn)
     const dialog = document.querySelector('.dialog')
     const cancelBtn = document.querySelector('.btn--cancel')
 
+    // Show new folder form
     newFolderBtn.addEventListener('click', () => {
-      // console.log('button clicked')
       dialog.showModal()
-
     })
+
+    // Close new folder form
     cancelBtn.addEventListener('click', () => {
-      // console.log('button clicked')
       dialog.close()
-
     })
-
   </script>
-  
 </html>

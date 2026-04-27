@@ -14,6 +14,8 @@
     <ul>
         <li><a class="menu__link link link--cta" href="/files/upload">Add File</a></li>
         <% if(locals.currentUser) { %>
+          <!-- <li><a class="menu__link link link--cta" href="/folders/new">New Folder</a></li> -->
+           <li><button class="btn btn--newFolder" type="button">New Folder</button></li>
           <li class="menu__item"><a class="menu__link" href=""><%= currentUser.name %></a></li>
           <li>
             <form action="/logOut" method="post">

@@ -12,6 +12,7 @@ if (!fs.existsSync(uploadsDir)) {
 const storage = multer.diskStorage({
   // Set destination folder for uploads
   destination: function (req, file, cb) {
+    // console.log("🚀 ~ file:", file)
     cb(null, uploadsDir)
   },
   // Generate unique file name

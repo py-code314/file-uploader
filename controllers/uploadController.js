@@ -13,6 +13,7 @@ async function upload_post(req, res, next) {
   const uploadHandler = upload.array('fileUpload', 5)
 
   uploadHandler(req, res, function (err) {
+    // console.log('req files:', req.files)
     try {
       // Handle Multer errors
       if (err instanceof multer.MulterError) {

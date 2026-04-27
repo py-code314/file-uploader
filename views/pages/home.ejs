@@ -8,7 +8,30 @@
 
     <!-- Main content-->
     <main class="main">
-      
+      <dialog class="dialog">
+        <form class="form" action="/folders/new" method="POST">
+          <h2 class="">New Folder</h2>
+          <div class="form__control">
+            <label class="form__label" for="folderName">Folder Name (required)
+              <span>Folder name can not contain the characters \, /, :, *, ?, <, ></span>
+            </label>
+            <input
+              class="form__input"
+              id="folderName"
+              name="folderName"
+              placeholder="Name"
+              type="text"
+              value="<%= locals.user?.folderName || '' %>"
+              pattern="[^\\/:*?<>|]+"
+              required
+                />
+          </div>
+          <div class="form__buttons">
+            <button class="btn  btn--cancel" type="button">Cancel</button>
+            <button class="btn  btn--submit" type="submit">Create</button>
+          </div>
+        </form>
+      </dialog>
       
     </main>
 
@@ -17,6 +40,23 @@
 
     
   </body>
+  <script>
+    const newFolderBtn = document.querySelector('.btn--newFolder')
+    // console.log('button:', newFolderBtn)
+    const dialog = document.querySelector('.dialog')
+    const cancelBtn = document.querySelector('.btn--cancel')
 
+    newFolderBtn.addEventListener('click', () => {
+      // console.log('button clicked')
+      dialog.showModal()
+
+    })
+    cancelBtn.addEventListener('click', () => {
+      // console.log('button clicked')
+      dialog.close()
+
+    })
+
+  </script>
   
 </html>

@@ -9,20 +9,26 @@
     <!-- Main content-->
     <main class="main">
       <dialog class="dialog">
+
+        <!-- Show errors -->
+        <% if(locals.errors && locals.errors.length > 0) { %>
+          <%- include('../partials/errors.ejs') %>
+        <% }  %>
+
         <form class="form" action="/folders/new" method="POST">
           <h2 class="">New Folder</h2>
           <div class="form__control">
             <label class="form__label" for="folderName">Folder Name (required)
-              <span>Folder name can not contain the characters \, /, :, *, ?, <, ></span>
+              <span>Allowed characters: Letters, numbers, spaces, period, underscore and hyphen</span>
             </label>
             <input
               class="form__input"
               id="folderName"
-              name="folderName"
+              name="name"
               placeholder="Name"
               type="text"
-              value="<%= locals.user?.folderName || '' %>"
-              pattern="[^\\/:*?<>|]+"
+              value="<%= locals.folder?.name || '' %>"
+              pattern="[a-zA-Z0-9\s._\-]+"
               required
                 />
           </div>
@@ -43,6 +49,7 @@
     const newFolderBtn = document.querySelector('.btn--newFolder')
     const dialog = document.querySelector('.dialog')
     const cancelBtn = document.querySelector('.btn--cancel')
+    const errorMsgs = document.querySelectorAll('.errors__msg')
 
     // Show new folder form
     newFolderBtn.addEventListener('click', () => {
@@ -53,5 +60,11 @@
     cancelBtn.addEventListener('click', () => {
       dialog.close()
     })
+
+    if(errorMsgs.length > 0) {
+      dialog.showModal()
+    }
+   
+    
   </script>
 </html>

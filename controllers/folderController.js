@@ -1,5 +1,6 @@
 /* Imports */
 const { body, validationResult, matchedData } = require('express-validator')
+const { prisma } = require('../lib/prisma.js')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -20,7 +21,7 @@ const validateFolderName = [
       }
 
       // Throw error if email already exists
-      const folder = await prisma.folder.findUnique({
+      const folder = await prisma.folder.findFirst({
         where: {
           name,
         },
@@ -53,6 +54,27 @@ const add_folder_post = [
         folder: folderData,
         errors: errors.array(),
       })
+    }
+
+    try {
+      // Get validated form data
+      
+      const { name } = matchedData(req)
+      // const user = req.user
+      const userId = req.user.id
+      // console.log("🚀 ~ req:", req)
+
+      await prisma.folder.create({
+        data: {
+          name,
+          userId
+        },
+      })
+
+      res.redirect('/')
+    } catch (err) {
+      console.error(err)
+      return next(err)
     }
     
   }

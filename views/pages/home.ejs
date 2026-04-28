@@ -38,6 +38,11 @@
           </div>
         </form>
       </dialog>
+
+      <!-- Show folders -->
+      <% if(locals.folders && locals.folders.length > 0) { %>
+        <%- include('../partials/folders.ejs') %>
+      <% }  %>
       
     </main>
 

@@ -1,0 +1,12 @@
+<div class="folders">
+  <% if (locals.folders) {%>
+    <!-- Folders list -->
+    <ul class="folders">
+      <% folders.forEach((folder) => { %>
+        <li ><%= folder.name %></li>
+      <% }); %>
+    </ul>
+  <% } %>
+</div>
+
+

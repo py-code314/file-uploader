@@ -4,6 +4,18 @@
     <ul class="folders">
       <% folders.forEach((folder) => { %>
         <li ><%= folder.name %></li>
+
+        <!-- Update folder name -->
+        <div class="btn-group">
+          <a class="link link--update folder__update"  href="/folders/<%= folder.id %>/update">
+           Update</a>
+
+          <!-- Delete folder -->
+          <form id="folder-form" action="/folders/<%= folder.id %>/delete" method="POST" >
+            <button class="btn btn--primary btn--delete" type="submit">
+              Delete</button>
+          </form>
+        </div>
       <% }); %>
     </ul>
   <% } %>

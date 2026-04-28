@@ -36,12 +36,12 @@ const validateFolderName = [
 
 const add_folder_post = [
   validateFolderName,
-  
+
   async (req, res, next) => {
     // Get form data
     const { name } = req.body
     const folderData = {
-      name: name
+      name: name,
     }
 
     // Validate request
@@ -58,7 +58,7 @@ const add_folder_post = [
 
     try {
       // Get validated form data
-      
+
       const { name } = matchedData(req)
       // const user = req.user
       const userId = req.user.id
@@ -67,7 +67,7 @@ const add_folder_post = [
       await prisma.folder.create({
         data: {
           name,
-          userId
+          userId,
         },
       })
 
@@ -76,8 +76,28 @@ const add_folder_post = [
       console.error(err)
       return next(err)
     }
-    
-  }
+  },
 ]
 
-module.exports = {add_folder_post}
+/* Delete folder */
+async function delete_folder_post(req, res, next) {
+  const id = Number(req.params.id)
+  // console.log('🚀 ~ genre_delete_post ~ id:', id)
+  const userId = req.user.id
+
+  try {
+    // Delete folder
+    await prisma.folder.delete({
+      where: {
+        id,
+        userId
+      },
+    })
+    res.redirect('/')
+  } catch (err) {
+    console.error(err)
+    return next(err)
+  }
+}
+
+module.exports = { add_folder_post, delete_folder_post }

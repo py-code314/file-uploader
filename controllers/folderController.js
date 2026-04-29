@@ -110,25 +110,52 @@ async function update_folder_get(req, res) {
 }
 
 /* Update folder name */
-async function update_folder_post(req, res, next) {
-  const id = Number(req.params.id)
-  // console.log('🚀 ~ genre_delete_post ~ id:', id)
-  const userId = req.user.id
+const update_folder_post = [
+  validateFolderName,
 
-  try {
-    // Update folder
-    await prisma.folder.delete({
-      where: {
-        id,
-        userId,
-      },
-    })
-    res.redirect('/')
-  } catch (err) {
+  async (req, res, next) => {
+    const id = Number(req.params.id)
+    const userId = req.user.id
+
+    // Get form data
+    const { name } = req.body
+    const folderData = {
+      name: name,
+    }
+
+    // Validate request
+    const errors = validationResult(req)
+
+    // Show errors if validation fails
+    if (!errors.isEmpty()) {
+      return res.status(400).render('pages/home', {
+        title: 'Update Folder',
+        folder: folderData,
+        errors: errors.array(),
+      })
+    }
+
+    try {
+      // Get validated form data
+      const { name } = matchedData(req)
+      
+      // Update folder
+      await prisma.folder.update({
+        where: {
+          id,
+          userId,
+        },
+        data: {
+          name,
+        },
+      })
+      res.redirect('/')
+    } catch (err) {
     console.error(err)
     return next(err)
   }
-}
+  }
+]
 
 /* Delete folder */
 async function delete_folder_post(req, res, next) {

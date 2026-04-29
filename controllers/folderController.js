@@ -79,6 +79,57 @@ const add_folder_post = [
   },
 ]
 
+/* Show update folder form */
+async function update_folder_get(req, res) {
+  const folderId = Number(req.params.id)
+  const userId = req.user.id
+
+  // Get all folders
+  const folders = await prisma.folder.findMany({
+    where: { userId },
+  })
+
+  // Get folder data
+  const folder = await prisma.folder.findFirst({
+    where: {
+      id: folderId,
+      userId,
+    },
+  })
+
+  if (!folder) {
+    res.redirect('/')
+  }
+
+  res.render('pages/home', {
+    title: 'Update Folder',
+    folder,
+    folders,
+    isUpdate: true,
+  })
+}
+
+/* Update folder name */
+async function update_folder_post(req, res, next) {
+  const id = Number(req.params.id)
+  // console.log('🚀 ~ genre_delete_post ~ id:', id)
+  const userId = req.user.id
+
+  try {
+    // Update folder
+    await prisma.folder.delete({
+      where: {
+        id,
+        userId,
+      },
+    })
+    res.redirect('/')
+  } catch (err) {
+    console.error(err)
+    return next(err)
+  }
+}
+
 /* Delete folder */
 async function delete_folder_post(req, res, next) {
   const id = Number(req.params.id)
@@ -90,7 +141,7 @@ async function delete_folder_post(req, res, next) {
     await prisma.folder.delete({
       where: {
         id,
-        userId
+        userId,
       },
     })
     res.redirect('/')
@@ -100,4 +151,9 @@ async function delete_folder_post(req, res, next) {
   }
 }
 
-module.exports = { add_folder_post, delete_folder_post }
+module.exports = {
+  add_folder_post,
+  update_folder_get,
+  update_folder_post,
+  delete_folder_post,
+}

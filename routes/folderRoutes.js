@@ -5,6 +5,7 @@ const {
   update_folder_get,
   update_folder_post,
   delete_folder_post,
+  open_folder_get,
 } = require('../controllers/folderController')
 
 /* Folder routes */
@@ -12,6 +13,7 @@ folderRouter.post('/new', add_folder_post)
 folderRouter.get('/:id/update', update_folder_get)
 folderRouter.post('/:id/update', update_folder_post)
 folderRouter.post('/:id/delete', delete_folder_post)
+folderRouter.get('/:id/open', open_folder_get)
 
 
 module.exports = folderRouter

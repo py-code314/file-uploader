@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head -->
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <!-- Main content-->
+    <main class="main">
+      <!-- Show folders -->
+      <% if (locals.folder && folder.children.length > 0) { %>
+        <ul>
+          <% children.forEach(folder => { %>
+            <li>
+              <p><%= folder.name %></p>
+              <a   href="/folders/<%= folder.id %>/update">Rename</a>
+              <form  action="/folders/<%= folder.id %>/delete" method="POST" >
+                <button class="btn btn--delete" type="submit">
+                Delete</button>
+              </form>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+
+      <!-- Show files -->
+      <% if (locals.folder && folder.files.length > 0) { %>
+        <ul>
+          <% files.forEach(file => { %>
+            <li>
+              <p><%= file.name %></p>
+              <a   href="/files/<%= file.id %>/update">Rename</a>
+              <button>Download</button>
+              <form  action="/files/<%= file.id %>/delete" method="POST" >
+              <button class="btn btn--delete" type="submit">
+                Delete</button>
+              </form>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </main>
+</html>

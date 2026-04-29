@@ -138,7 +138,7 @@ const update_folder_post = [
     try {
       // Get validated form data
       const { name } = matchedData(req)
-      
+
       // Update folder
       await prisma.folder.update({
         where: {
@@ -178,9 +178,44 @@ async function delete_folder_post(req, res, next) {
   }
 }
 
+async function open_folder_get(req, res, next) {
+  const folderId = Number(req.params.id)
+  const userId = req.user.id
+
+  // Get all folders
+  const folders = await prisma.folder.findMany({
+    where: { userId },
+  })
+
+  // Get folder data
+  const folder = await prisma.folder.findFirst({
+    where: {
+      id: folderId,
+      userId,
+    },
+    include: {
+      files: true,
+      children: true,
+    },
+  })
+  console.log('🚀 ~ open_folder_get ~ folder:', folder)
+
+  try {
+    // Show folder contents
+    res.render('pages/folderDetails', {
+      title: 'Folder Content',
+      folder
+    })
+  } catch (err) {
+    console.error(err)
+    return next(err)
+  }
+}
+
 module.exports = {
   add_folder_post,
   update_folder_get,
   update_folder_post,
   delete_folder_post,
+  open_folder_get,
 }

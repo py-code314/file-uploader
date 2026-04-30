@@ -1,8 +1,11 @@
 const multer = require('multer')
 const upload = require('../middleware/upload')
+const { prisma } = require('../lib/prisma')
 
 /* Show file upload form */
 async function upload_get(req, res) {
+  console.log("🚀 ~ upload_get ~ req:", req)
+
   res.render('pages/fileForm', {
     title: 'Upload File',
   })
@@ -12,7 +15,7 @@ async function upload_post(req, res, next) {
   // Manually invoke multer middleware function
   const uploadHandler = upload.array('fileUpload', 5)
 
-  uploadHandler(req, res, function (err) {
+  uploadHandler(req, res, async function (err) {
     // console.log('req files:', req.files)
     try {
       // Handle Multer errors
@@ -67,6 +70,24 @@ async function upload_post(req, res, next) {
           errors: [{ msg: 'Choose at least one file to upload.' }],
         })
       }
+
+      // console.log('req:', req)
+      const currentFiles = req.files
+      // console.log("🚀 ~ upload_post ~ currentFiles:", currentFiles)
+      // Add file data to db
+      for (const file of currentFiles) {
+        await prisma.file.create({
+          data: {
+            name: file.originalname,
+            size: file.size,
+            type: file.mimetype,
+            url: `/uploads/${file.filename}`,
+            userId: req.user.id,
+            
+           }
+         })
+      }
+     
 
       // Successful upload
       res.redirect('/')

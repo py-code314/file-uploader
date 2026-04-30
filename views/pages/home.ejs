@@ -41,9 +41,16 @@
         </form>
       </dialog>
 
+      
+
       <!-- Show folders -->
       <% if(locals.folders && locals.folders.length > 0) { %>
         <%- include('../partials/folders.ejs') %>
+      <% }  %>
+
+      <!-- Show files -->
+      <% if(locals.files && locals.files.length > 0) { %>
+        <%- include('../partials/files.ejs') %>
       <% }  %>
 
       <% if (locals.isUpdate) { %>

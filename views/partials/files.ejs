@@ -1,0 +1,28 @@
+<div class="files">
+  <% if (locals.files) {%>
+    <!-- Files list -->
+    <ul class="file__list">
+      <% files.forEach((file) => { %>
+        <li class="file" >
+          <p class="file__name"><%= file.name %></p>
+          <div class="btn-group">
+            <!-- Update file name -->
+            <a class="link link--update file__update"  href="/files/<%= file.id %>/update">
+            Rename</a>
+
+            <!-- Delete file -->
+            <form id="file-form" action="/files/<%= file.id %>/delete" method="POST" >
+              <button class="btn btn--primary btn--delete" type="submit">
+                Delete</button>
+            </form>
+          </div>
+        </li>
+
+        
+        
+      <% }); %>
+    </ul>
+  <% } %>
+</div>
+
+

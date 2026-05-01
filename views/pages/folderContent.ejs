@@ -8,6 +8,7 @@
 
     <!-- Main content-->
     <main class="main">
+      <h2><%= locals.folder ? `${folder.name}` : '' %></h2>
       <!-- Show folders -->
       <% if (locals.folder && folder.children.length > 0) { %>
         <ul>
@@ -27,7 +28,7 @@
       <!-- Show files -->
       <% if (locals.folder && folder.files.length > 0) { %>
         <ul>
-          <% files.forEach(file => { %>
+          <% folder.files.forEach(file => { %>
             <li>
               <p><%= file.name %></p>
               <a   href="/files/<%= file.id %>/update">Rename</a>
@@ -40,5 +41,10 @@
           <% }) %>
         </ul>
       <% } %>
+
     </main>
+
+    <!-- Footer -->
+    <%- include('../partials/footer.ejs') %>
+  </body>
 </html>

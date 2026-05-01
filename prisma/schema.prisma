@@ -33,7 +33,8 @@ model User {
 
 model File {
   id   Int    @id @default(autoincrement())
-  name String @unique
+  name String 
+  storedName String @unique
   size BigInt // Use BigInt for future-proofing
   type String // mime-type 
   url  String

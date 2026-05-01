@@ -12,7 +12,8 @@
 
   <nav>
     <ul>
-        <li><a class="menu__link link link--cta" href="/files/upload">Add File</a></li>
+        <li><a class="menu__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/files/upload` : `/files/upload` %>">Add File</a></li>
+        <!-- <li><a class="menu__link link link--cta" href="/files/upload">Add File</a></li> -->
         <% if(locals.currentUser) { %>
           <!-- <li><a class="menu__link link link--cta" href="/folders/new">New Folder</a></li> -->
            <li><button class="btn btn--newFolder" type="button">New Folder</button></li>

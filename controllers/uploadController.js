@@ -4,10 +4,14 @@ const { prisma } = require('../lib/prisma')
 
 /* Show file upload form */
 async function upload_get(req, res) {
-  console.log("🚀 ~ upload_get ~ req:", req)
+
+  const url = req.originalUrl
+  const folderId = Number(url.split('/')[2])
+
 
   res.render('pages/fileForm', {
     title: 'Upload File',
+    folderId
   })
 }
 
@@ -16,7 +20,7 @@ async function upload_post(req, res, next) {
   const uploadHandler = upload.array('fileUpload', 5)
 
   uploadHandler(req, res, async function (err) {
-    // console.log('req files:', req.files)
+
     try {
       // Handle Multer errors
       if (err instanceof multer.MulterError) {
@@ -71,26 +75,30 @@ async function upload_post(req, res, next) {
         })
       }
 
-      // console.log('req:', req)
       const currentFiles = req.files
-      // console.log("🚀 ~ upload_post ~ currentFiles:", currentFiles)
+      const folderId = Number(req.params.id)
+
       // Add file data to db
       for (const file of currentFiles) {
         await prisma.file.create({
           data: {
             name: file.originalname,
+            storedName: file.filename,
             size: file.size,
             type: file.mimetype,
             url: `/uploads/${file.filename}`,
             userId: req.user.id,
-            
-           }
-         })
+            folderId: folderId,
+          },
+        })
       }
-     
 
       // Successful upload
-      res.redirect('/')
+      if (folderId) {
+        res.redirect(`/folders/${folderId}/open`)
+      } else {
+        res.redirect('/')
+      }
     } catch (err) {
       console.error(err)
       return next(err)

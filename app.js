@@ -78,6 +78,7 @@ app.use('/signUp', signUpRouter)
 app.use('/logIn', logInRouter)
 app.use('/logOut', logOutRouter)
 app.use('/files', uploadRouter)
+app.use('/folders/:id/files', uploadRouter)
 app.use('/folders', folderRouter)
 
 /**

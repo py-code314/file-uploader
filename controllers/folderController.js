@@ -60,9 +60,9 @@ const add_folder_post = [
       // Get validated form data
 
       const { name } = matchedData(req)
-      // const user = req.user
+
       const userId = req.user.id
-      // console.log("🚀 ~ req:", req)
+
 
       await prisma.folder.create({
         data: {
@@ -160,7 +160,7 @@ const update_folder_post = [
 /* Delete folder */
 async function delete_folder_post(req, res, next) {
   const id = Number(req.params.id)
-  // console.log('🚀 ~ genre_delete_post ~ id:', id)
+
   const userId = req.user.id
 
   try {
@@ -198,13 +198,17 @@ async function open_folder_get(req, res, next) {
       children: true,
     },
   })
-  console.log('🚀 ~ open_folder_get ~ folder:', folder)
+
 
   try {
     // Show folder contents
-    res.render('pages/folderDetails', {
-      title: 'Folder Content',
-      folder
+    // res.render('pages/home', {
+    //   title: `Home | ${folder.name}`,
+    //   folder
+    // })
+    res.render('pages/folderContent', {
+      title: `${folder.name}`,
+      folder,
     })
   } catch (err) {
     console.error(err)

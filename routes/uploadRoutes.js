@@ -1,9 +1,8 @@
 const express = require('express')
-const uploadRouter = express.Router()
+const uploadRouter = express.Router({mergeParams: true})
 const { upload_get, upload_post } = require('../controllers/uploadController')
 const { isAuth } = require('../routes/auth')
 const upload = require('../middleware/upload')
-
 
 /* New message routes */
 uploadRouter.get('/upload', isAuth, upload_get) // protected route

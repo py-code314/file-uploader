@@ -7,11 +7,20 @@ async function home_page_get(req, res, next) {
     const userId = req.user.id
     // Get all folders
     const folders = await prisma.folder.findMany({
-      where: { userId },
+      where: { 
+        userId,
+        parentId: null
+        
+
+       },
     })
     // Get all files in root folder
     const files = await prisma.file.findMany({
-      where: { userId },
+      where: { 
+        userId,
+        folderId: null
+
+       },
     })
 
     res.render('pages/home', {

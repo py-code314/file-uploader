@@ -12,7 +12,7 @@
       <!-- Show folders -->
       <% if (locals.folder && folder.children.length > 0) { %>
         <ul>
-          <% children.forEach(folder => { %>
+          <% folder.children.forEach(folder => { %>
             <li>
               <p><%= folder.name %></p>
               <a   href="/folders/<%= folder.id %>/update">Rename</a>
@@ -42,9 +42,72 @@
         </ul>
       <% } %>
 
+      <dialog class="dialog">
+
+        <!-- Show errors -->
+        <% if(locals.errors && locals.errors.length > 0) { %>
+          <%- include('../partials/errors.ejs') %>
+        <% }  %>
+
+       
+        <form class="form" action="<%= locals.isUpdate ? `/folders/${folder.id}/update` : locals.folder ? `/folders/${folder.id}/new` : `/folders/new` %>" method="POST">
+          <h2 class=""><%= locals.isUpdate ? 'Update Folder' : 'New Folder' %></h2>
+          <div class="form__control">
+            <label class="form__label" for="folderName">Folder Name (required)
+              <span>Allowed characters: Letters, numbers, spaces, period, underscore and hyphen</span>
+            </label>
+            <input
+              class="form__input"
+              id="folderName"
+              name="name"
+              placeholder="Name"
+              type="text"
+              value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
+              pattern="[a-zA-Z0-9\s._\-]+"
+              required
+                />
+            
+          </div>
+          <div class="form__buttons">
+            <a href="/" class="btn  btn--cancel" type="button">Cancel</a>
+            <button class="btn  btn--submit" type="submit">
+              <%= locals.isUpdate ? 'Update' : 'Create' %>
+            </button>
+          </div>
+        </form>
+      </dialog>
+
     </main>
 
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
   </body>
+
+  <script>
+    const newFolderBtn = document.querySelector('.btn--newFolder')
+    const dialog = document.querySelector('.dialog')
+    const cancelBtn = document.querySelector('.btn--cancel')
+    const errorMsgs = document.querySelectorAll('.errors__msg')
+    const updateFolder = document.querySelector('#updateFolder')
+
+    // Show new folder form
+    newFolderBtn.addEventListener('click', () => {
+      dialog.showModal()
+    })
+
+    // Close new folder form
+    cancelBtn.addEventListener('click', () => {
+      dialog.close()
+    })
+
+    if(errorMsgs.length > 0 || updateFolder) {
+      dialog.showModal()
+    }    
+
+    dialog.addEventListener('cancel', (e) => {
+      e.preventDefault()
+
+      window.location.href = '/'
+    })
+  </script>
 </html>

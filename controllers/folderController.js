@@ -20,11 +20,12 @@ const validateFolderName = [
         )
       }
 
-      // Throw error if email already exists
+      // Throw error if folder already exists
       const folder = await prisma.folder.findFirst({
         where: {
           name,
         },
+        // ? Can i add parent folder id here
       })
       if (folder) {
         throw new Error(`Folder name is ${existsErr}`)
@@ -40,9 +41,12 @@ const add_folder_post = [
   async (req, res, next) => {
     // Get form data
     const { name } = req.body
+    // const folderId = Number(req.params.id)
+    // const userId = req.user.id
     const folderData = {
       name: name,
     }
+    
 
     // Validate request
     const errors = validationResult(req)
@@ -60,18 +64,28 @@ const add_folder_post = [
       // Get validated form data
 
       const { name } = matchedData(req)
-
+      // console.log("🚀 ~ req:", req)
+      const folderId = Number(req.params.id)
+      console.log("🚀 ~ folderId:", folderId)
       const userId = req.user.id
+
+      
 
 
       await prisma.folder.create({
         data: {
           name,
           userId,
+          parentId: folderId
         },
       })
 
-      res.redirect('/')
+      if (folderId) {
+        res.redirect(`/folders/${folderId}`)
+      } else {
+        res.redirect('/')
+      }
+      // res.redirect('/')
     } catch (err) {
       console.error(err)
       return next(err)

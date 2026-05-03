@@ -4,7 +4,7 @@
     <ul class="folder__list">
       <% folders.forEach((folder) => { %>
         <li class="folder" >
-          <p class="folder__name"><a href="/folders/<%= folder.id %>/open"><%= folder.name %></a></p>
+          <p class="folder__name"><a href="/folders/<%= folder.id %>"><%= folder.name %></a></p>
           <div class="btn-group">
             <!-- Update folder name -->
             <a class="link link--update folder__update"  href="/folders/<%= folder.id %>/update">

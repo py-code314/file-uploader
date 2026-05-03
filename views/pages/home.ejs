@@ -15,7 +15,8 @@
           <%- include('../partials/errors.ejs') %>
         <% }  %>
 
-        <form class="form" action="<%= locals.isUpdate ? `/folders/${folder.id}/update` : `/folders/new` %>" method="POST">
+       
+        <form class="form" action="<%= locals.isUpdate ? `/folders/${folder.id}/update` : locals.folder ? `/folders/${folder.id}/new` : `/folders/new` %>" method="POST">
           <h2 class=""><%= locals.isUpdate ? 'Update Folder' : 'New Folder' %></h2>
           <div class="form__control">
             <label class="form__label" for="folderName">Folder Name (required)
@@ -27,10 +28,11 @@
               name="name"
               placeholder="Name"
               type="text"
-              value="<%= locals.folder?.name || '' %>"
+              value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
               pattern="[a-zA-Z0-9\s._\-]+"
               required
                 />
+            
           </div>
           <div class="form__buttons">
             <a href="/" class="btn  btn--cancel" type="button">Cancel</a>

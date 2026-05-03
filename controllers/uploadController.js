@@ -95,7 +95,7 @@ async function upload_post(req, res, next) {
 
       // Successful upload
       if (folderId) {
-        res.redirect(`/folders/${folderId}/open`)
+        res.redirect(`/folders/${folderId}`)
       } else {
         res.redirect('/')
       }

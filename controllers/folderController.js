@@ -63,7 +63,7 @@ const add_folder_post = [
 
     // Show errors if validation fails
     if (!errors.isEmpty()) {
-      return res.status(400).render('pages/home', {
+      return res.status(400).render('pages/folderForm', {
         title: 'Create Folder',
         folder: folderData,
         errors: errors.array(),

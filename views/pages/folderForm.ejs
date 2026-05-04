@@ -29,14 +29,26 @@
               placeholder="Name"
               type="text"
               value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
-              pattern="[a-zA-Z0-9\s._\-]+"
+
               autofocus
               required
                 />
+            <!-- <input
+              class="form__input"
+              id="folderName"
+              name="name"
+              placeholder="Name"
+              type="text"
+              value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
+              pattern="[a-zA-Z0-9\s._\-]+"
+              autofocus
+              required
+                /> -->
             
           </div>
           <div class="form__buttons">
-            <a href="<%= locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
+            <a href="<%= locals.parentId ? `/folders/${parentId}` : locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
+            <!-- <a href="<%= locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a> -->
             <button class="btn  btn--submit" type="submit">
               <%= locals.isUpdate ? 'Update' : 'Create' %>
             </button>

@@ -12,7 +12,8 @@ const validateFolderName = [
     .trim()
     .notEmpty()
     .withMessage(`Folder name ${emptyErr}`)
-    .custom(async (name, {req}) => {
+    .bail()
+    .custom(async (name, { req }) => {
       const folderNameRegex = /^[a-zA-Z0-9\s._-]+$/
       if (!folderNameRegex.test(name)) {
         throw new Error(
@@ -21,14 +22,30 @@ const validateFolderName = [
       }
 
       const folderId = Number(req.params.id)
+      const userId = req.user.id
+      let parentId = null
+
+      // Get parent id if updating
+      if (req.originalUrl.includes('/update')) {
+        const currentFolder = await prisma.folder.findFirst({
+          where: {
+            id: folderId,
+            userId,
+          },
+        })
+        parentId = currentFolder.parentId
+      } else { // If adding a new folder
+        parentId = folderId
+      }
 
       // Throw error if folder already exists
       const folder = await prisma.folder.findFirst({
         where: {
           name,
-          parentId: folderId
+          parentId
         },
       })
+
       if (folder) {
         throw new Error(`Folder name is ${existsErr}`)
       }
@@ -38,10 +55,7 @@ const validateFolderName = [
 ]
 
 async function add_folder_get(req, res, next) {
-  // const url = req.originalUrl
-  // const folderId = Number(url.split('/')[2])
   const folderId = Number(req.params.id)
-  // console.log("🚀 ~ add_folder_get ~ folderId:", folderId)
 
   res.render('pages/folderForm', {
     title: 'New Folder',
@@ -104,11 +118,6 @@ async function update_folder_get(req, res) {
   const folderId = Number(req.params.id)
   const userId = req.user.id
 
-  // Get all folders
-  // const folders = await prisma.folder.findMany({
-  //   where: { userId },
-  // })
-
   // Get folder data
   const folder = await prisma.folder.findFirst({
     where: {
@@ -116,15 +125,12 @@ async function update_folder_get(req, res) {
       userId,
     },
   })
-
-  // if (!folder) {
-  //   res.redirect('/')
-  // }
+  const parentId = folder.parentId
 
   res.render('pages/folderForm', {
     title: 'Update Folder',
     folder,
-    // folders,
+    parentId,
     isUpdate: true,
   })
 }
@@ -134,8 +140,9 @@ const update_folder_post = [
   validateFolderName,
 
   async (req, res, next) => {
-    const id = Number(req.params.id)
-    const userId = req.user.id
+    const folderId = Number(req.params.id)
+    
+    
 
     // Get form data
     const { name } = req.body
@@ -148,9 +155,10 @@ const update_folder_post = [
 
     // Show errors if validation fails
     if (!errors.isEmpty()) {
-      return res.status(400).render('pages/home', {
+      return res.status(400).render('pages/folderForm', {
         title: 'Update Folder',
         folder: folderData,
+        folderId,
         errors: errors.array(),
       })
     }
@@ -158,18 +166,34 @@ const update_folder_post = [
     try {
       // Get validated form data
       const { name } = matchedData(req)
+      const userId = req.user.id
+
+      // Get folder data
+      const folder = await prisma.folder.findFirst({
+        where: {
+          id: folderId,
+          userId,
+        },
+      })
+      const parentId = folder.parentId
+      
 
       // Update folder
       await prisma.folder.update({
         where: {
-          id,
+          id: folderId,
           userId,
         },
         data: {
           name,
         },
       })
-      res.redirect('/')
+      
+      if (parentId) {
+        res.redirect(`/folders/${parentId}`)
+      } else {
+        res.redirect('/')
+      }
     } catch (err) {
     console.error(err)
     return next(err)

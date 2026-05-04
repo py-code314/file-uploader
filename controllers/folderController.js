@@ -105,9 +105,9 @@ async function update_folder_get(req, res) {
   const userId = req.user.id
 
   // Get all folders
-  const folders = await prisma.folder.findMany({
-    where: { userId },
-  })
+  // const folders = await prisma.folder.findMany({
+  //   where: { userId },
+  // })
 
   // Get folder data
   const folder = await prisma.folder.findFirst({
@@ -117,14 +117,14 @@ async function update_folder_get(req, res) {
     },
   })
 
-  if (!folder) {
-    res.redirect('/')
-  }
+  // if (!folder) {
+  //   res.redirect('/')
+  // }
 
-  res.render('pages/home', {
+  res.render('pages/folderForm', {
     title: 'Update Folder',
     folder,
-    folders,
+    // folders,
     isUpdate: true,
   })
 }

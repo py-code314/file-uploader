@@ -36,7 +36,7 @@
             
           </div>
           <div class="form__buttons">
-            <a href="/" class="btn  btn--cancel">Cancel</a>
+            <a href="<%= locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
             <button class="btn  btn--submit" type="submit">
               <%= locals.isUpdate ? 'Update' : 'Create' %>
             </button>

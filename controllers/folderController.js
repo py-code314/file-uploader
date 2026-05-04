@@ -38,8 +38,10 @@ const validateFolderName = [
 ]
 
 async function add_folder_get(req, res, next) {
-  const url = req.originalUrl
-  const folderId = Number(url.split('/')[2])
+  // const url = req.originalUrl
+  // const folderId = Number(url.split('/')[2])
+  const folderId = Number(req.params.id)
+  // console.log("🚀 ~ add_folder_get ~ folderId:", folderId)
 
   res.render('pages/folderForm', {
     title: 'New Folder',
@@ -51,6 +53,7 @@ const add_folder_post = [
   validateFolderName,
 
   async (req, res, next) => {
+    const folderId = Number(req.params.id)
     // Get form data
     const { name } = req.body
     const folderData = {
@@ -66,6 +69,7 @@ const add_folder_post = [
       return res.status(400).render('pages/folderForm', {
         title: 'Create Folder',
         folder: folderData,
+        folderId,
         errors: errors.array(),
       })
     }
@@ -73,7 +77,6 @@ const add_folder_post = [
     try {
       // Get validated form data
       const { name } = matchedData(req)
-      const folderId = Number(req.params.id)
       const userId = req.user.id
 
       await prisma.folder.create({

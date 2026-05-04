@@ -12,7 +12,7 @@ const validateFolderName = [
     .trim()
     .notEmpty()
     .withMessage(`Folder name ${emptyErr}`)
-    .custom(async (name) => {
+    .custom(async (name, {req}) => {
       const folderNameRegex = /^[a-zA-Z0-9\s._-]+$/
       if (!folderNameRegex.test(name)) {
         throw new Error(
@@ -20,12 +20,14 @@ const validateFolderName = [
         )
       }
 
+      const folderId = Number(req.params.id)
+
       // Throw error if folder already exists
       const folder = await prisma.folder.findFirst({
         where: {
           name,
+          parentId: folderId
         },
-        // ? Can i add parent folder id here
       })
       if (folder) {
         throw new Error(`Folder name is ${existsErr}`)
@@ -51,8 +53,6 @@ const add_folder_post = [
   async (req, res, next) => {
     // Get form data
     const { name } = req.body
-    // const folderId = Number(req.params.id)
-    // const userId = req.user.id
     const folderData = {
       name: name,
     }
@@ -72,15 +72,9 @@ const add_folder_post = [
 
     try {
       // Get validated form data
-
       const { name } = matchedData(req)
-      // console.log("🚀 ~ req:", req)
       const folderId = Number(req.params.id)
-      console.log("🚀 ~ folderId:", folderId)
       const userId = req.user.id
-
-      
-
 
       await prisma.folder.create({
         data: {
@@ -95,7 +89,6 @@ const add_folder_post = [
       } else {
         res.redirect('/')
       }
-      // res.redirect('/')
     } catch (err) {
       console.error(err)
       return next(err)

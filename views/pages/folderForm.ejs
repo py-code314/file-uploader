@@ -16,7 +16,7 @@
         <% }  %>
 
        
-        <form class="form" action="<%= locals.isUpdate ? `/folders/${folder.id}/update` : locals.folder ? `/folders/${folder.id}/new` : `/folders/new` %>" method="POST">
+        <form class="form" action="<%= locals.isUpdate ? `/folders/${folder.id}/update` : locals.folderId ? `/folders/${folderId}/new` : `/folders/new` %>" method="POST">
           <h2 class=""><%= locals.isUpdate ? 'Update Folder' : 'New Folder' %></h2>
           <div class="form__control">
             <label class="form__label" for="folderName">Folder Name (required)
@@ -30,6 +30,7 @@
               type="text"
               value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
               pattern="[a-zA-Z0-9\s._\-]+"
+              autofocus
               required
                 />
             

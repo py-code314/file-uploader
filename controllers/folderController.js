@@ -35,6 +35,16 @@ const validateFolderName = [
     }),
 ]
 
+async function add_folder_get(req, res, next) {
+  const url = req.originalUrl
+  const folderId = Number(url.split('/')[2])
+
+  res.render('pages/folderForm', {
+    title: 'New Folder',
+    folderId
+  })
+}
+
 const add_folder_post = [
   validateFolderName,
 
@@ -231,6 +241,7 @@ async function open_folder_get(req, res, next) {
 }
 
 module.exports = {
+  add_folder_get,
   add_folder_post,
   update_folder_get,
   update_folder_post,

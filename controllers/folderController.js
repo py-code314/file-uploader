@@ -34,7 +34,8 @@ const validateFolderName = [
           },
         })
         parentId = currentFolder.parentId
-      } else { // If adding a new folder
+      } else {
+        // If adding a new folder
         parentId = folderId
       }
 
@@ -42,7 +43,7 @@ const validateFolderName = [
       const folder = await prisma.folder.findFirst({
         where: {
           name,
-          parentId
+          parentId,
         },
       })
 
@@ -59,7 +60,7 @@ async function add_folder_get(req, res, next) {
 
   res.render('pages/folderForm', {
     title: 'New Folder',
-    folderId
+    folderId,
   })
 }
 
@@ -73,7 +74,6 @@ const add_folder_post = [
     const folderData = {
       name: name,
     }
-    
 
     // Validate request
     const errors = validationResult(req)
@@ -97,7 +97,7 @@ const add_folder_post = [
         data: {
           name,
           userId,
-          parentId: folderId
+          parentId: folderId,
         },
       })
 
@@ -141,8 +141,17 @@ const update_folder_post = [
 
   async (req, res, next) => {
     const folderId = Number(req.params.id)
-    
-    
+    const userId = req.user.id
+    let parentId = null
+    // Get folder data
+    const folder = await prisma.folder.findFirst({
+      where: {
+        id: folderId,
+        userId,
+      },
+    })
+
+    parentId = folder.parentId
 
     // Get form data
     const { name } = req.body
@@ -158,7 +167,7 @@ const update_folder_post = [
       return res.status(400).render('pages/folderForm', {
         title: 'Update Folder',
         folder: folderData,
-        folderId,
+        folderId: parentId, // Pass it to be used in Cancel link
         errors: errors.array(),
       })
     }
@@ -166,17 +175,6 @@ const update_folder_post = [
     try {
       // Get validated form data
       const { name } = matchedData(req)
-      const userId = req.user.id
-
-      // Get folder data
-      const folder = await prisma.folder.findFirst({
-        where: {
-          id: folderId,
-          userId,
-        },
-      })
-      const parentId = folder.parentId
-      
 
       // Update folder
       await prisma.folder.update({
@@ -188,17 +186,17 @@ const update_folder_post = [
           name,
         },
       })
-      
+
       if (parentId) {
         res.redirect(`/folders/${parentId}`)
       } else {
         res.redirect('/')
       }
     } catch (err) {
-    console.error(err)
-    return next(err)
-  }
-  }
+      console.error(err)
+      return next(err)
+    }
+  },
 ]
 
 /* Delete folder */
@@ -242,7 +240,6 @@ async function open_folder_get(req, res, next) {
       children: true,
     },
   })
-
 
   try {
     // Show folder contents

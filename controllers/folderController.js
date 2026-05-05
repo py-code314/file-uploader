@@ -201,19 +201,34 @@ const update_folder_post = [
 
 /* Delete folder */
 async function delete_folder_post(req, res, next) {
-  const id = Number(req.params.id)
-
+  const folderId = Number(req.params.id)
   const userId = req.user.id
+  let parentId = null
+  // Get folder data
+  const folder = await prisma.folder.findFirst({
+    where: {
+      id: folderId,
+      userId,
+    },
+  })
+
+  parentId = folder.parentId
 
   try {
     // Delete folder
     await prisma.folder.delete({
       where: {
-        id,
+        id: folderId,
         userId,
       },
     })
-    res.redirect('/')
+
+    if (parentId) {
+      res.redirect(`/folders/${parentId}`)
+    } else {
+      res.redirect('/')
+    }
+    
   } catch (err) {
     console.error(err)
     return next(err)

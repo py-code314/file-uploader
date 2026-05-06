@@ -1,7 +1,7 @@
 const express = require('express')
 const folderRouter = express.Router()
-// Import uploadRouter
-const uploadRouter = require('./uploadRoutes')
+// Import fileRouter
+const fileRouter = require('./fileRoutes')
 
 const {
   add_folder_get,
@@ -23,9 +23,6 @@ folderRouter.post('/:folderId/new', add_folder_post)
 folderRouter.get('/:folderId', open_folder_get)
 // ? No route to get all folders - folderRouter.get('/', all_folders_get)
 
-folderRouter.use('/:folderId/files', uploadRouter)
-
-
-
+folderRouter.use('/:folderId/files', fileRouter)
 
 module.exports = folderRouter

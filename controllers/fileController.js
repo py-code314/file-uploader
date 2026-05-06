@@ -130,4 +130,46 @@ async function update_file_get(req, res, next) {
   })
 }
 
-module.exports = { upload_file_get, upload_file_post, update_file_get }
+/* Delete file */
+async function delete_file_post(req, res, next) {
+  const fileId = Number(req.params.fileId)
+  const userId = req.user.id
+  let folderId = null
+
+  // Get folder data
+  const currentFile = await prisma.file.findFirst({
+    where: {
+      id: fileId,
+      userId,
+    },
+  })
+
+  folderId = currentFile.folderId
+
+  try {
+    // Delete file
+    await prisma.file.delete({
+      where: {
+        id: fileId,
+        userId,
+      },
+    })
+
+    if (folderId) {
+      res.redirect(`/folders/${folderId}`)
+    } else {
+      res.redirect('/')
+    }
+    
+  } catch (err) {
+    console.error(err)
+    return next(err)
+  }
+}
+
+module.exports = {
+  upload_file_get,
+  upload_file_post,
+  update_file_get,
+  delete_file_post,
+}

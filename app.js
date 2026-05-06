@@ -11,7 +11,7 @@ const homeRouter = require('./routes/homeRoutes')
 const signUpRouter = require('./routes/signUpRoutes')
 const logInRouter = require('./routes/logInRoutes')
 const logOutRouter = require('./routes/logOutRoutes')
-const uploadRouter = require('./routes/uploadRoutes')
+const fileRouter = require('./routes/uploadRoutes')
 const folderRouter = require('./routes/folderRoutes')
 
 /**
@@ -77,7 +77,7 @@ app.use('/', homeRouter)
 app.use('/signUp', signUpRouter)
 app.use('/logIn', logInRouter)
 app.use('/logOut', logOutRouter)
-app.use('/files', uploadRouter)
+app.use('/files', fileRouter)
 app.use('/folders', folderRouter)
 
 /**

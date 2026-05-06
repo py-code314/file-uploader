@@ -40,7 +40,7 @@
           <% folder.files.forEach(file => { %>
             <li>
               <p><%= file.name %></p>
-              <a   href="/files/<%= file.id %>/update">Rename</a>
+              <a href="/folders/<%= file.folderId %>/files/<%= file.id %>/update">Rename</a>
               <button>Download</button>
               <form  action="/files/<%= file.id %>/delete" method="POST" >
               <button class="btn btn--delete" type="submit">

@@ -111,17 +111,23 @@ async function upload_file_post(req, res, next) {
 async function update_file_get(req, res, next) {
   const fileId = Number(req.params.fileId)
   const userId = req.user.id
+  const folderId = Number(req.params.folderId)
+
 
   // Get file data
   const currentFile = await prisma.file.findFirst({
     where: {
       id: fileId,
       userId,
+      folderId
     },
   })
  
-
-  res.send('update file')
+  res.render('pages/fileUpdateForm', {
+    title: 'Update File',
+    file: currentFile,
+    folderId
+  })
 }
 
 module.exports = { upload_file_get, upload_file_post, update_file_get }

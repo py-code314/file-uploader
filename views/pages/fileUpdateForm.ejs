@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head -->
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <!-- Main content-->
+    <main class="main">
+      <div class="">
+
+        <!-- Show errors -->
+        <% if(locals.errors && locals.errors.length > 0) { %>
+          <%- include('../partials/errors.ejs') %>
+        <% }  %>
+
+       
+        <form class="form" action="<%= locals.folderId ? `/folders/${folderId}/files/${file.id}/update` : `/files/${file.id}/update` %>" method="POST">
+          <h2 class="">Update File</h2>
+          <div class="form__control">
+            <label class="form__label" for="fileName">File Name (required)
+              <!-- <span>Allowed characters: Letters, numbers, spaces, period, underscore and hyphen</span> -->
+            </label>
+            <input
+              class="form__input"
+              id="fileName"
+              name="name"
+              placeholder="Name"
+              type="text"
+              value="<%= locals.file || locals.errors ? `${file.name}` : '' %>"
+              autofocus
+              required
+                />
+          </div>
+          <div class="form__buttons">
+            <a href="<%= locals.parentId ? `/folders/${parentId}` : locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
+            <button class="btn  btn--submit" type="submit">
+              Update
+            </button>
+          </div>
+        </form>
+      </div>
+      
+    </main>
+
+    <!-- Footer -->
+    <%- include('../partials/footer.ejs') %>
+  </body>
+  
+ 
+</html>

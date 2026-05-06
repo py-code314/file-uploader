@@ -2,8 +2,9 @@ const multer = require('multer')
 const upload = require('../middleware/upload')
 const { prisma } = require('../lib/prisma')
 
+
 /* Show file upload form */
-async function upload_get(req, res) {
+async function upload_file_get(req, res) {
   const folderId = Number(req.params.folderId)
 
   res.render('pages/fileForm', {
@@ -12,7 +13,7 @@ async function upload_get(req, res) {
   })
 }
 
-async function upload_post(req, res, next) {
+async function upload_file_post(req, res, next) {
   // Manually invoke multer middleware function
   const uploadHandler = upload.array('fileUpload', 5)
 
@@ -74,9 +75,13 @@ async function upload_post(req, res, next) {
 
       const currentFiles = req.files
       const folderId = Number(req.params.folderId)
+      const userId = req.user.id
+      
+
 
       // Add file data to db
       for (const file of currentFiles) {
+        
         await prisma.file.create({
           data: {
             name: file.originalname,
@@ -84,7 +89,7 @@ async function upload_post(req, res, next) {
             size: file.size,
             type: file.mimetype,
             url: `/uploads/${file.filename}`,
-            userId: req.user.id,
+            userId: userId,
             folderId: folderId,
           },
         })
@@ -103,4 +108,20 @@ async function upload_post(req, res, next) {
   })
 }
 
-module.exports = { upload_get, upload_post }
+async function update_file_get(req, res, next) {
+  const fileId = Number(req.params.fileId)
+  const userId = req.user.id
+
+  // Get file data
+  const currentFile = await prisma.file.findFirst({
+    where: {
+      id: fileId,
+      userId,
+    },
+  })
+ 
+
+  res.send('update file')
+}
+
+module.exports = { upload_file_get, upload_file_post, update_file_get }

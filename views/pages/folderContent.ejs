@@ -8,13 +8,14 @@
 
     <!-- Main content-->
     <main class="main">
+      
       <h2><%= locals.folder ? `${folder.name}` : '' %></h2>
       <!-- Show folders -->
       <% if (locals.folder && folder.children.length > 0) { %>
         <ul>
           <% folder.children.forEach(folder => { %>
             <li>
-              <p><%= folder.name %></p>
+              <p class="folder__name"><a href="/folders/<%= folder.id %>"><%= folder.name %></a></p>
               <a   href="/folders/<%= folder.id %>/update">Rename</a>
               <form  action="/folders/<%= folder.id %>/delete" method="POST" >
                 <button class="btn btn--delete" type="submit">

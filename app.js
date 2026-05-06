@@ -78,7 +78,7 @@ app.use('/signUp', signUpRouter)
 app.use('/logIn', logInRouter)
 app.use('/logOut', logOutRouter)
 app.use('/files', uploadRouter)
-app.use('/folders/:id/files', uploadRouter)
+app.use('/folders/:id/files', uploadRouter) // ? Nest this route inside folder routes
 app.use('/folders', folderRouter)
 
 /**

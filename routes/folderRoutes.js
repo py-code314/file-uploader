@@ -13,12 +13,13 @@ const {
 /* Folder routes */
 folderRouter.post('/new', add_folder_post)
 folderRouter.get('/new', add_folder_get)
-folderRouter.get('/:id/update', update_folder_get)
-folderRouter.post('/:id/update', update_folder_post)
-folderRouter.post('/:id/delete', delete_folder_post)
-folderRouter.get('/:id/new', add_folder_get)
-folderRouter.post('/:id/new', add_folder_post)
-folderRouter.get('/:id', open_folder_get)
+folderRouter.get('/:folderId/update', update_folder_get)
+folderRouter.post('/:folderId/update', update_folder_post)
+folderRouter.post('/:folderId/delete', delete_folder_post)
+folderRouter.get('/:folderId/new', add_folder_get)
+folderRouter.post('/:folderId/new', add_folder_post)
+folderRouter.get('/:folderId', open_folder_get)
+// ? No route to get all folders - folderRouter.get('/', all_folders_get)
 
 
 

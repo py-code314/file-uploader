@@ -1,6 +1,7 @@
 /* Imports */
 const { body, validationResult, matchedData } = require('express-validator')
 const { prisma } = require('../lib/prisma.js')
+const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -21,7 +22,7 @@ const validateFolderName = [
         )
       }
 
-      const folderId = Number(req.params.id)
+      const folderId = Number(req.params.folderId)
       const userId = req.user.id
       let parentId = null
 
@@ -56,7 +57,7 @@ const validateFolderName = [
 ]
 
 async function add_folder_get(req, res, next) {
-  const folderId = Number(req.params.id)
+  const folderId = Number(req.params.folderId)
 
   res.render('pages/folderForm', {
     title: 'New Folder',
@@ -68,7 +69,7 @@ const add_folder_post = [
   validateFolderName,
 
   async (req, res, next) => {
-    const folderId = Number(req.params.id)
+    const folderId = Number(req.params.folderId)
     // Get form data
     const { name } = req.body
     const folderData = {
@@ -115,7 +116,7 @@ const add_folder_post = [
 
 /* Show update folder form */
 async function update_folder_get(req, res) {
-  const folderId = Number(req.params.id)
+  const folderId = Number(req.params.folderId)
   const userId = req.user.id
 
   // Get folder data
@@ -140,7 +141,7 @@ const update_folder_post = [
   validateFolderName,
 
   async (req, res, next) => {
-    const folderId = Number(req.params.id)
+    const folderId = Number(req.params.folderId)
     const userId = req.user.id
     let parentId = null
     // Get folder data
@@ -201,7 +202,7 @@ const update_folder_post = [
 
 /* Delete folder */
 async function delete_folder_post(req, res, next) {
-  const folderId = Number(req.params.id)
+  const folderId = Number(req.params.folderId)
   const userId = req.user.id
   let parentId = null
   // Get folder data
@@ -236,16 +237,11 @@ async function delete_folder_post(req, res, next) {
 }
 
 async function open_folder_get(req, res, next) {
-  const folderId = Number(req.params.id)
+  const folderId = Number(req.params.folderId)
   const userId = req.user.id
 
-  // Get all folders
-  const folders = await prisma.folder.findMany({
-    where: { userId },
-  })
-
   // Get folder data
-  const folder = await prisma.folder.findFirst({
+  const currentFolder = await prisma.folder.findFirst({
     where: {
       id: folderId,
       userId,
@@ -256,15 +252,15 @@ async function open_folder_get(req, res, next) {
     },
   })
 
+  const breadcrumbs = await getBreadcrumbs(folderId, userId)
+  // console.log("🚀 ~ open_folder_get ~ breadcrumbs:", breadcrumbs)
+
+
   try {
-    // Show folder contents
-    // res.render('pages/home', {
-    //   title: `Home | ${folder.name}`,
-    //   folder
-    // })
     res.render('pages/folderContent', {
-      title: `${folder.name}`,
-      folder,
+      title: `${currentFolder.name}`,
+      folder: currentFolder,
+      breadcrumbs
     })
   } catch (err) {
     console.error(err)

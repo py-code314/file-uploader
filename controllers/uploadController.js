@@ -4,10 +4,7 @@ const { prisma } = require('../lib/prisma')
 
 /* Show file upload form */
 async function upload_get(req, res) {
-
-  const url = req.originalUrl
-  const folderId = Number(url.split('/')[2])
-
+  const folderId = Number(req.params.folderId)
 
   res.render('pages/fileForm', {
     title: 'Upload File',
@@ -76,7 +73,7 @@ async function upload_post(req, res, next) {
       }
 
       const currentFiles = req.files
-      const folderId = Number(req.params.id)
+      const folderId = Number(req.params.folderId)
 
       // Add file data to db
       for (const file of currentFiles) {

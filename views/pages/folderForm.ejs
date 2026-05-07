@@ -20,7 +20,7 @@
           <h2 class=""><%= locals.isUpdate ? 'Update Folder' : 'New Folder' %></h2>
           <div class="form__control">
             <label class="form__label" for="folderName">Folder Name (required)
-              <span>Allowed characters: Letters, numbers, spaces, period, underscore and hyphen</span>
+              <span>Allowed characters: Letters, numbers, spaces, underscore and hyphen</span>
             </label>
             <input
               class="form__input"
@@ -29,22 +29,10 @@
               placeholder="Name"
               type="text"
               value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
-
+              pattern="[a-zA-Z0-9\s_\-]+"
               autofocus
               required
                 />
-            <!-- <input
-              class="form__input"
-              id="folderName"
-              name="name"
-              placeholder="Name"
-              type="text"
-              value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
-              pattern="[a-zA-Z0-9\s._\-]+"
-              autofocus
-              required
-                /> -->
-            
           </div>
           <div class="form__buttons">
             <a href="<%= locals.parentId ? `/folders/${parentId}` : locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>

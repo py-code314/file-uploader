@@ -15,10 +15,10 @@ const validateFolderName = [
     .withMessage(`Folder name ${emptyErr}`)
     .bail()
     .custom(async (name, { req }) => {
-      const folderNameRegex = /^[a-zA-Z0-9\s._-]+$/
+      const folderNameRegex = /^[a-zA-Z0-9\s_-]+$/
       if (!folderNameRegex.test(name)) {
         throw new Error(
-          'Folder name can only contain letters, numbers, spaces, period, underscore and hyphen',
+          'Folder name can only contain letters, numbers, spaces, underscore and hyphen',
         )
       }
 

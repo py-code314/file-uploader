@@ -4,14 +4,13 @@ const expressSession = require('express-session')
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store')
 const { prisma } = require('./lib/prisma.js')
 const passport = require('passport')
-// const multer = require('multer')
-// const upload = multer({ dest: './upload' })
+
 // Import routers
 const homeRouter = require('./routes/homeRoutes')
 const signUpRouter = require('./routes/signUpRoutes')
 const logInRouter = require('./routes/logInRoutes')
 const logOutRouter = require('./routes/logOutRoutes')
-const fileRouter = require('./routes/uploadRoutes')
+const fileRouter = require('./routes/fileRoutes')
 const folderRouter = require('./routes/folderRoutes')
 
 /**
@@ -31,6 +30,8 @@ app.set('view engine', 'ejs')
 // Setup for static files
 const assetsPath = path.join(__dirname, 'public')
 app.use(express.static(assetsPath))
+
+app.set('UPLOAD_PATH', assetsPath)
 
 // Middleware to process request body
 app.use(express.json())

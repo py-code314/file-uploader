@@ -41,7 +41,10 @@
             <li>
               <p><%= file.name %></p>
               <a href="/folders/<%= file.folderId %>/files/<%= file.id %>/update">Rename</a>
-              <button>Download</button>
+              <!-- Download file -->
+              <form action="/files/<%= file.id %>/download" method="get">
+                <button type="submit">Download</button>
+              </form>
               <form  action="/files/<%= file.id %>/delete" method="POST" >
               <button class="btn btn--delete" type="submit">
                 Delete</button>

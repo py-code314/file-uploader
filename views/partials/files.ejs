@@ -10,7 +10,10 @@
             <a class="link link--update file__update"  href="/files/<%= file.id %>/update">
             Rename</a>
             
-              <button>Download</button>
+            <!-- Download file -->
+            <form action="/files/<%= file.id %>/download" method="get">
+              <button type="submit">Download</button>
+            </form>
 
             <!-- Delete file -->
             <form id="file-form" action="/files/<%= file.id %>/delete" method="POST" >

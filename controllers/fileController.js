@@ -3,6 +3,8 @@ const upload = require('../middleware/upload')
 const { prisma } = require('../lib/prisma')
 
 
+
+
 /* Show file upload form */
 async function upload_file_get(req, res) {
   const folderId = Number(req.params.folderId)
@@ -167,9 +169,39 @@ async function delete_file_post(req, res, next) {
   }
 }
 
+// Download file
+async function download_file_get(req, res, next) {
+  console.log('download file')
+  const fileId = Number(req.params.fileId)
+  const userId = req.user.id
+  const folderId = Number(req.params.folderId)
+
+  const currentFile = await prisma.file.findFirst({
+    where: {
+      id: fileId,
+      userId
+    },
+    select: {
+      name: true,
+      url: true
+    }
+  })
+
+  const uploadDir = req.app.get('UPLOAD_PATH')
+  const fullPath = uploadDir + currentFile.url
+
+  try {
+    res.download(fullPath, currentFile.name)
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+}
+
 module.exports = {
   upload_file_get,
   upload_file_post,
   update_file_get,
   delete_file_post,
+  download_file_get,
 }

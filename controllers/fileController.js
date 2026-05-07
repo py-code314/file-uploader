@@ -1,8 +1,60 @@
 const multer = require('multer')
 const upload = require('../middleware/upload')
 const { prisma } = require('../lib/prisma')
+const { body, validationResult, matchedData } = require('express-validator')
 
+/* Error messages */
+const emptyErr = 'can not be empty.'
+const existsErr = 'already in use.'
 
+/* Validate form data */
+const validateFileName = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage(`File name ${emptyErr}`)
+    .bail()
+    .custom(async (name, { req }) => {
+      // const folderNameRegex = /^[a-zA-Z0-9\s_-]+$/
+      // if (!folderNameRegex.test(name)) {
+      //   throw new Error(
+      //     'Folder name can only contain letters, numbers, spaces, underscore and hyphen',
+      //   )
+      // }
+
+      const fileId = Number(req.params.fileId)
+      const userId = req.user.id
+      let folderId = null
+
+      // Get folder id if updating
+      if (req.originalUrl.includes('/update')) {
+        const currentFile = await prisma.file.findFirst({
+          where: {
+            id: fileId,
+            userId,
+          },
+          select: {
+            folderId: true
+          }
+        })
+        folderId = currentFile.folderId
+      } 
+
+      // Throw error if file already exists
+      const fileNameExists = await prisma.file.findFirst({
+        where: {
+          name,
+          folderId,
+        },
+      })
+
+      if (fileNameExists) {
+        throw new Error(`File name is ${existsErr}`)
+      }
+
+      return true
+    }),
+]
 
 
 /* Show file upload form */
@@ -67,7 +119,8 @@ async function upload_file_post(req, res, next) {
         })
       }
 
-      // Check if file exists
+      // TODO Check for duplicate file name
+      // Check for files length
       else if (!req.files.length) {
         return res.status(400).render('pages/fileForm', {
           title: 'Upload File',
@@ -131,6 +184,74 @@ async function update_file_get(req, res, next) {
     folderId
   })
 }
+
+/* Update file name */
+const update_file_post = [
+  validateFileName,
+
+  async (req, res, next) => {
+    const fileId = Number(req.params.fileId)
+    const userId = req.user.id
+    let folderId = null
+
+    // Get folder id
+    const currentFile = await prisma.file.findFirst({
+      where: {
+        id: fileId,
+        userId,
+      },
+      select: {
+        folderId: true
+      }
+    })
+
+    folderId = currentFile.folderId
+
+    // Get form data
+    const { name } = req.body
+    const fileData = {
+      name: name,
+    }
+
+    // Validate request
+    const errors = validationResult(req)
+
+    // Show errors if validation fails
+    if (!errors.isEmpty()) {
+      return res.status(400).render('pages/fileUpdateForm', {
+        title: 'Update file',
+        file: fileData,
+        folderId, // Pass it to be used in Cancel link
+        errors: errors.array(),
+      })
+    }
+
+    try {
+      // Get validated form data
+      const { name } = matchedData(req)
+
+      // Update file name
+      await prisma.file.update({
+        where: {
+          id: fileId,
+          userId,
+        },
+        data: {
+          name,
+        },
+      })
+
+      if (folderId) {
+        res.redirect(`/folders/${folderId}`)
+      } else {
+        res.redirect('/')
+      }
+    } catch (err) {
+      console.error(err)
+      return next(err)
+    }
+  },
+]
 
 /* Delete file */
 async function delete_file_post(req, res, next) {
@@ -202,6 +323,7 @@ module.exports = {
   upload_file_get,
   upload_file_post,
   update_file_get,
+  update_file_post,
   delete_file_post,
   download_file_get,
 }

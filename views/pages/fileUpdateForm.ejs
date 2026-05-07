@@ -16,7 +16,7 @@
         <% }  %>
 
        
-        <form class="form" action="<%= locals.folderId ? `/folders/${folderId}/files/${file.id}/update` : `/files/${file.id}/update` %>" method="POST">
+        <form class="form" action="<%= locals.folderId ? `/folders/${folderId}/files/${fileId}/update` : `/files/${fileId}/update` %>" method="POST">
           <h2 class="">Update File</h2>
           <div class="form__control">
             <label class="form__label" for="fileName">File Name (required)
@@ -28,7 +28,7 @@
               name="name"
               placeholder="Name"
               type="text"
-              value="<%= locals.file || locals.errors ? `${file.name}` : '' %>"
+              value="<%= locals.isUpdate || locals.errors ? `${file.name}` : '' %>"
               autofocus
               required
                 />

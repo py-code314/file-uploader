@@ -15,13 +15,6 @@ const validateFileName = [
     .withMessage(`File name ${emptyErr}`)
     .bail()
     .custom(async (name, { req }) => {
-      // const folderNameRegex = /^[a-zA-Z0-9\s_-]+$/
-      // if (!folderNameRegex.test(name)) {
-      //   throw new Error(
-      //     'Folder name can only contain letters, numbers, spaces, underscore and hyphen',
-      //   )
-      // }
-
       const fileId = Number(req.params.fileId)
       const userId = req.user.id
       let folderId = null
@@ -34,11 +27,11 @@ const validateFileName = [
             userId,
           },
           select: {
-            folderId: true
-          }
+            folderId: true,
+          },
         })
         folderId = currentFile.folderId
-      } 
+      }
 
       // Throw error if file already exists
       const fileNameExists = await prisma.file.findFirst({
@@ -56,14 +49,13 @@ const validateFileName = [
     }),
 ]
 
-
 /* Show file upload form */
 async function upload_file_get(req, res) {
   const folderId = Number(req.params.folderId)
 
   res.render('pages/fileForm', {
     title: 'Upload File',
-    folderId
+    folderId,
   })
 }
 
@@ -72,7 +64,6 @@ async function upload_file_post(req, res, next) {
   const uploadHandler = upload.array('fileUpload', 5)
 
   uploadHandler(req, res, async function (err) {
-
     try {
       // Handle Multer errors
       if (err instanceof multer.MulterError) {
@@ -131,12 +122,9 @@ async function upload_file_post(req, res, next) {
       const currentFiles = req.files
       const folderId = Number(req.params.folderId)
       const userId = req.user.id
-      
-
 
       // Add file data to db
       for (const file of currentFiles) {
-        
         await prisma.file.create({
           data: {
             name: file.originalname,
@@ -168,20 +156,21 @@ async function update_file_get(req, res, next) {
   const userId = req.user.id
   const folderId = Number(req.params.folderId)
 
-
   // Get file data
   const currentFile = await prisma.file.findFirst({
     where: {
       id: fileId,
       userId,
-      folderId
+      folderId,
     },
   })
- 
+
   res.render('pages/fileUpdateForm', {
     title: 'Update File',
     file: currentFile,
-    folderId
+    fileId,
+    folderId,
+    isUpdate: true
   })
 }
 
@@ -200,17 +189,15 @@ const update_file_post = [
         id: fileId,
         userId,
       },
-      select: {
-        folderId: true
-      }
+      
     })
 
     folderId = currentFile.folderId
 
     // Get form data
     const { name } = req.body
-    const fileData = {
-      name: name,
+    const fileName = {
+      name,
     }
 
     // Validate request
@@ -220,7 +207,8 @@ const update_file_post = [
     if (!errors.isEmpty()) {
       return res.status(400).render('pages/fileUpdateForm', {
         title: 'Update file',
-        file: fileData,
+        file: fileName,
+        fileId: currentFile.id,
         folderId, // Pass it to be used in Cancel link
         errors: errors.array(),
       })
@@ -283,7 +271,6 @@ async function delete_file_post(req, res, next) {
     } else {
       res.redirect('/')
     }
-    
   } catch (err) {
     console.error(err)
     return next(err)
@@ -300,12 +287,12 @@ async function download_file_get(req, res, next) {
   const currentFile = await prisma.file.findFirst({
     where: {
       id: fileId,
-      userId
+      userId,
     },
     select: {
       name: true,
-      url: true
-    }
+      url: true,
+    },
   })
 
   const uploadDir = req.app.get('UPLOAD_PATH')

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head -->
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <!-- Main content-->
+    <main class="main">
+      <% if(locals.breadcrumbs) { %>
+        <p><a href="/">Home</a>
+        <% breadcrumbs.forEach(breadcrumb => { %>
+          / <a href="/folders/<%= breadcrumb.id %>"><%= breadcrumb.name %></a>
+        <% }) %>
+        </p>
+
+      <% } %>
+
+      <h2><%= locals.file ? `${file.name}` : '' %></h2>
+      <!-- Show file details -->
+      <% if (locals.file ) { %>
+        // TODO Change it to a table with headings
+        <ul>
+          <li><%= file.name %></li>
+          <li><%= file.size %></li>
+          <li><%= file.type %></li>
+          <li><%= file.uploadedAt %></li>
+        </ul>
+      <% } %>
+
+      
+    </main>
+
+    <!-- Footer -->
+    <%- include('../partials/footer.ejs') %>
+  </body>
+</html>

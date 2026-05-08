@@ -5,7 +5,7 @@ const { body, validationResult, matchedData } = require('express-validator')
 // const path = require('node:path')
 const { getModifiedFileName } = require('../utils/modifyFileName')
 const fs = require('fs')
-
+const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -129,7 +129,11 @@ async function upload_file_post(req, res, next) {
       // Add file data to db
       for (const file of currentFiles) {
         // Check for same file name
-        const modifiedFileName = await getModifiedFileName(file, folderId, userId)
+        const modifiedFileName = await getModifiedFileName(
+          file,
+          folderId,
+          userId,
+        )
 
         await prisma.file.create({
           data: {
@@ -176,7 +180,7 @@ async function update_file_get(req, res, next) {
     file: currentFile,
     fileId,
     folderId,
-    isUpdate: true
+    isUpdate: true,
   })
 }
 
@@ -195,7 +199,6 @@ const update_file_post = [
         id: fileId,
         userId,
       },
-      
     })
 
     folderId = currentFile.folderId
@@ -326,7 +329,36 @@ async function download_file_get(req, res, next) {
 }
 
 async function open_file_get(req, res, next) {
-  res.send('open file')
+  const fileId = Number(req.params.fileId)
+  const folderId = Number(req.params.folderId)
+  const userId = req.user.id
+
+  // Get file data
+  const currentFile = await prisma.file.findFirst({
+    where: {
+      id: fileId,
+      folderId,
+      userId,
+    },
+  })
+
+  let breadcrumbs = []
+  // Run getBreadcrumbs only if folder id is a number to prevent error
+  // folderId must be a number for prisma.create() to work
+  if (folderId) {
+    breadcrumbs = await getBreadcrumbs(folderId, userId)
+  }
+
+  try {
+    res.render('pages/fileDetails', {
+      title: `${currentFile.name}`,
+      file: currentFile,
+      breadcrumbs,
+    })
+  } catch (err) {
+    console.error(err)
+    return next(err)
+  }
 }
 
 module.exports = {
@@ -336,5 +368,5 @@ module.exports = {
   update_file_post,
   delete_file_post,
   download_file_get,
-  open_file_get
+  open_file_get,
 }

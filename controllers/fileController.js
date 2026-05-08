@@ -3,7 +3,8 @@ const upload = require('../middleware/upload')
 const { prisma } = require('../lib/prisma')
 const { body, validationResult, matchedData } = require('express-validator')
 // const path = require('node:path')
-const {getModifiedFileName} = require('../utils/modifyFileName')
+const { getModifiedFileName } = require('../utils/modifyFileName')
+const fs = require('fs')
 
 
 /* Error messages */
@@ -263,13 +264,26 @@ async function delete_file_post(req, res, next) {
   folderId = currentFile.folderId
 
   try {
-    // Delete file
+    // Delete file data in db
     await prisma.file.delete({
       where: {
         id: fileId,
         userId,
       },
     })
+
+    // Delete file in uploads folder
+    if (currentFile) {
+      const fileName = currentFile.storedName
+      const uploadsDir = req.app.get('UPLOAD_PATH')
+      const fullPath = uploadsDir + currentFile.url
+
+      fs.unlink(fullPath, (err) => {
+        if (err) {
+          console.error('Failed to delete file:', err)
+        }
+      })
+    }
 
     if (folderId) {
       res.redirect(`/folders/${folderId}`)
@@ -300,8 +314,8 @@ async function download_file_get(req, res, next) {
     },
   })
 
-  const uploadDir = req.app.get('UPLOAD_PATH')
-  const fullPath = uploadDir + currentFile.url
+  const uploadsDir = req.app.get('UPLOAD_PATH')
+  const fullPath = uploadsDir + currentFile.url
 
   try {
     res.download(fullPath, currentFile.name)

@@ -2,6 +2,9 @@ const multer = require('multer')
 const upload = require('../middleware/upload')
 const { prisma } = require('../lib/prisma')
 const { body, validationResult, matchedData } = require('express-validator')
+// const path = require('node:path')
+const {getModifiedFileName} = require('../utils/modifyFileName')
+
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -110,7 +113,6 @@ async function upload_file_post(req, res, next) {
         })
       }
 
-      // TODO Check for duplicate file name
       // Check for files length
       else if (!req.files.length) {
         return res.status(400).render('pages/fileForm', {
@@ -120,14 +122,17 @@ async function upload_file_post(req, res, next) {
       }
 
       const currentFiles = req.files
-      const folderId = Number(req.params.folderId)
+      const folderId = req.params.folderId ? Number(req.params.folderId) : null
       const userId = req.user.id
 
       // Add file data to db
       for (const file of currentFiles) {
+        // Check for same file name
+        const modifiedFileName = await getModifiedFileName(file, folderId, userId)
+
         await prisma.file.create({
           data: {
-            name: file.originalname,
+            name: modifiedFileName,
             storedName: file.filename,
             size: file.size,
             type: file.mimetype,

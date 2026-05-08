@@ -7,6 +7,7 @@ const {
   update_file_post,
   delete_file_post,
   download_file_get,
+  open_file_get,
 } = require('../controllers/fileController')
 const { isAuth } = require('./auth')
 const upload = require('../middleware/upload')
@@ -14,6 +15,7 @@ const upload = require('../middleware/upload')
 /* New message routes */
 fileRouter.get('/upload', isAuth, upload_file_get) // protected route
 fileRouter.post('/upload', isAuth, upload_file_post)
+fileRouter.get('/:fileId', open_file_get)
 fileRouter.get('/:fileId/update', update_file_get)
 fileRouter.post('/:fileId/update', update_file_post)
 

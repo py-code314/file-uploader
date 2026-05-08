@@ -39,7 +39,7 @@
         <ul>
           <% folder.files.forEach(file => { %>
             <li>
-              <p><%= file.name %></p>
+              <p><a href="/folders/<%= file.folderId %>/files/<%= file.id %>"><%= file.name %></a></p>
               <a href="/folders/<%= file.folderId %>/files/<%= file.id %>/update">Rename</a>
               <!-- Download file -->
               <form action="/files/<%= file.id %>/download" method="get">

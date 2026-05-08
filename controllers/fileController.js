@@ -325,6 +325,10 @@ async function download_file_get(req, res, next) {
   }
 }
 
+async function open_file_get(req, res, next) {
+  res.send('open file')
+}
+
 module.exports = {
   upload_file_get,
   upload_file_post,
@@ -332,4 +336,5 @@ module.exports = {
   update_file_post,
   delete_file_post,
   download_file_get,
+  open_file_get
 }

@@ -45,6 +45,9 @@ const validateFolderName = [
         where: {
           name,
           parentId,
+          NOT: {
+            id: folderId,
+          },
         },
       })
 

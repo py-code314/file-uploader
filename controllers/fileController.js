@@ -42,6 +42,9 @@ const validateFileName = [
         where: {
           name,
           folderId,
+          NOT: {
+            id: fileId,
+          },
         },
       })
 

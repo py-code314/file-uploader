@@ -39,7 +39,7 @@
         <ul>
           <% folder.files.forEach(file => { %>
             <li>
-              <p><a href="/folders/<%= file.folderId %>/files/<%= file.id %>"><%= file.name %></a></p>
+              <p><a class="file__link" href="/folders/<%= file.folderId %>/files/<%= file.id %>" data-name="<%= file.name %>"><%= file.name %></a></p>
               <a href="/folders/<%= file.folderId %>/files/<%= file.id %>/update">Rename</a>
               <!-- Download file -->
               <form action="/files/<%= file.id %>/download" method="get">
@@ -58,4 +58,17 @@
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
   </body>
+  <script>
+    const fileLinks = document.querySelectorAll('.file__link')
+
+    fileLinks.forEach(fileLink => {
+      const fileLinkValue = fileLink.getAttribute('data-name')
+      const fileLinkArr = fileLinkValue.split('.')
+
+      // Remove file extension
+      const baseName = fileLinkArr[0]
+      fileLink.textContent = `${baseName}`
+    })
+    
+  </script>
 </html>

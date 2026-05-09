@@ -23,4 +23,17 @@
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
   </body>
+  <script>
+    const fileLinks = document.querySelectorAll('.file__link')
+
+    fileLinks.forEach(fileLink => {
+      const fileLinkValue = fileLink.getAttribute('data-name')
+      const fileLinkArr = fileLinkValue.split('.')
+
+      // Remove file extension
+      const baseName = fileLinkArr[0]
+      fileLink.textContent = `${baseName}`
+    })
+    
+  </script>
 </html>

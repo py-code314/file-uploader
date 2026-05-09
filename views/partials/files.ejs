@@ -4,7 +4,7 @@
     <ul class="file__list">
       <% files.forEach((file) => { %>
         <li class="file" >
-          <p class="file__name"><a href="/files/<%= file.id %>"><%= file.name %></a></p>
+          <p class="file__name"><a class="file__link" href="/files/<%= file.id %>" data-name="<%= file.name %>"><%= file.name %></a></p>
           <div class="btn-group">
             <!-- Update file name -->
             <a class="link link--update file__update"  href="/files/<%= file.id %>/update">
@@ -22,9 +22,6 @@
             </form>
           </div>
         </li>
-
-        
-        
       <% }); %>
     </ul>
   <% } %>

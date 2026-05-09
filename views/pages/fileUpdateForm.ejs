@@ -28,10 +28,11 @@
               name="name"
               placeholder="Name"
               type="text"
-              value="<%= locals.isUpdate || locals.errors ? `${file.name}` : '' %>"
+              value="<%= locals.isUpdate || locals.errors ? `${fileName}` : '' %>"
               autofocus
-              required
+              
                 />
+            
           </div>
           <div class="form__buttons">
             <a href="<%= locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>

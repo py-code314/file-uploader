@@ -2,7 +2,7 @@ const multer = require('multer')
 const upload = require('../middleware/upload')
 const { prisma } = require('../lib/prisma')
 const { body, validationResult, matchedData } = require('express-validator')
-// const path = require('node:path')
+const path = require('node:path')
 const { getModifiedFileName } = require('../utils/modifyFileName')
 const fs = require('fs')
 const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
@@ -177,10 +177,13 @@ async function update_file_get(req, res, next) {
       folderId,
     },
   })
+  const originalName = currentFile.name 
+  const extension = path.extname(originalName)
+  const baseName = path.basename(originalName, extension)
 
   res.render('pages/fileUpdateForm', {
     title: 'Update File',
-    file: currentFile,
+    fileName: baseName,
     fileId,
     folderId,
     isUpdate: true,
@@ -208,9 +211,10 @@ const update_file_post = [
 
     // Get form data
     const { name } = req.body
-    const fileName = {
-      name,
-    }
+    // const fileName = {
+    //   name,
+    // }
+    const fileName = name
 
     // Validate request
     const errors = validationResult(req)
@@ -219,7 +223,8 @@ const update_file_post = [
     if (!errors.isEmpty()) {
       return res.status(400).render('pages/fileUpdateForm', {
         title: 'Update file',
-        file: fileName,
+        // file: fileName,
+        fileName,
         fileId: currentFile.id,
         folderId, // Pass it to be used in Cancel link
         errors: errors.array(),

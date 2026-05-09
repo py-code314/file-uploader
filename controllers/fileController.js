@@ -208,12 +208,11 @@ const update_file_post = [
     })
 
     folderId = currentFile.folderId
+    const originalName = currentFile.name
+    const extension = path.extname(originalName)
 
     // Get form data
     const { name } = req.body
-    // const fileName = {
-    //   name,
-    // }
     const fileName = name
 
     // Validate request
@@ -223,7 +222,6 @@ const update_file_post = [
     if (!errors.isEmpty()) {
       return res.status(400).render('pages/fileUpdateForm', {
         title: 'Update file',
-        // file: fileName,
         fileName,
         fileId: currentFile.id,
         folderId, // Pass it to be used in Cancel link
@@ -234,6 +232,7 @@ const update_file_post = [
     try {
       // Get validated form data
       const { name } = matchedData(req)
+      const fullName = `${name}${extension}`
 
       // Update file name
       await prisma.file.update({
@@ -242,7 +241,7 @@ const update_file_post = [
           userId,
         },
         data: {
-          name,
+          name: fullName,
         },
       })
 

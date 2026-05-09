@@ -148,6 +148,7 @@
 
         const fileType = file.type
         const fileURL = URL.createObjectURL(file)
+        console.log('file url:', fileURL)
 
         // Image file
         if(fileType.startsWith('image/')) {

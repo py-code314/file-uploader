@@ -17,15 +17,18 @@
 
       <% } %>
 
-      <h2><%= locals.file ? `${file.name}` : '' %></h2>
+      <div class="preview">
+
+      </div>
       <!-- Show file details -->
       <% if (locals.file ) { %>
-        <!-- // TODO Change it to a table with headings -->
         <ul>
-          <li><%= file.name %></li>
-          <li><%= file.size %></li>
-          <li><%= file.type %></li>
-          <li><%= file.uploadedAt %></li>
+          <li class="file__name" data-name="<%= file.name %>">Name: <%= file.name %></li>
+          <li class="file__size" data-size="<%= file.size %>"><%= file.size %></li>
+          <li class="file__type" data-type="<%= file.type %>"><%= file.type %></li>
+          <li class="file__date" data-date="<%= file.uploadedAt.toISOString() %>"><%= file.uploadedAt.toUTCString() %></li>
+          <!-- // TODO Hide this element -->
+          <li class="file__url hidden" data-url="<%= file.url %>"><%= file.url %></li>
         </ul>
       <% } %>
 
@@ -35,4 +38,106 @@
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
   </body>
+
+  <script>
+    const preview = document.querySelector(".preview");
+    const fileType = document.querySelector('.file__type')
+    const fileTypeValue = fileType.getAttribute('data-type')
+    console.log(fileTypeValue)
+    const fileURL = document.querySelector('.file__url').getAttribute('data-url')
+    const fileName = document.querySelector('.file__name')
+    const fileNameValue = fileName.getAttribute('data-name')
+    const fileSize = document.querySelector('.file__size')
+    const fileSizeValue = fileSize.getAttribute('data-size')
+    const fileDate = document.querySelector('.file__date')
+    const fileDateValue = fileDate.getAttribute('data-date')
+    // console.log(fileUrl)
+
+    function previewFile() {
+      // Image file
+      if(fileTypeValue.startsWith('image/')) {
+        const image = document.createElement("img");
+        image.src = fileURL;
+        image.alt = image.title = fileNameValue;
+        image.style.width = "50px"
+        image.style.height = "50px"
+
+        preview.appendChild(image);
+      } else if (fileTypeValue.startsWith('audio/')) { // Audio file
+
+        // Add audio controls to the file
+        const audio = document.createElement("audio");
+        audio.src = fileURL;
+        audio.controls = true; // Shows play/pause and volume buttons
+        audio.style.width = "200px";
+        
+        preview.appendChild(audio);
+
+      } else if (fileTypeValue.startsWith('video/')) { // Video file
+        const video = document.createElement("video")
+        video.src = fileURL
+        video.style.width = "50px"
+        video.style.height = "50px"
+        video.currentTime = 1; // Load the first frame as a "preview"
+
+        preview.appendChild(video);
+
+      } else if (fileTypeValue === 'application/msword' || fileTypeValue === 
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        // Show doc icon
+        const icon = document.createElement("div");
+        icon.textContent = "📄";
+        icon.style.width = "50px"
+        icon.style.height = "50px"
+
+        preview.appendChild(icon);
+      } else if (fileTypeValue === 'application/pdf') {
+        // Show pdf icon
+        const icon = document.createElement("div");
+        icon.textContent = "PDF";
+        icon.style.width = "50px"
+        icon.style.height = "50px"
+
+        preview.appendChild(icon);
+      }
+    }
+
+    function removeFileExtensionAndDisplayFileType(fullName) {
+      const fileNameArr = fullName.split('.')
+
+      // Remove file extension
+      const baseName = fileNameArr[0]
+      fileName.textContent = `Name: ${baseName}`
+
+      // Show file type
+      const extension = fileNameArr[1]
+      fileType.textContent = `Type: ${extension}`
+    }
+    
+    function displayFileSize(size) {
+      size = Number(size)
+      let number = ''
+
+      if (size < 1024) {
+        number = `${size} bytes`;
+      } else if (size >= 1024 && size < 1024 * 1024) {
+        number = `${(size / 1024).toFixed(2)} KB`;
+      } else {
+        number = `${(size / (1024 * 1024)).toFixed(2)} MB`;
+      }
+      
+      fileSize.textContent = `Size: ${number}`
+    }
+
+    function displayDate(date) {
+      // Convert the date into local date and time
+      const localDate = new Date(date).toLocaleString()
+      fileDate.textContent = `Time Uploaded: ${localDate}`
+    }
+
+    previewFile()
+    removeFileExtensionAndDisplayFileType(fileNameValue)
+    displayFileSize(fileSizeValue)
+    displayDate(fileDateValue)
+  </script>
 </html>

@@ -250,9 +250,19 @@ async function open_folder_get(req, res, next) {
       userId,
     },
     include: {
-      files: true,
-      children: true,
+      files: {
+        orderBy: {
+          uploadedAt: 'desc'
+        }
+      },
+      children: {
+        orderBy: {
+          createdAt: 'desc'
+        }
+      },
+    
     },
+    
   })
 
   const breadcrumbs = await getBreadcrumbs(folderId, userId)

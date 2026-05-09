@@ -13,12 +13,18 @@ async function home_page_get(req, res, next) {
           userId,
           parentId: null,
         },
+        orderBy: {
+          createdAt: 'desc'
+        }
       })
       // Get all files in root folder
       const files = await prisma.file.findMany({
         where: {
           userId,
           folderId: null,
+        },
+        orderBy: {
+          uploadedAt: 'desc',
         },
       })
 

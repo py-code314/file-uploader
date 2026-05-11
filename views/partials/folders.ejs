@@ -12,7 +12,7 @@
 
             <!-- Delete folder -->
             <form id="folder-form" action="/folders/<%= folder.id %>/delete" method="POST" >
-              <button class="btn btn--primary btn--delete" type="submit">
+              <button class="btn btn--primary btn--delete" type="submit" onclick="return confirm('This will delete ALL data inside this folder. Are you sure you want to continue?')">
                 Delete</button>
             </form>
           </div>

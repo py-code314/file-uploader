@@ -26,7 +26,7 @@
               <p class="folder__name"><a href="/folders/<%= folder.id %>"><%= folder.name %></a></p>
               <a   href="/folders/<%= folder.id %>/update">Rename</a>
               <form  action="/folders/<%= folder.id %>/delete" method="POST" >
-                <button class="btn btn--delete" type="submit">
+                <button class="btn btn--delete" type="submit" onclick="return confirm('This will delete ALL data inside this folder. Are you sure you want to continue?')">
                 Delete</button>
               </form>
             </li>

@@ -2,6 +2,8 @@
 const { body, validationResult, matchedData } = require('express-validator')
 const { prisma } = require('../lib/prisma.js')
 const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
+const { getNestedFolderIds } = require('../utils/nestedFolderIds.js')
+const fs = require('fs')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -208,18 +210,49 @@ async function delete_folder_post(req, res, next) {
   const folderId = Number(req.params.folderId)
   const userId = req.user.id
   let parentId = null
+
   // Get folder data
-  const folder = await prisma.folder.findFirst({
+  const currentFolder = await prisma.folder.findFirst({
     where: {
       id: folderId,
       userId,
     },
   })
 
-  parentId = folder.parentId
+  parentId = currentFolder.parentId
 
   try {
-    // Delete folder
+    // Get all nested folder ids
+    let nestedFolderIds = await getNestedFolderIds(folderId, userId)
+    nestedFolderIds.push(folderId)
+
+    // Get all files to be deleted
+    const filesToDelete = await prisma.file.findMany({
+      where: {
+        folderId: {
+          in: nestedFolderIds,
+        },
+      },
+      select: {
+        url: true,
+      },
+    })
+
+    // Delete files in uploads folder
+    filesToDelete.forEach((file) => {
+      const uploadsDir = req.app.get('UPLOAD_PATH')
+      const fullPath = uploadsDir + file.url
+
+      fs.unlink(fullPath, (err) => {
+        if (err) {
+          console.error('Failed to delete file:', err)
+        }
+      })
+    })
+
+    // Delete folder in db
+    // All nested folders and files in parent folder will be deleted
+    // because of cascade deletion
     await prisma.folder.delete({
       where: {
         id: folderId,
@@ -232,7 +265,6 @@ async function delete_folder_post(req, res, next) {
     } else {
       res.redirect('/')
     }
-    
   } catch (err) {
     console.error(err)
     return next(err)

@@ -43,15 +43,28 @@ const validateFolderName = [
       }
 
       // Throw error if folder already exists
-      const folder = await prisma.folder.findFirst({
-        where: {
-          name,
-          parentId,
-          NOT: {
-            id: folderId,
+      let folder
+
+      // When updating
+      if (folderId) {
+        folder = await prisma.folder.findFirst({
+          where: {
+            name,
+            parentId,
+            NOT: { // Exclude current folder id
+              id: folderId,
+            },
           },
-        },
-      })
+        })
+      } else { // There is no current folder id, only parent id when adding a new folder
+        folder = await prisma.folder.findFirst({
+          where: {
+            name,
+            parentId,
+          },
+        })
+      }
+      
 
       if (folder) {
         throw new Error(`Folder name is ${existsErr}`)
@@ -252,7 +265,7 @@ async function delete_folder_post(req, res, next) {
 
     // Delete folder in db
     // All nested folders and files in parent folder will be deleted
-    // because of cascade deletion
+    // because of cascade deletion 
     await prisma.folder.delete({
       where: {
         id: folderId,

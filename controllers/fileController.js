@@ -6,6 +6,8 @@ const path = require('node:path')
 const { getModifiedFileName } = require('../utils/modifyFileName')
 const fs = require('fs')
 const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
+const uploadFiles = require('../utils/uploadFiles.js')
+const handleMulterErrors = require('../utils/multerErrors.js')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -73,36 +75,9 @@ async function upload_file_post(req, res, next) {
   uploadHandler(req, res, async function (err) {
     try {
       // Handle Multer errors
+
       if (err instanceof multer.MulterError) {
-        // Clean up any partial uploads
-        if (req.files && req.files.length > 0) {
-          req.files.forEach((file) => {
-            if (fs.existsSync(file.path)) {
-              fs.unlinkSync(file.path)
-            }
-          })
-        }
-
-        const errorMap = {
-          LIMIT_FILE_SIZE: {
-            status: 413,
-            message: 'One of the files you selected is too large',
-          },
-          LIMIT_FILE_COUNT: {
-            status: 400,
-            message: 'Too many files.',
-          },
-          LIMIT_UNEXPECTED_FILE: {
-            status: 400,
-            message:
-              'Invalid upload field. Please use the provided buttons to upload files.',
-          },
-        }
-
-        const errorInfo = errorMap[err.code] || {
-          status: 400,
-          message: 'File upload error',
-        }
+        const errorInfo = await handleMulterErrors(req.files, err)
 
         return res.status(errorInfo.status).render('pages/fileForm', {
           title: 'Upload File',
@@ -126,54 +101,35 @@ async function upload_file_post(req, res, next) {
       }
 
       // Upload files to cloudinary
-      const uploadPromises = req.files.map((file) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-        const extension = path.extname(file.originalname)
-        const sanitizedName = path
-          .basename(file.originalname, extension)
-          .toLowerCase()
-          .replace(/[^a-z0-9]/g, '-')
-        let uniqueFileName = `${sanitizedName}-${uniqueSuffix}`
-        if (extension === '.doc' || extension === '.docx') {
-          uniqueFileName = `${sanitizedName}-${uniqueSuffix}${extension}`
-        }
+      const results = await uploadFiles(req.files)
 
-        return uploadToCloudinary(file.buffer, {
-          resource_type: 'auto',
-          asset_folder: 'file-uploader',
-          public_id: uniqueFileName, // Define custom public id
-          filename_override: file.originalname,
-        })
-      })
-
-      const results = await Promise.all(uploadPromises)
-      console.log('🚀 ~ upload_file_post ~ results:', results)
-
-      const currentFiles = req.files
       const folderId = req.params.folderId ? Number(req.params.folderId) : null
       const userId = req.user.id
 
       // Add file data to db
-      // for (const file of currentFiles) {
-      //   // Check for same file name
-      //   const modifiedFileName = await getModifiedFileName(
-      //     file,
-      //     folderId,
-      //     userId,
-      //   )
+      for (const result of results) {
+        const extension = result.format || result.url.split('.').pop()
+        const fullName = `${result.original_filename}.${extension}`
 
-      //   await prisma.file.create({
-      //     data: {
-      //       name: modifiedFileName,
-      //       storedName: file.filename,
-      //       size: file.size,
-      //       type: file.mimetype,
-      //       url: `/uploads/${file.filename}`,
-      //       userId: userId,
-      //       folderId: folderId,
-      //     },
-      //   })
-      // }
+        // Check for same file name
+        const modifiedFileName = await getModifiedFileName(
+          fullName,
+          folderId,
+          userId,
+        )
+
+        await prisma.file.create({
+          data: {
+            name: modifiedFileName,
+            storedName: result.public_id,
+            size: result.bytes,
+            type: extension,
+            url: result.secure_url,
+            userId: userId,
+            folderId: folderId,
+          },
+        })
+      }
 
       // Successful upload
       if (folderId) {

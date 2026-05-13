@@ -1,10 +1,9 @@
 const path = require('node:path')
 const { prisma } = require('../lib/prisma')
 
-async function getModifiedFileName(file, folderId, userId) {
-  const originalName = file.originalname
-  const extension = path.extname(file.originalname)
-  const fileName = path.basename(file.originalname, extension)
+async function getModifiedFileName(fullName, folderId, userId) {
+  const extension = fullName.split('.').pop()
+  const fileName = fullName.split('.')[0]
 
   // Find all files starting with fileName
   const allFiles = await prisma.file.findMany({
@@ -21,21 +20,21 @@ async function getModifiedFileName(file, folderId, userId) {
   })
 
   // Initial value
-  let modifiedFileName = file.originalname
+  let modifiedFileName = fullName
 
-  const fileNameExists = allFiles.some((file) => file.name === originalName)
+  const fileNameExists = allFiles.some((file) => file.name === fullName)
 
   // Add an incrementing number next to file name
   if (fileNameExists) {
     counter = 1
     while (
       allFiles.some(
-        (file) => file.name === `${fileName}(${counter})${extension}`,
+        (file) => file.name === `${fileName}(${counter}).${extension}`,
       )
     ) {
       counter++
     }
-    modifiedFileName = `${fileName}(${counter})${extension}`
+    modifiedFileName = `${fileName}(${counter}).${extension}`
   }
 
   return modifiedFileName

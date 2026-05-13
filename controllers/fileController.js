@@ -1,5 +1,5 @@
 const multer = require('multer')
-const upload = require('../middleware/upload')
+const { upload, uploadToCloudinary } = require('../middleware/upload')
 const { prisma } = require('../lib/prisma')
 const { body, validationResult, matchedData } = require('express-validator')
 const path = require('node:path')
@@ -125,31 +125,55 @@ async function upload_file_post(req, res, next) {
         })
       }
 
+      // Upload files to cloudinary
+      const uploadPromises = req.files.map((file) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+        const extension = path.extname(file.originalname)
+        const sanitizedName = path
+          .basename(file.originalname, extension)
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, '-')
+        let uniqueFileName = `${sanitizedName}-${uniqueSuffix}`
+        if (extension === '.doc' || extension === '.docx') {
+          uniqueFileName = `${sanitizedName}-${uniqueSuffix}${extension}`
+        }
+
+        return uploadToCloudinary(file.buffer, {
+          resource_type: 'auto',
+          asset_folder: 'file-uploader',
+          public_id: uniqueFileName, // Define custom public id
+          filename_override: file.originalname,
+        })
+      })
+
+      const results = await Promise.all(uploadPromises)
+      console.log('🚀 ~ upload_file_post ~ results:', results)
+
       const currentFiles = req.files
       const folderId = req.params.folderId ? Number(req.params.folderId) : null
       const userId = req.user.id
 
       // Add file data to db
-      for (const file of currentFiles) {
-        // Check for same file name
-        const modifiedFileName = await getModifiedFileName(
-          file,
-          folderId,
-          userId,
-        )
+      // for (const file of currentFiles) {
+      //   // Check for same file name
+      //   const modifiedFileName = await getModifiedFileName(
+      //     file,
+      //     folderId,
+      //     userId,
+      //   )
 
-        await prisma.file.create({
-          data: {
-            name: modifiedFileName,
-            storedName: file.filename,
-            size: file.size,
-            type: file.mimetype,
-            url: `/uploads/${file.filename}`,
-            userId: userId,
-            folderId: folderId,
-          },
-        })
-      }
+      //   await prisma.file.create({
+      //     data: {
+      //       name: modifiedFileName,
+      //       storedName: file.filename,
+      //       size: file.size,
+      //       type: file.mimetype,
+      //       url: `/uploads/${file.filename}`,
+      //       userId: userId,
+      //       folderId: folderId,
+      //     },
+      //   })
+      // }
 
       // Successful upload
       if (folderId) {
@@ -177,7 +201,7 @@ async function update_file_get(req, res, next) {
       folderId,
     },
   })
-  const originalName = currentFile.name 
+  const originalName = currentFile.name
   const extension = path.extname(originalName)
   const baseName = path.basename(originalName, extension)
 

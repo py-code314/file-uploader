@@ -254,11 +254,22 @@ async function delete_file_post(req, res, next) {
       id: fileId,
       userId,
     },
+    select: {
+      storedName: true,
+      resourceType: true
+    }
   })
+
+  if(!currentFile) throw new Error('File not found')
 
   folderId = currentFile.folderId
 
   try {
+    // Delete file in cloudinary
+    await cloudinary.uploader.destroy(currentFile.storedName, {
+      resource_type: currentFile.resourceType
+    })
+
     // Delete file data in db
     await prisma.file.delete({
       where: {
@@ -266,19 +277,6 @@ async function delete_file_post(req, res, next) {
         userId,
       },
     })
-
-    // Delete file in uploads folder
-    if (currentFile) {
-      const fileName = currentFile.storedName
-      const uploadsDir = req.app.get('UPLOAD_PATH')
-      const fullPath = uploadsDir + currentFile.url
-
-      fs.unlink(fullPath, (err) => {
-        if (err) {
-          console.error('Failed to delete file:', err)
-        }
-      })
-    }
 
     if (folderId) {
       res.redirect(`/folders/${folderId}`)
@@ -314,7 +312,9 @@ async function download_file_get(req, res, next) {
 
     if(!currentFile) throw new Error('File not found')
 
+    // Download file from cloudinary
     const downloadUrl = cloudinary.url(currentFile.storedName, {
+      // Downloaded file name reflects updated file name if user changes a file name
       flags: `attachment:${currentFile.name.split('.')[0]}`,
       resource_type: currentFile.resourceType,
     })

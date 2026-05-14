@@ -5,6 +5,8 @@ const { body, validationResult, matchedData } = require('express-validator')
 const path = require('node:path')
 const { getModifiedFileName } = require('../utils/modifyFileName')
 const fs = require('fs')
+
+const https = require('https')
 const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
 const uploadFiles = require('../utils/uploadFiles.js')
 const handleMulterErrors = require('../utils/multerErrors.js')
@@ -293,22 +295,23 @@ async function download_file_get(req, res, next) {
   const userId = req.user.id
   const folderId = Number(req.params.folderId)
 
-  const currentFile = await prisma.file.findFirst({
-    where: {
-      id: fileId,
-      userId,
-    },
-    select: {
-      name: true,
-      url: true,
-    },
-  })
-
-  const uploadsDir = req.app.get('UPLOAD_PATH')
-  const fullPath = uploadsDir + currentFile.url
-
   try {
-    res.download(fullPath, currentFile.name)
+    const currentFile = await prisma.file.findFirst({
+      where: {
+        id: fileId,
+        userId,
+      },
+      select: {
+        name: true,
+        url: true,
+      },
+    })
+
+    if(!currentFile) throw new Error('File not found')
+
+    const downloadUrl = currentFile.url.replace('/upload/', '/upload/fl_attachment/')
+
+    res.redirect(downloadUrl)
   } catch (err) {
     console.error(err)
     next(err)

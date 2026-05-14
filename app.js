@@ -31,7 +31,7 @@ app.set('view engine', 'ejs')
 const assetsPath = path.join(__dirname, 'public')
 app.use(express.static(assetsPath))
 
-app.set('UPLOAD_PATH', assetsPath)
+// app.set('UPLOAD_PATH', assetsPath)
 
 // Middleware to process request body
 app.use(express.json())

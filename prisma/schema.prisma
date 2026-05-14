@@ -36,7 +36,8 @@ model File {
   name String 
   storedName String @unique
   size BigInt // Use BigInt for future-proofing
-  type String // mime-type 
+  type String // type of file
+  resourceType String
   url  String
 
   // Metadata

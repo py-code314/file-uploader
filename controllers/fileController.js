@@ -10,6 +10,7 @@ const https = require('https')
 const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
 const uploadFiles = require('../utils/uploadFiles.js')
 const handleMulterErrors = require('../utils/multerErrors.js')
+const { cloudinary } = require('../config/cloudinaryConfig.js')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -104,6 +105,7 @@ async function upload_file_post(req, res, next) {
 
       // Upload files to cloudinary
       const results = await uploadFiles(req.files)
+      console.log("🚀 ~ upload_file_post ~ results:", results)
 
       const folderId = req.params.folderId ? Number(req.params.folderId) : null
       const userId = req.user.id
@@ -126,6 +128,7 @@ async function upload_file_post(req, res, next) {
             storedName: result.public_id,
             size: result.bytes,
             type: extension,
+            resourceType: result.resource_type,
             url: result.secure_url,
             userId: userId,
             folderId: folderId,
@@ -304,12 +307,17 @@ async function download_file_get(req, res, next) {
       select: {
         name: true,
         url: true,
+        storedName: true,
+        resourceType: true
       },
     })
 
     if(!currentFile) throw new Error('File not found')
 
-    const downloadUrl = currentFile.url.replace('/upload/', '/upload/fl_attachment/')
+    const downloadUrl = cloudinary.url(currentFile.storedName, {
+      flags: `attachment:${currentFile.name.split('.')[0]}`,
+      resource_type: currentFile.resourceType,
+    })
 
     res.redirect(downloadUrl)
   } catch (err) {

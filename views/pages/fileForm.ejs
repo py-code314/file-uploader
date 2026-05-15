@@ -27,6 +27,7 @@
             <ul class="errors__list"></ul>
           </div>
           
+          <button class="btn-clear" type="button">Clear</button>
           <button class="btn-submit">Submit</button>
         </form>
         
@@ -41,12 +42,16 @@
 
   <script>
     const fileInput = document.querySelector("#fileUpload");
+    
     const errorsList = document.querySelector('.errors__list')
     const preview = document.querySelector(".preview");
     const submitBtn = document.querySelector(".btn-submit")
+    const clearBtn = document.querySelector('.btn-clear')
 
-    fileInput.style.opacity = 0;
+
+    // fileInput.style.opacity = 0;
     submitBtn.disabled = true
+    clearBtn.disabled = true
 
     
     let currentFilesArr
@@ -126,6 +131,8 @@
 
       // Update fileInput element directly
       fileInput.files = dt.files; 
+
+      clearBtn.disabled = false
     }
 
 
@@ -161,14 +168,6 @@
           listItem.appendChild(image);
           listItem.appendChild(para);
         } else if (fileType.startsWith('audio/')) { // Audio file
-
-          // Show music icon
-          // const icon = document.createElement("div");
-          // icon.textContent = "🎵";
-
-          // listItem.appendChild(icon);
-          // listItem.appendChild(para);
-
           // User can listen to the file before uploading
           const audio = document.createElement("audio");
           audio.src = fileURL;
@@ -230,5 +229,13 @@
         previewFiles()
       }
     );
+
+    clearBtn.addEventListener('click', () => {
+      currentFilesArr = []
+      updateFileList()
+      previewFiles()
+      submitBtn.disabled = true
+      clearBtn.disabled = true
+    })
   </script>
 </html>

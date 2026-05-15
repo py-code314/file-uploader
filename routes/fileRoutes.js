@@ -12,9 +12,11 @@ const {
 const { isAuth } = require('./auth')
 const upload = require('../middleware/upload')
 
+fileRouter.use(isAuth)
+
 /* New message routes */
-fileRouter.get('/upload', isAuth, upload_file_get) // protected route
-fileRouter.post('/upload', isAuth, upload_file_post)
+fileRouter.get('/upload', upload_file_get)
+fileRouter.post('/upload', upload_file_post)
 fileRouter.get('/:fileId', open_file_get)
 fileRouter.get('/:fileId/update', update_file_get)
 fileRouter.post('/:fileId/update', update_file_post)

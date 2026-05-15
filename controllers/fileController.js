@@ -11,6 +11,7 @@ const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
 const uploadFiles = require('../utils/uploadFiles.js')
 const handleMulterErrors = require('../utils/multerErrors.js')
 const { cloudinary } = require('../config/cloudinaryConfig.js')
+const generateFilePreview = require('../utils/filePreview.js')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -340,6 +341,8 @@ async function open_file_get(req, res, next) {
     },
   })
 
+  const {previewUrl, previewType} = await generateFilePreview(currentFile)
+
   let breadcrumbs = []
   // Run getBreadcrumbs only if folder id is a number to prevent error
   // folderId must be a number for prisma.create() to work
@@ -351,6 +354,8 @@ async function open_file_get(req, res, next) {
     res.render('pages/fileDetails', {
       title: `${currentFile.name}`,
       file: currentFile,
+      previewUrl,
+      previewType,
       breadcrumbs,
     })
   } catch (err) {

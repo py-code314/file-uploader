@@ -18,7 +18,7 @@
       <% } %>
 
       <div class="preview">
-
+        <img src="<%= locals.previewUrl %>" alt="">
       </div>
       <!-- Show file details -->
       <% if (locals.file ) { %>
@@ -39,11 +39,11 @@
     <%- include('../partials/footer.ejs') %>
   </body>
 
-  <script>
+   <!-- <script>
     const preview = document.querySelector(".preview");
     const fileType = document.querySelector('.file__type')
     const fileTypeValue = fileType.getAttribute('data-type')
-    console.log(fileTypeValue)
+    // console.log(fileTypeValue)
     const fileURL = document.querySelector('.file__url').getAttribute('data-url')
     const fileName = document.querySelector('.file__name')
     const fileNameValue = fileName.getAttribute('data-name')
@@ -54,6 +54,7 @@
     // console.log(fileUrl)
 
     function previewFile() {
+      const imageFileTypes = []
       // Image file
       if(fileTypeValue.startsWith('image/')) {
         const image = document.createElement("img");
@@ -73,7 +74,7 @@
         
         preview.appendChild(audio);
 
-      } else if (fileTypeValue.startsWith('video/')) { // Video file
+      } else if (fileTypeValue === 'mp4') { // Video file
         const video = document.createElement("video")
         video.src = fileURL
         video.style.width = "50px"
@@ -139,5 +140,5 @@
     removeFileExtensionAndDisplayFileType(fileNameValue)
     displayFileSize(fileSizeValue)
     displayDate(fileDateValue)
-  </script>
+  </script>  -->
 </html>

@@ -101,3 +101,71 @@ a {
     url('/fonts/figtree/figtree-regular.woff') format('woff');
 }
 
+/* CSS variables */
+:root {
+  /* Core units
+  ============== */
+  --base-unit: 0.25rem;
+  --base-half-unit: calc(var(--base-unit) / 2);
+
+  /* Typography
+  ============== */
+  /* Fonts */
+  --ff-primary: 'Figtree Regular' ;
+  --ff-secondary: 'Besley Medium';
+  --ff-tertiary: 'Besley Regular';
+  --ff-header: 'Besley Bold';
+
+  /* Font sizes */
+  --font-base-unit: var(--base-unit);
+  --fs-12: calc(var(--font-base-unit) * 3);
+  --fs-16: calc(var(--font-base-unit) * 4);
+  --fs-20: calc(var(--font-base-unit) * 5);
+  --fs-24: calc(var(--font-base-unit) * 6);
+  --fs-32: calc(var(--font-base-unit) * 8);
+  --fs-40: calc(var(--font-base-unit) * 10);
+  --fs-48: calc(var(--font-base-unit) * 12);
+  --fs-64: calc(var(--font-base-unit) * 16);
+
+  /* Font weights */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semi-bold: 600;
+  --fw-bold: 700;
+
+  /* Space
+  ========= */
+  --space-base-unit: var(--base-unit);
+  --space-4: var(--space-base-unit);
+  --space-8: calc(var(--space-base-unit) * 2);
+  --space-10: calc(var(--space-base-unit) * 2.5);
+  --space-12: calc(var(--space-base-unit) * 3);
+  --space-16: calc(var(--space-base-unit) * 4);
+  --space-24: calc(var(--space-base-unit) * 6);
+  --space-32: calc(var(--space-base-unit) * 8);
+  --space-64: calc(var(--space-base-unit) * 16);
+  --space-96: calc(var(--space-base-unit) * 24);
+  --space-128: calc(var(--space-base-unit) * 32);
+  --space-144: calc(var(--space-base-unit) * 36);
+
+  /* color
+  ========= */
+  --clr-gray-1: #ffffff;
+  --clr-gray-2: #eeeeee;
+  --clr-gray-3: #d5d5d5;
+  --clr-gray-7: #6f6f6f;
+  --clr-white: #fff;
+  --clr-black: #000;
+
+  /* Border
+  ========== */
+  /* Border radius */
+  --radius-base-unit: 0.3125rem;
+  --bd-radius-small: calc(var(--radius-base-unit) * 1);
+  --bd-radius-medium: calc(var(--radius-base-unit) * 2);
+  --bd-radius-large: calc(var(--radius-base-unit) * 8);
+  --bd-radius-round: 50%;
+
+  /* Box shadow */
+  --box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+}

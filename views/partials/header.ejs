@@ -1,31 +1,41 @@
 <header class="header">
   <div class="brand">
-    <div class="logo"></div>
+    <div class="logo">
+      <img src="/icons/diamond-icon.svg" alt="" width="40" height="40">
+    </div>
 
     <div class="title-container">
       <!-- Title -->
       <a href="/">
-        <h1 class="title">Aegis</h1>
+        <h1 class="title">Nexus</h1>
       </a>
     </div>
   </div>
 
-  <nav>
-    <ul>
-        <li><a class="menu__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/files/upload` : `/files/upload` %>">Add File</a></li>
+  <nav class="nav">
+    <ul class="nav__list">
+      <div class="nav__main">
+        <li class="nav__item"><a href="/" class="nav__link">Home</a></li>
+        <li class="nav__item">About Us</li>
+        <li class="nav__item">Features</li>
+        <li class="nav__item">Pricing</li>
+      </div>
+        
+      <div class="nav__user">
         <% if(locals.currentUser) { %>
-          <!-- <li><a class="menu__link link link--cta" href="/folders/new">New Folder</a></li> -->
-          <li><a class="menu__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/new` : `/folders/new` %>">New Folder</a></li>
-          <li class="menu__item"><a class="menu__link" href=""><%= currentUser.name %></a></li>
+          <li class="nav__item"><a class="nav__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/files/upload` : `/files/upload` %>">Add File</a></li>
+          <li class="nav__item"><a class="nav__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/new` : `/folders/new` %>">New Folder</a></li>
+          <li class="nav__item"><a class="nav__link" href=""><%= currentUser.name %></a></li>
           <li>
             <form action="/logOut" method="post">
               <button class=" btn btn--logout" type="submit">Log Out</button>
             </form>
           </li>
         <% } else { %>
-          <li class="menu__item"><a class="menu__link link link--login" href="/logIn">Log In</a></li>
-          <li class="menu__item"><a class="menu__link link link--login" href="/signUp">Sign Up</a></li>
+          <li class="nav__item"><a class="nav__link link link--logIn" href="/logIn">Log In</a></li>
+          <li class="nav__item"><a class="nav__link link link--signUp" href="/signUp">Sign Up</a></li>
         <% } %>
+      </div>
     </ul>
   </nav>
 </header>

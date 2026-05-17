@@ -23,12 +23,19 @@
         
       <div class="nav__user">
         <% if(locals.currentUser) { %>
-          <li class="nav__item"><a class="nav__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/files/upload` : `/files/upload` %>">Add File</a></li>
+          <!-- <li class="nav__item"><a class="nav__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/files/upload` : `/files/upload` %>">Add File</a></li>
           <li class="nav__item"><a class="nav__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/new` : `/folders/new` %>">New Folder</a></li>
           <li class="nav__item"><a class="nav__link" href=""><%= currentUser.name %></a></li>
           <li>
             <form action="/logOut" method="post">
               <button class=" btn btn--logout" type="submit">Log Out</button>
+            </form>
+          </li> -->
+          <li class="nav__item nav__profile"><img src="/icons/profile-icon.svg" alt="" width="30" height="30" title="Profile">Profile</li>
+          <!-- <li></li> -->
+          <li>
+            <form action="/logOut" method="post">
+              <button class=" btn btn--logout" type="submit"><img src="/icons/log-out-icon.svg" alt="" width="27" height="27" title="Log Out">Log Out</button>
             </form>
           </li>
         <% } else { %>

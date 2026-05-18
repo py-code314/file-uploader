@@ -6,23 +6,25 @@
     <!-- Header -->
     <%- include('../partials/header.ejs') %>
 
-    <!-- Sidebar  -->
-    <%- include('../partials/sidebar.ejs') %>
-
-
-    <!-- Main content-->
-    <main class="main">
-      <!-- Show folders -->
-      <% if(locals.folders && locals.folders.length > 0) { %>
-        <%- include('../partials/folders.ejs') %>
-      <% }  %>
-
-      <!-- Show files -->
-      <% if(locals.files && locals.files.length > 0) { %>
-        <%- include('../partials/files.ejs') %>
-      <% }  %>
+    <div class="main-layout">
+      <% if (locals.currentUser) { %>
+        <!-- Sidebar  -->
+      <%- include('../partials/sidebar.ejs') %>
+      <% } %>
       
-    </main>
+      <!-- Main content-->
+      <main class="main">
+        <!-- Show folders -->
+        <% if(locals.folders && locals.folders.length > 0) { %>
+          <%- include('../partials/folders.ejs') %>
+        <% }  %>
+        <!-- Show files -->
+        <% if(locals.files && locals.files.length > 0) { %>
+          <%- include('../partials/files.ejs') %>
+        <% }  %>
+      
+      </main>
+    </div>
 
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>

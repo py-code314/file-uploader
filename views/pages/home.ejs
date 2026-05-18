@@ -14,14 +14,25 @@
       
         <!-- Main content-->
         <main class="main">
-          <!-- Show folders -->
-          <% if(locals.folders && locals.folders.length > 0) { %>
-            <%- include('../partials/folders.ejs') %>
-          <% }  %>
-          <!-- Show files -->
-          <% if(locals.files && locals.files.length > 0) { %>
-            <%- include('../partials/files.ejs') %>
-          <% }  %>
+
+          <section class="hero">
+            <h2 class="hero__heading">Upload Files Easy</h2>
+            <div class="hero__upload"><img class="hero__img" src="/images/upload.svg" alt="" width="350" height="200"></div>
+            <div class="hero__cloud"><img class="hero__img" src="/images/cloud-compute.jpg" alt="" width="700" height="300"></div>
+          </section>
+
+          <% if (locals.currentUser) { %>
+            <!-- Show folders -->
+            <% if(locals.folders && locals.folders.length > 0) { %>
+              <%- include('../partials/folders.ejs') %>
+            <% }  %>
+
+            <!-- Show files -->
+            <% if(locals.files && locals.files.length > 0) { %>
+              <%- include('../partials/files.ejs') %>
+            <% }  %>
+          <% } %>
+          
       
         </main>
       </div>
@@ -42,19 +53,6 @@
       const baseName = fileLinkArr[0]
       fileLink.textContent = `${baseName}`
     })
-
-    // page.addEventListener('click', (e) => {
-    //   // e.preventDefault()
-    //   console.log('link clicked')
-    //   console.log(e.target)
-    //   const clickedElement = e.target
-    //   navLinks.forEach(link => {
-    //     console.log('remove active class')
-    //     link.classList.remove('active')
-
-    //   })
-    //   clickedElement.classList.add('active')
-    // })
 
     window.addEventListener('DOMContentLoaded', () => {
       const currentPath = window.location.pathname

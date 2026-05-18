@@ -3,34 +3,36 @@
   <!-- Head -->
   <%- include('../partials/head.ejs') %>
   <body>
-    <!-- Header -->
-    <%- include('../partials/header.ejs') %>
 
-    <div class="main-layout">
-      <% if (locals.currentUser) { %>
-        <!-- Sidebar  -->
-      <%- include('../partials/sidebar.ejs') %>
-      <% } %>
+      <!-- Header -->
+      <%- include('../partials/header.ejs') %>
+      <div class="main-layout">
+        <% if (locals.currentUser) { %>
+          <!-- Sidebar  -->
+        <%- include('../partials/sidebar.ejs') %>
+        <% } %>
       
-      <!-- Main content-->
-      <main class="main">
-        <!-- Show folders -->
-        <% if(locals.folders && locals.folders.length > 0) { %>
-          <%- include('../partials/folders.ejs') %>
-        <% }  %>
-        <!-- Show files -->
-        <% if(locals.files && locals.files.length > 0) { %>
-          <%- include('../partials/files.ejs') %>
-        <% }  %>
+        <!-- Main content-->
+        <main class="main">
+          <!-- Show folders -->
+          <% if(locals.folders && locals.folders.length > 0) { %>
+            <%- include('../partials/folders.ejs') %>
+          <% }  %>
+          <!-- Show files -->
+          <% if(locals.files && locals.files.length > 0) { %>
+            <%- include('../partials/files.ejs') %>
+          <% }  %>
       
-      </main>
-    </div>
+        </main>
+      </div>
+      <!-- Footer -->
+      <%- include('../partials/footer.ejs') %>
 
-    <!-- Footer -->
-    <%- include('../partials/footer.ejs') %>
   </body>
   <script>
     const fileLinks = document.querySelectorAll('.file__link')
+    
+
 
     fileLinks.forEach(fileLink => {
       const fileLinkValue = fileLink.getAttribute('data-name')
@@ -39,6 +41,31 @@
       // Remove file extension
       const baseName = fileLinkArr[0]
       fileLink.textContent = `${baseName}`
+    })
+
+    // page.addEventListener('click', (e) => {
+    //   // e.preventDefault()
+    //   console.log('link clicked')
+    //   console.log(e.target)
+    //   const clickedElement = e.target
+    //   navLinks.forEach(link => {
+    //     console.log('remove active class')
+    //     link.classList.remove('active')
+
+    //   })
+    //   clickedElement.classList.add('active')
+    // })
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const currentPath = window.location.pathname
+      const navLinks = document.querySelectorAll('.nav__link')
+
+      navLinks.forEach(link => {
+        const linkPath = link.getAttribute('href')
+        if(linkPath === currentPath) {
+          link.classList.add('active')
+        }
+      })
     })
     
   </script>

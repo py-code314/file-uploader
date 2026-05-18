@@ -150,4 +150,18 @@
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
   </body>
+
+  <script>
+     window.addEventListener('DOMContentLoaded', () => {
+      const currentPath = window.location.pathname
+      const navLinks = document.querySelectorAll('.nav__link')
+
+      navLinks.forEach(link => {
+        const linkPath = link.getAttribute('href')
+        if(linkPath === currentPath) {
+          link.classList.add('active')
+        }
+      })
+    })
+  </script>
 </html>

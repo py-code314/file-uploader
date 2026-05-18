@@ -1,13 +1,15 @@
 <nav aria-label="Secondary" class="nav sidebar">
   <ul class="nav__list nav__actions">
     <li class="nav__item">
-      <a class="sidebar__link" href="">
+      <a class="nav__link" 
+      href="<%= locals.folder ? `/folders/${folder.id}/files/upload` : `/files/upload` %>">
         <img src="/icons/add-file-icon.svg" alt="" width="30" height="30" />
         Add File
       </a>
     </li>
     <li class="nav__item">
-      <a class="sidebar__link" href="">
+      <a class="nav__link" 
+      href="<%= locals.folder ? `/folders/${folder.id}/new` : `/folders/new` %>">
         <img src="/icons/new-folder-icon.svg" alt="" width="30" height="30" />
         New Folder
       </a>

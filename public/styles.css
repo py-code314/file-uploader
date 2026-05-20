@@ -425,6 +425,10 @@ body {
   font-size: var(--fs-20, 1.25rem);
   display: grid;
   gap: var(--space-16, 1rem);
+  
+}
+
+.signup {
   overflow-y: auto;
   height: 75svh;
 }

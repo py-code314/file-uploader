@@ -14,7 +14,7 @@
           <div class="login">
             <h2 class="login__heading sub-title">Log In</h2>
             <!-- Show errors -->
-            <% if(locals.errors.length > 0) { %>
+            <% if(locals.errors && locals.errors.length > 0) { %>
               <%- include('../partials/errors.ejs') %>
             <% }  %>
       

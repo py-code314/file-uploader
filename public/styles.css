@@ -101,6 +101,13 @@ a {
     url('/fonts/figtree/figtree-regular.woff') format('woff');
 }
 
+@font-face {
+  font-family: 'Figtree Italic';
+  src:
+    url('/fonts/figtree/figtree-italic.woff2') format('woff2'),
+    url('/fonts/figtree/figtree-italic.woff') format('woff');
+}
+
 /* CSS variables */
 :root {
   /* Core units
@@ -115,6 +122,7 @@ a {
   --ff-secondary: 'Besley Medium';
   --ff-tertiary: 'Besley Regular';
   --ff-header: 'Besley Bold';
+  --ff-error: 'Figtree Italic';
 
   /* Font sizes */
   --font-base-unit: var(--base-unit);
@@ -167,6 +175,7 @@ a {
   --clr-black: #000;
   --clr-accent: #044eac;
   --clr-bg: #f0f8ff;
+  --clr-red: #ff0000;
 
   /* Border
   ========== */
@@ -449,4 +458,15 @@ body {
   background-color: var(--clr-accent, mediumblue);
   color: var(--clr-white, white);
   margin-block-start: var(--space-16, 1rem);
+}
+
+/* Style errors */
+.errors {
+  color: var(--clr-red, red);
+  font-family: var(--ff-error), sans-serif;
+}
+
+.errors__list {
+  list-style-type: disc;
+  padding-inline-start: var(--space-16, 1rem);
 }

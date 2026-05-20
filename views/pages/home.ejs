@@ -9,60 +9,25 @@
       <div class="main-layout">
         <% if (locals.currentUser) { %>
           <!-- Sidebar  -->
-        <%- include('../partials/sidebar.ejs') %>
-        <% } %>
-      
-        <!-- Main content-->
-        <main class="main">
+          <%- include('../partials/sidebar.ejs') %>
 
-          <section class="hero">
-            <h2 class="hero__heading">Upload Files Easy</h2>
-            <div class="hero__upload"><img class="hero__img" src="/images/upload.svg" alt="" width="350" height="200"></div>
-            <div class="hero__cloud"><img class="hero__img" src="/images/cloud-compute.jpg" alt="" width="700" height="300"></div>
-          </section>
-
-          <section class="features">
-            <div class="feature">
-              <div class="feature__container feature__container--upload"><img class="feature__img" src="/icons/file-icon.svg" alt="" width="40" height="40"></div>
-              <h3 class="feature__heading">Easy Upload</h3>
-              
-              <p class="feature__text">Upload your files seamlessly. Our system processes and prepares your data instantly without any complicated setup.</p>
-            </div>
-            <div class="feature">
-              <div class="feature__container feature__container--privacy">
-                <img class="feature__img" src="/icons/lock-icon.svg" alt="" width="40" height="40">
-              </div>
-              
-              <h3 class="feature__heading">Zero-Knowledge Privacy</h3>
-              
-              <p class="feature__text">Security isn't an afterthought. Your files are encrypted instantly upon upload and safely locked away in our cloud vaults, ensuring your data remains permanently protected and accessible only to you.</p>
-            </div>
-            <div class="feature">
-              <div class="feature__container feature__container--delivery">
-                <img class="feature__img" src="icons/lightning-icon.svg" alt="" width="40" height="40">
-              </div>
-
-              <h3 class="feature__heading">Light Speed Delivery</h3>
-              
-              <p class="feature__text">
-                Powered by dynamic cloud transformations, you can access your files anytime, on any device without draining your local bandwidth or memory.</p>
-            </div>
-          </section>
-
-          <% if (locals.currentUser) { %>
+          <!-- Main content-->
+          <main class="main">
             <!-- Show folders -->
             <% if(locals.folders && locals.folders.length > 0) { %>
               <%- include('../partials/folders.ejs') %>
             <% }  %>
-
             <!-- Show files -->
             <% if(locals.files && locals.files.length > 0) { %>
               <%- include('../partials/files.ejs') %>
             <% }  %>
-          <% } %>
-          
-      
-        </main>
+          </main>
+        <% } else { %>
+          <main class="main">
+            <!-- Landing page  -->
+            <%- include('../partials/landing.ejs') %>
+          </main>
+        <% } %>
       </div>
       <!-- Footer -->
       <%- include('../partials/footer.ejs') %>

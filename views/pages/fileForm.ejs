@@ -19,22 +19,30 @@
         <%- include('../partials/errors.ejs') %>
       <% }  %>
 
-      <div>
-        <form action="<%= locals.folderId ? `/folders/${folderId}/files/upload` : `/files/upload` %>" method="post" enctype="multipart/form-data" novalidate>
+      <div class="upload">
+        <form class="form upload__form" action="<%= locals.folderId ? `/folders/${folderId}/files/upload` : `/files/upload` %>" method="post" enctype="multipart/form-data" novalidate>
           <div class="form__control">
-            <label for="fileUpload">Select files to upload (Allowed file types: images, audio & video files, .doc & .docx files, and .pdf) (Max size allowed per file: 20 MB) (Max number of files can be uploaded at a time: 5)</label>
+            <label class="upload__label btn" for="fileUpload">Select files to upload </label>
+            <ul class="upload__list">
+              <li><strong>Supported formats: </strong>Images, audio, video, PDF, DOC, and DOCX.</li>
+              <li><strong>Limits: </strong>Up to 5 files at a time, max 20 MB per file.</li>
+            </ul>
+            
             <!-- Many mobile devices also let the user take a picture with the camera when 'image/*' is used -->
-            <input type="file" id="fileUpload" name="fileUpload" accept=".doc, .docx, .pdf, image/*, audio/*, video/*" multiple />
+          
+            <input class="form__input" type="file" id="fileUpload" name="fileUpload" accept=".doc, .docx, .pdf, image/*, audio/*, video/*" multiple />
           </div>
-          <div class="preview">
-            <p>No files currently selected for upload</p>
+          <div class="upload__preview">
+            <p class="upload__text">No files currently selected for upload</p>
           </div>
           <div class="errors">
             <ul class="errors__list"></ul>
           </div>
           
-          <button class="btn-clear" type="button">Clear</button>
-          <button class="btn-submit">Submit</button>
+          <div class="upload__btns">
+            <button class=" btn btn--clear" type="button">Clear</button>
+            <button class=" btn btn--submit">Submit</button>
+          </div>
         </form>
         
       </div>
@@ -49,14 +57,13 @@
 
   <script>
     const fileInput = document.querySelector("#fileUpload");
-    
     const errorsList = document.querySelector('.errors__list')
-    const preview = document.querySelector(".preview");
-    const submitBtn = document.querySelector(".btn-submit")
-    const clearBtn = document.querySelector('.btn-clear')
+    const preview = document.querySelector(".upload__preview");
+    const submitBtn = document.querySelector(".btn--submit")
+    const clearBtn = document.querySelector('.btn--clear')
 
 
-    // fileInput.style.opacity = 0;
+    fileInput.style.opacity = 0;
     submitBtn.disabled = true
     clearBtn.disabled = true
 
@@ -150,44 +157,47 @@
       }
 
       const list = document.createElement("ol");
+      list.classList.add('.upload__preview-list')
       preview.appendChild(list);
 
       const currentFiles = fileInput.files
 
       for(const file of currentFiles) {
         const listItem = document.createElement("li");
+        listItem.classList.add('upload__item')
         const para = document.createElement("p");
-        para.textContent = `File name: ${file.name}, 
-          File size: ${returnFileSize(file.size,)} (${file.size} bytes).`;
+        para.innerHTML = `<strong>File name:</strong> ${file.name}, 
+          <strong>File size:</strong> ${returnFileSize(file.size,)} (${file.size} bytes).`;
 
         const fileType = file.type
         const fileURL = URL.createObjectURL(file)
-        console.log('file url:', fileURL)
 
         // Image file
         if(fileType.startsWith('image/')) {
           const image = document.createElement("img");
           image.src = fileURL;
           image.alt = image.title = file.name;
-          image.style.width = "50px"
-          image.style.height = "50px"
+          image.style.width = "120px"
+          image.style.height = "80px"
 
           listItem.appendChild(image);
           listItem.appendChild(para);
         } else if (fileType.startsWith('audio/')) { // Audio file
-          // User can listen to the file before uploading
-          const audio = document.createElement("audio");
-          audio.src = fileURL;
-          audio.controls = true; // Shows play/pause and volume buttons
-          audio.style.width = "200px";
           
-          listItem.appendChild(audio);
+          const image = document.createElement("img");
+          image.src = `/icons/music-icon.svg`;
+          image.alt = image.title = file.name;
+          image.style.width = "120px"
+          image.style.height = "80px"
+
+          listItem.appendChild(image);
           listItem.appendChild(para);
         } else if (fileType.startsWith('video/')) { // Video file
           const video = document.createElement("video")
           video.src = fileURL
-          video.style.width = "50px"
-          video.style.height = "50px"
+          video.style.width = "120px"
+          video.style.height = "80px"
+          video.style.objectFit = 'cover'
           video.currentTime = 1; // Load the first frame as a "preview"
 
           listItem.appendChild(video);
@@ -195,24 +205,31 @@
         } else if (fileType === 'application/msword' || fileType === 
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
           // Show doc icon
-          const icon = document.createElement("div");
-          icon.textContent = "📄";
-          icon.style.width = "50px"
-          icon.style.height = "50px"
+          
 
-          listItem.appendChild(icon);
+          const image = document.createElement("img");
+          image.src = `/icons/ms-word-icon.svg`;
+          image.alt = image.title = file.name;
+          image.style.width = "120px"
+          image.style.height = "80px"
+
+          listItem.appendChild(image);
           listItem.appendChild(para);
-        } else if (fileType === 'application/pdf') {
-          // Show pdf icon
-          const icon = document.createElement("div");
-          icon.textContent = "PDF";
-          icon.style.width = "50px"
-          icon.style.height = "50px"
 
-          listItem.appendChild(icon);
+        } else if (fileType === 'application/pdf') {
+         
+          const pdf = document.createElement('iframe')
+          pdf.src = fileURL
+          pdf.width = '120px'
+          pdf.height = '80px'
+
+          listItem.appendChild(pdf)
+          
           listItem.appendChild(para);
         }
         list.appendChild(listItem);
+        const hr = document.createElement('hr')
+        list.appendChild(hr)
       }
     }
 
@@ -243,8 +260,15 @@
       previewFiles()
       submitBtn.disabled = true
       clearBtn.disabled = true
+
+      // Add para text back
+      const para = document.createElement('p')
+      para.classList.add('upload__text')
+      para.textContent = `No files currently selected for upload`
+      preview.appendChild(para)
     })
 
+    // Add underline for active link
      window.addEventListener('DOMContentLoaded', () => {
       const currentPath = window.location.pathname
       const navLinks = document.querySelectorAll('.nav__link')

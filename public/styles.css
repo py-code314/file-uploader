@@ -425,7 +425,6 @@ body {
   font-size: var(--fs-20, 1.25rem);
   display: grid;
   gap: var(--space-16, 1rem);
-  
 }
 
 .signup {
@@ -437,8 +436,6 @@ body {
   display: grid;
   gap: var(--space-20);
 }
-
-
 
 .form__control,
 .form__label,
@@ -471,7 +468,8 @@ body {
   font-family: var(--ff-error), sans-serif;
 }
 
-.errors__list {
+.errors__list,
+.upload__list {
   list-style-type: disc;
   padding-inline-start: var(--space-16, 1rem);
 }
@@ -481,4 +479,55 @@ body {
   margin-block-end: var(--space-8, 0.5rem);
   font-family: var(--ff-error), sans-serif;
   font-size: var(--fs-16, 1rem);
+}
+
+.upload {
+  padding: var(--space-16, 1rem);
+}
+
+.upload__form {
+  padding: var(--space-32, 2rem);
+  border: 1px solid var(--clr-black, black);
+}
+
+
+.upload__label {
+  display: inline-block;
+  border: 1px solid var(--clr-black, black);
+  margin-block-end: var(--space-16, 1rem);
+}
+
+.upload__preview {
+  border: 1px solid var(--clr-black, black);
+}
+
+
+
+.upload__text {
+  padding: var(--space-16, 1rem);
+}
+
+.upload__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16, 1rem);
+}
+
+hr:last-child {
+  border-width: 0;
+}
+
+.upload__btns {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16, 1rem);
+}
+
+.btn--clear {
+  border: 1px solid var(--clr-black, black)
+}
+
+.btn--submit {
+  color: var(--clr-white, white);
+  background-color: var(--clr-black, black);
 }

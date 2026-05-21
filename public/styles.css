@@ -481,7 +481,8 @@ body {
   font-size: var(--fs-16, 1rem);
 }
 
-.upload {
+.upload,
+.new-folder {
   padding: var(--space-16, 1rem);
 }
 
@@ -517,17 +518,33 @@ hr:last-child {
   border-width: 0;
 }
 
-.upload__btns {
+.form__btns {
   display: flex;
   align-items: center;
   gap: var(--space-16, 1rem);
 }
 
-.btn--clear {
+.btn--cancel {
   border: 1px solid var(--clr-black, black)
 }
 
 .btn--submit {
   color: var(--clr-white, white);
   background-color: var(--clr-black, black);
+}
+
+.form--new-folder {
+  width: 500px;
+  padding: var(--space-32, 2rem);
+  border: 1px solid var(--clr-black, black);
+  border-radius: var(--bd-radius-medium);
+}
+
+.new-folder__label {
+  font-size: var(--fs-18, 1.125rem);
+}
+
+.new-folder__instructions {
+  display: block;
+  margin-block-end: var(--space-8, 0.5rem);
 }

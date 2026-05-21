@@ -1,13 +1,15 @@
-<div class="folders">
+<section class="folders">
+  <h2 class="folders__heading">Folders</h2>
   <% if (locals.folders) {%>
     <!-- Folders list -->
-    <ul class="folder__list">
+    <ul class="folders__list">
       <% folders.forEach((folder) => { %>
         <li class="folder" >
-          <p class="folder__name"><a href="/folders/<%= folder.id %>"><%= folder.name %></a></p>
-          <div class="btn-group">
+          <a class="folder__name" href="/folders/<%= folder.id %>">
+            <img src="/icons/folder-icon.svg" alt="" width="30" height="30" /><%= folder.name %></a>
+          <div class="folder__btns">
             <!-- Update folder name -->
-            <a class="link link--update folder__update"  href="/folders/<%= folder.id %>/update">
+            <a class=" btn link link--update folder__update "  href="/folders/<%= folder.id %>/update">
             Rename</a>
 
             <!-- Delete folder -->
@@ -17,12 +19,13 @@
             </form>
           </div>
         </li>
+        <hr>
 
         
         
       <% }); %>
     </ul>
   <% } %>
-</div>
+</section>
 
 

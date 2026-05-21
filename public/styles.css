@@ -128,6 +128,7 @@ a {
   --font-base-unit: var(--base-unit);
   --fs-12: calc(var(--font-base-unit) * 3);
   --fs-16: calc(var(--font-base-unit) * 4);
+  --fs-18: calc(var(--font-base-unit) * 4.5);
   --fs-20: calc(var(--font-base-unit) * 5);
   --fs-24: calc(var(--font-base-unit) * 6);
   --fs-32: calc(var(--font-base-unit) * 8);
@@ -160,6 +161,7 @@ a {
   --space-144: calc(var(--space-base-unit) * 36);
   --space-350: calc(var(--space-base-unit) * 87.5);
   --space-200: calc(var(--space-base-unit) * 50);
+  --space-500: calc(var(--space-base-unit) * 125);
   --space-700: calc(var(--space-base-unit) * 175);
   --space-300: calc(var(--space-base-unit) * 75);
   --space-1200: calc(var(--space-base-unit) * 300);
@@ -189,6 +191,7 @@ a {
   /* Box shadow */
   --box-shadow-1: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   --box-shadow-2: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  --box-shadow-3: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 }
 
 body {
@@ -267,7 +270,8 @@ body {
   border: transparent;
   cursor: pointer;
   background-color: transparent;
-  padding: var(--space-12, 0.75rem) var(--space-16, 1rem);
+  padding: var(--space-4, 0.75rem) var(--space-6, 1rem);
+  /* padding: var(--space-12, 0.75rem) var(--space-16, 1rem); */
   border-radius: var(--bd-radius-medium, 0.625rem);
   font-weight: var(--fw-bold, 700);
 }
@@ -534,7 +538,7 @@ hr:last-child {
 }
 
 .form--new-folder {
-  width: 500px;
+  width: var(--space-500, 31.25rem);
   padding: var(--space-32, 2rem);
   border: 1px solid var(--clr-black, black);
   border-radius: var(--bd-radius-medium);
@@ -547,4 +551,38 @@ hr:last-child {
 .new-folder__instructions {
   display: block;
   margin-block-end: var(--space-8, 0.5rem);
+}
+
+.folders {
+  padding: var(--space-16, 1rem);
+  
+}
+
+.folder {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-8, 0.5rem);
+ 
+}
+
+.folder__name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10, 0.625rem);
+   font-size: var(--fs-18, 1.125rem);
+}
+
+.folder__btns {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16, 1rem);
+  
+}
+
+.link--update,
+.btn--delete {
+  border: 1px solid var(--clr-black, black);
+  background-color: var(--clr-gray-2, lightgray);
+  box-shadow: var(--box-shadow-3, rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px);
 }

@@ -1,7 +1,7 @@
 <header class="header">
   <div class="brand">
     <div class="logo">
-      <img src="/icons/diamond-icon.svg" alt="" width="40" height="40">
+      <img src="/icons/diamond-icon.svg" alt="Logo" width="40" height="40">
     </div>
 
     <div class="title-container">
@@ -12,37 +12,28 @@
     </div>
   </div>
 
-  <nav class="nav">
-    <ul class="nav__list">
-      <div class="nav__main">
+  <nav class="nav" aria-label="Primary">
+    <!-- <ul class="nav__list"> -->
+      <ul class="nav__main">
         <li class="nav__item"><a href="/" class="nav__link">Home</a></li>
         <li class="nav__item">About Us</li>
         <li class="nav__item">Features</li>
         <li class="nav__item">Pricing</li>
-      </div>
+      </ul>
         
-      <div class="nav__user">
+      <ul class="nav__user">
         <% if(locals.currentUser) { %>
-          <!-- <li class="nav__item"><a class="nav__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/files/upload` : `/files/upload` %>">Add File</a></li>
-          <li class="nav__item"><a class="nav__link link link--cta" href="<%= locals.folder ? `/folders/${folder.id}/new` : `/folders/new` %>">New Folder</a></li>
-          <li class="nav__item"><a class="nav__link" href=""><%= currentUser.name %></a></li>
+          <li class="nav__item nav__profile"><img src="/icons/profile-icon.svg" alt="" width="30" height="30" title="Profile" aria-hidden="true" focusable="false">Profile</li>
           <li>
             <form action="/logOut" method="post">
-              <button class=" btn btn--logout" type="submit">Log Out</button>
-            </form>
-          </li> -->
-          <li class="nav__item nav__profile"><img src="/icons/profile-icon.svg" alt="" width="30" height="30" title="Profile">Profile</li>
-          <!-- <li></li> -->
-          <li>
-            <form action="/logOut" method="post">
-              <button class=" btn btn--logout nav__link" type="submit"><img class="" src="/icons/log-out-icon.svg" alt="" width="27" height="27" title="Log Out">Log Out</button>
+              <button class=" btn btn--logout nav__link" type="submit"><img  src="/icons/log-out-icon.svg" alt="" width="27" height="27" title="Log Out" aria-hidden="true" focusable="false">Log Out</button>
             </form>
           </li>
         <% } else { %>
           <li class="nav__item"><a class="nav__link link link--logIn" href="/logIn">Log In</a></li>
           <li class="nav__item"><a class="nav__link link link--signUp" href="/signUp">Sign Up</a></li>
         <% } %>
-      </div>
-    </ul>
+      </ul>
+    <!-- </ul> -->
   </nav>
 </header>

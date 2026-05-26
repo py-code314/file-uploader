@@ -192,6 +192,7 @@ a {
   --box-shadow-1: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   --box-shadow-2: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   --box-shadow-3: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+  --shadow-4: rgba(0, 0, 0, 0.45) 10px 25px 20px -20px;
 }
 
 body {
@@ -222,12 +223,10 @@ body {
 
 .nav {
   flex: 2;
-}
-
-.nav__list {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-inline-end: var(--space-32, 2rem);
 }
 
 .nav__main,
@@ -270,7 +269,6 @@ body {
   border: transparent;
   cursor: pointer;
   background-color: transparent;
-  /* padding: var(--space-4, 0.75rem) var(--space-6, 1rem); */
   padding: var(--space-12, 0.75rem) var(--space-16, 1rem);
   border-radius: var(--bd-radius-medium, 0.625rem);
   font-weight: var(--fw-bold, 700);
@@ -304,6 +302,11 @@ body {
 
 .main {
   flex: 5;
+  height: 85svh;
+  overflow-y: auto;
+  margin-inline-end: var(--space-32, 2rem);
+  border-radius: var(--bd-radius-small, 0.3125rem);
+  box-shadow: var(--shadow-4, rgba(0, 0, 0, 0.45) 10px 25px 20px -20px);
 }
 
 .sidebar {
@@ -313,7 +316,8 @@ body {
   padding: var(--space-16, 1rem);
   font-weight: var(--fw-semi-bold);
   background-color: var(--clr-bg, ghostwhite);
-  border-top-right-radius: var(--bd-radius-medium, 0.625rem);
+  border-radius: 0 var(--bd-radius-medium, 0.625rem)
+    var(--bd-radius-medium, 0.625rem) 0;
 }
 
 .nav__actions,
@@ -554,7 +558,7 @@ hr:last-child {
 
 .folders,
 .files {
-  padding: var(--space-48, 3rem);
+  padding: var(--space-32, 2rem);
 }
 
 .folders__heading,
@@ -635,5 +639,4 @@ hr:last-child {
 .link--home:hover,
 .breadcrumbs__link:hover {
   text-decoration: underline;
-  
 }

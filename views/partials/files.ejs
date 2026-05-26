@@ -1,30 +1,38 @@
-<div class="files">
+<section class="files">
+  <h2 class="files__heading">Files</h2>
   <% if (locals.files) {%>
     <!-- Files list -->
-    <ul class="file__list">
+    <ul class="files__list">
       <% files.forEach((file) => { %>
         <li class="file" >
-          <p class="file__name"><a class="file__link" href="/files/<%= file.id %>" data-name="<%= file.name %>"><%= file.name %></a></p>
-          <div class="btn-group">
+          <a class=" file__name" href="/files/<%= file.id %>" data-name="<%= file.name %>">
+            <img src="/icons/file-icon.svg" alt="" width="35" height="35" />
+            <%= file.name %>
+          </a>
+          <div class="file__btns">
             <!-- Update file name -->
-            <a class="link link--update file__update"  href="/files/<%= file.id %>/update">
-            Rename</a>
+            <a class=" link link--update file__update"  href="/files/<%= file.id %>/update">
+               <img src="/icons/edit-icon.svg" alt="" width="25" height="25" />
+            </a>
             
             <!-- Download file -->
             <form action="/files/<%= file.id %>/download" method="get">
-              <button type="submit">Download</button>
+              <button class=" btn--download" type="submit">
+                 <img src="/icons/download-icon.svg" alt="" width="25" height="25" /></button>
             </form>
 
             <!-- Delete file -->
             <form id="file-form" action="/files/<%= file.id %>/delete" method="POST" >
-              <button class="btn btn--primary btn--delete" type="submit">
-                Delete</button>
+              <button class=" btn--primary btn--delete" type="submit">
+                 <img src="/icons/delete-icon.svg" alt="" width="25" height="25" />
+                </button>
             </form>
           </div>
         </li>
+        <hr>
       <% }); %>
     </ul>
   <% } %>
-</div>
+</section>
 
 

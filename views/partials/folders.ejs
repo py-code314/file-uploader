@@ -6,7 +6,9 @@
       <% folders.forEach((folder) => { %>
         <li class="folder" >
           <a class="folder__name" href="/folders/<%= folder.id %>">
-            <img src="/icons/folder-icon.svg" alt="" width="30" height="30" /><%= folder.name %></a>
+            <img src="/icons/folder-icon.svg" alt="" width="30" height="30" />
+            <%= folder.name %>
+          </a>
           <div class="folder__btns">
             <!-- Update folder name -->
             <a class=" btn link link--update folder__update "  href="/folders/<%= folder.id %>/update">

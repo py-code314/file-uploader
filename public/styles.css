@@ -270,8 +270,8 @@ body {
   border: transparent;
   cursor: pointer;
   background-color: transparent;
-  padding: var(--space-4, 0.75rem) var(--space-6, 1rem);
-  /* padding: var(--space-12, 0.75rem) var(--space-16, 1rem); */
+  /* padding: var(--space-4, 0.75rem) var(--space-6, 1rem); */
+  padding: var(--space-12, 0.75rem) var(--space-16, 1rem);
   border-radius: var(--bd-radius-medium, 0.625rem);
   font-weight: var(--fw-bold, 700);
 }
@@ -495,7 +495,6 @@ body {
   border: 1px solid var(--clr-black, black);
 }
 
-
 .upload__label {
   display: inline-block;
   border: 1px solid var(--clr-black, black);
@@ -505,8 +504,6 @@ body {
 .upload__preview {
   border: 1px solid var(--clr-black, black);
 }
-
-
 
 .upload__text {
   padding: var(--space-16, 1rem);
@@ -529,7 +526,7 @@ hr:last-child {
 }
 
 .btn--cancel {
-  border: 1px solid var(--clr-black, black)
+  border: 1px solid var(--clr-black, black);
 }
 
 .btn--submit {
@@ -553,36 +550,48 @@ hr:last-child {
   margin-block-end: var(--space-8, 0.5rem);
 }
 
-.folders {
-  padding: var(--space-16, 1rem);
-  
+.folders,
+.files {
+  padding: var(--space-48, 3rem);
 }
 
-.folder {
+.files__heading {
+  margin-block-end: var(--space-8, 0.5rem);
+}
+
+.folder,
+.file {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--space-8, 0.5rem);
- 
 }
 
-.folder__name {
+.folder {
+  padding-inline-start: var(--space-10, 0.625rem);
+}
+
+.folder__name,
+.file__name {
   display: flex;
   align-items: center;
   gap: var(--space-10, 0.625rem);
-   font-size: var(--fs-18, 1.125rem);
+  font-size: var(--fs-18, 1.125rem);
 }
 
-.folder__btns {
+.folder__btns,
+.file__btns {
   display: flex;
   align-items: center;
   gap: var(--space-16, 1rem);
-  
 }
 
 .link--update,
-.btn--delete {
+.btn--delete,
+.btn--download {
   border: 1px solid var(--clr-black, black);
-  background-color: var(--clr-gray-2, lightgray);
+  background-color: transparent;
   box-shadow: var(--box-shadow-3, rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px);
+  cursor: pointer;
+  padding: var(--space-4, 0.25rem);
 }

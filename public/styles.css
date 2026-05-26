@@ -596,3 +596,42 @@ hr:last-child {
   cursor: pointer;
   padding: var(--space-4, 0.25rem);
 }
+
+.sub-folder {
+  padding: var(--space-32, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16, 1rem);
+}
+
+.breadcrumbs {
+  padding: var(--space-8);
+  background-color: var(--clr-gray-2);
+}
+
+.breadcrumbs__list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-18, 1.125rem);
+}
+
+.breadcrumbs__item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbs__separator {
+  font-size: var(--fs-20, 1.25rem);
+}
+
+.link--home,
+.breadcrumbs__link {
+  color: var(--clr-accent, mediumblue);
+}
+
+.link--home:hover,
+.breadcrumbs__link:hover {
+  text-decoration: underline;
+  
+}

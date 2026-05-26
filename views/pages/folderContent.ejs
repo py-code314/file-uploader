@@ -6,54 +6,108 @@
     <!-- Header -->
     <%- include('../partials/header.ejs') %>
 
-    <!-- Main content-->
-    <main class="main">
-      <% if(locals.breadcrumbs) { %>
-        <p><a href="/">Home</a>
-        <% breadcrumbs.forEach(breadcrumb => { %>
-          / <a href="/folders/<%= breadcrumb.id %>"><%= breadcrumb.name %></a>
-        <% }) %>
-        </p>
+    <div class="main-layout">
+      <% if (locals.currentUser) { %>
+        <!-- Sidebar  -->
+        <%- include('../partials/sidebar.ejs') %>
 
-      <% } %>
+        <!-- Main content-->
+        <main class="main">
+          <div class="sub-folder">
+            <!-- Breadcrumbs navigation -->
+            <% if(locals.breadcrumbs) { %>
+              <!-- <p class="breadcrumbs"><a href="/">Home</a>
+              <% breadcrumbs.forEach(breadcrumb => { %>
+                / <a href="/folders/<%= breadcrumb.id %>"><%= breadcrumb.name %></a>
+              <% }) %>
+              </p> -->
+              <nav class="breadcrumbs" aria-label="Breadcrumbs">
+                <ol class="breadcrumbs__list" role="list">
+                  <li class="breadcrumbs__item">
+                    <a class="link--home" href="/">Home</a>
+                  </li>
+                  <% breadcrumbs.forEach(breadcrumb => { %>
+                    <li class="breadcrumbs__item">
+                       <span class="breadcrumbs__separator" aria-hidden="true">&nbsp;»&nbsp;</span> 
+                       <a class="breadcrumbs__link" href="/folders/<%= breadcrumb.id %>"><%= breadcrumb.name %></a>
+                    </li>
+                  <% }) %>
+                </ol>
+              </nav>
+            <% } %>
 
-      <h2><%= locals.folder ? `${folder.name}` : '' %></h2>
-      <!-- Show folders -->
-      <% if (locals.folder && folder.children.length > 0) { %>
-        <ul>
-          <% folder.children.forEach(folder => { %>
-            <li>
-              <p class="folder__name"><a href="/folders/<%= folder.id %>"><%= folder.name %></a></p>
-              <a   href="/folders/<%= folder.id %>/update">Rename</a>
-              <form  action="/folders/<%= folder.id %>/delete" method="POST" >
-                <button class="btn btn--delete" type="submit" onclick="return confirm('This will delete ALL data inside this folder. Are you sure you want to continue?')">
-                Delete</button>
-              </form>
-            </li>
-          <% }) %>
-        </ul>
+            <h2 class="sub-folder__heading"><%= locals.folder ? `${folder.name}` : '' %></h2>
+              
+              <!-- Show folders -->
+              <% if (locals.folder && folder.children.length > 0) { %>
+                <section>
+                  <h3 class="folders__heading">Folders</h3>
+                  <ul class="folders__list">
+                    <% folder.children.forEach(folder => { %>
+                      <li class="folder">
+                        <a class="folder__name" href="/folders/<%= folder.id %>">
+                          <img src="/icons/folder-icon.svg" alt="" width="30" height="30" />
+                          <%= folder.name %>
+                        </a>
+                        <div class="folder__btns">
+                          <!-- Update folder name -->
+                          <a class="link link--update folder__update" aria-label="Rename"   href="/folders/<%= folder.id %>/update">
+                            <img src="/icons/edit-icon.svg" alt="" width="25" height="25" title="Rename" focusable="false" />
+                          </a>
+                          <!-- Delete folder -->
+                          <form  action="/folders/<%= folder.id %>/delete" method="POST" >
+                            <button class=" btn--delete" type="submit" aria-label="Delete" onclick="return confirm('This will delete ALL data inside this folder. Are you sure you want to continue?')">
+                              <img src="/icons/delete-icon.svg" alt="" width="25" height="25" title="Delete" focusable="false" />
+                            </button>
+                        </form>
+                        </div>
+                      </li>
+                      <hr>
+                    <% }) %>
+                  </ul>
+                </section>
+              <% } %>
+              
+              <!-- Show files -->
+              <% if (locals.folder && folder.files.length > 0) { %>
+                <section>
+                  <h3 class="files__heading" >Files</h3>
+                  <ul class="files__list">
+                    <% folder.files.forEach(file => { %>
+                      <li class="file">
+                        <a class="file__name" href="/folders/<%= file.folderId %>/files/<%= file.id %>" data-name="<%= file.name %>">
+                          <img src="/icons/file-icon.svg" alt="" width="35" height="35" />
+                          <%= file.name %>
+                        </a>
+                        <div class="file__btns">
+                          <!-- Update file name -->
+                          <a class=" link link--update file__update" aria-label="Rename"  href="/folders/<%= file.folderId %>/files/<%= file.id %>/update">
+                            <img src="/icons/edit-icon.svg" alt="" width="25" height="25" focusable="false" />
+                          </a>
+                          <!-- Download file -->
+                          <form action="/files/<%= file.id %>/download" method="get">
+                            <button class=" btn--download" type="submit" aria-label="Download">
+                              <img src="/icons/download-icon.svg" alt="" width="25" height="25" focusable="false" />
+                            </button>
+                          </form>
+                          <!-- Delete file -->
+                          <form  action="/files/<%= file.id %>/delete" method="POST" >
+                            <button class=" btn--delete" type="submit" aria-label="Delete">
+                              <img src="/icons/delete-icon.svg" alt="" width="25" height="25" focusable="false" />
+                            </button>
+                          </form>
+                        </div>
+                      </li>
+                      <hr>
+                    <% }) %>
+                  </ul>
+                </section>
+              <% } %>
+          </div>
+        </main>
       <% } %>
-
-      <!-- Show files -->
-      <% if (locals.folder && folder.files.length > 0) { %>
-        <ul>
-          <% folder.files.forEach(file => { %>
-            <li>
-              <p><a class="file__link" href="/folders/<%= file.folderId %>/files/<%= file.id %>" data-name="<%= file.name %>"><%= file.name %></a></p>
-              <a href="/folders/<%= file.folderId %>/files/<%= file.id %>/update">Rename</a>
-              <!-- Download file -->
-              <form action="/files/<%= file.id %>/download" method="get">
-                <button type="submit">Download</button>
-              </form>
-              <form  action="/files/<%= file.id %>/delete" method="POST" >
-              <button class="btn btn--delete" type="submit">
-                Delete</button>
-              </form>
-            </li>
-          <% }) %>
-        </ul>
-      <% } %>
-    </main>
+    </div>
+   
 
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>

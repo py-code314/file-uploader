@@ -555,6 +555,7 @@ hr:last-child {
   padding: var(--space-48, 3rem);
 }
 
+.folders__heading,
 .files__heading {
   margin-block-end: var(--space-8, 0.5rem);
 }

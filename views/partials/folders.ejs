@@ -11,13 +11,15 @@
           </a>
           <div class="folder__btns">
             <!-- Update folder name -->
-            <a class=" btn link link--update folder__update "  href="/folders/<%= folder.id %>/update">
-            Rename</a>
+            <a class="link link--update folder__update" aria-label="Rename" href="/folders/<%= folder.id %>/update">
+              <img src="/icons/edit-icon.svg" alt="" width="25" height="25" title="Rename" focusable="false" />
+            </a>
 
             <!-- Delete folder -->
             <form id="folder-form" action="/folders/<%= folder.id %>/delete" method="POST" >
-              <button class="btn btn--primary btn--delete" type="submit" onclick="return confirm('This will delete ALL data inside this folder. Are you sure you want to continue?')">
-                Delete</button>
+              <button class="btn--delete" type="submit"  aria-label="Delete" onclick="return confirm('This will delete ALL data inside this folder. Are you sure you want to continue?')">
+                <img src="/icons/delete-icon.svg" alt="" width="25" height="25" title="Delete" focusable="false" />
+              </button>
             </form>
           </div>
         </li>

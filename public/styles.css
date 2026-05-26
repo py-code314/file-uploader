@@ -486,7 +486,8 @@ body {
 }
 
 .upload,
-.new-folder {
+.new-folder,
+.file-rename {
   padding: var(--space-16, 1rem);
 }
 
@@ -534,7 +535,8 @@ hr:last-child {
   background-color: var(--clr-black, black);
 }
 
-.form--new-folder {
+.form--new-folder,
+.form--file-rename {
   width: var(--space-500, 31.25rem);
   padding: var(--space-32, 2rem);
   border: 1px solid var(--clr-black, black);

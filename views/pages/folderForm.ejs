@@ -7,50 +7,49 @@
     <%- include('../partials/header.ejs') %>
 
     <div class="main-layout">
-        <% if (locals.currentUser) { %>
-          <!-- Sidebar  -->
-        <%- include('../partials/sidebar.ejs') %>
-        <% } %>
+      <% if (locals.currentUser) { %>
+        <!-- Sidebar  -->
+      <%- include('../partials/sidebar.ejs') %>
+      <% } %>
 
-    <!-- Main content-->
-    <main class="main">
-      <!-- Show errors -->
-        <% if(locals.errors && locals.errors.length > 0) { %>
-          <%- include('../partials/errors.ejs') %>
-        <% }  %>
+      <!-- Main content-->
+      <main class="main">
+        <!-- Show errors -->
+          <% if(locals.errors && locals.errors.length > 0) { %>
+            <%- include('../partials/errors.ejs') %>
+          <% }  %>
 
-      <div class="new-folder">
-       
-        <form class="form form--new-folder" action="<%= locals.isUpdate ? `/folders/${folder.id}/update` : locals.folderId ? `/folders/${folderId}/new` : `/folders/new` %>" method="POST">
-          <h2 class=""><%= locals.isUpdate ? 'Update Folder' : 'New Folder' %></h2>
-          <div class="form__control">
-            <label class="form__label new-folder__label" for="folderName">Folder Name (required)
-              
-            </label>
-            <span class="new-folder__instructions"><strong>Allowed characters:</strong> Letters, numbers, spaces, underscore and hyphen</span>
-            <input
-              class="form__input"
-              id="folderName"
-              name="name"
-              placeholder="Name"
-              type="text"
-              value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
-              pattern="[a-zA-Z0-9\s_\-]+"
-              autofocus
-              required
-                />
-          </div>
-          <div class="form__btns">
-            <a href="<%= locals.parentId ? `/folders/${parentId}` : locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
+        <div class="new-folder">
+        
+          <form class="form form--new-folder" action="<%= locals.isUpdate ? `/folders/${folder.id}/update` : locals.folderId ? `/folders/${folderId}/new` : `/folders/new` %>" method="POST">
+            <h2 ><%= locals.isUpdate ? 'Update Folder' : 'New Folder' %></h2>
+            <div class="form__control">
+              <label class="form__label new-folder__label" for="folderName">Folder Name (required)
+              </label>
+              <span class="new-folder__instructions"><strong>Allowed characters:</strong> Letters, numbers, spaces, underscore and hyphen</span>
+              <input
+                class="form__input"
+                id="folderName"
+                name="name"
+                placeholder="Name"
+                type="text"
+                value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
+                pattern="[a-zA-Z0-9\s_\-]+"
+                autofocus
+                required
+                  />
+            </div>
+            <div class="form__btns">
+              <a href="<%= locals.parentId ? `/folders/${parentId}` : locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
 
-            <button class="btn  btn--submit" type="submit">
-              <%= locals.isUpdate ? 'Update' : 'Create' %>
-            </button>
-          </div>
-        </form>
-      </div>
-      
-    </main>
+              <button class="btn  btn--submit" type="submit">
+                <%= locals.isUpdate ? 'Update' : 'Create' %>
+              </button>
+            </div>
+          </form>
+        </div>
+        
+      </main>
     </div>
 
     <!-- Footer -->

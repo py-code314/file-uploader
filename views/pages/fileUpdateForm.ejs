@@ -6,44 +6,51 @@
     <!-- Header -->
     <%- include('../partials/header.ejs') %>
 
-    <!-- Main content-->
-    <main class="main">
-      <div class="">
+    <div class="main-layout">
+      <% if (locals.currentUser) { %>
+        <!-- Sidebar  -->
+      <%- include('../partials/sidebar.ejs') %>
+      <% } %>
 
-        <!-- Show errors -->
-        <% if(locals.errors && locals.errors.length > 0) { %>
-          <%- include('../partials/errors.ejs') %>
-        <% }  %>
+      <!-- Main content-->
+      <main class="main">
+        <div >
 
-       
-        <form class="form" action="<%= locals.folderId ? `/folders/${folderId}/files/${fileId}/update` : `/files/${fileId}/update` %>" method="POST">
-          <h2 class="">Update File</h2>
-          <div class="form__control">
-            <label class="form__label" for="fileName">File Name (required)
-              <!-- <span>Allowed characters: Letters, numbers, spaces, period, underscore and hyphen</span> -->
-            </label>
-            <input
-              class="form__input"
-              id="fileName"
-              name="name"
-              placeholder="Name"
-              type="text"
-              value="<%= locals.isUpdate || locals.errors ? `${fileName}` : '' %>"
-              autofocus
-              
-                />
-            
+          <!-- Show errors -->
+          <% if(locals.errors && locals.errors.length > 0) { %>
+            <%- include('../partials/errors.ejs') %>
+          <% }  %>
+
+        
+          <div class="file-rename">
+            <form class="form form--file-rename" action="<%= locals.folderId ? `/folders/${folderId}/files/${fileId}/update` : `/files/${fileId}/update` %>" method="POST">
+              <h2 >Rename File</h2>
+              <div class="form__control">
+                <label class="form__label" for="fileName">File Name (required)
+                </label>
+                <input
+                  class="form__input"
+                  id="fileName"
+                  name="name"
+                  placeholder="Name"
+                  type="text"
+                  value="<%= locals.isUpdate || locals.errors ? `${fileName}` : '' %>"
+                  autofocus
+                    />
+              </div>
+              <div class="form__btns">
+                <a href="<%= locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
+                <button class="btn  btn--submit" type="submit">
+                  Update
+                </button>
+              </div>
+            </form>
           </div>
-          <div class="form__buttons">
-            <a href="<%= locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
-            <button class="btn  btn--submit" type="submit">
-              Update
-            </button>
-          </div>
-        </form>
-      </div>
-      
-    </main>
+        </div>
+        
+      </main>
+    </div>
+    
 
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>

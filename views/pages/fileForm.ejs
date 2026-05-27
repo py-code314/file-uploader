@@ -61,6 +61,7 @@
     const preview = document.querySelector(".upload__preview");
     const submitBtn = document.querySelector(".btn--submit")
     const clearBtn = document.querySelector('.btn--cancel')
+    const formBtns = document.querySelector('.form__btns')
 
 
     fileInput.style.opacity = 0;
@@ -179,6 +180,7 @@
           image.alt = image.title = file.name;
           image.style.width = "120px"
           image.style.height = "80px"
+          // image.style.objectFit = "cover"
 
           listItem.appendChild(image);
           listItem.appendChild(para);
@@ -266,6 +268,14 @@
       para.classList.add('upload__text')
       para.textContent = `No files currently selected for upload`
       preview.appendChild(para)
+    })
+
+    submitBtn.addEventListener('click', () => {
+      console.log('form submitted')
+      const loadingDiv = document.createElement('div')
+      loadingDiv.classList.add('loader')
+
+      formBtns.appendChild(loadingDiv)
     })
 
     // Add underline for active link

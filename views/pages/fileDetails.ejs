@@ -6,43 +6,64 @@
     <!-- Header -->
     <%- include('../partials/header.ejs') %>
 
-    <!-- Main content-->
-    <main class="main">
-      <% if(locals.breadcrumbs) { %>
-        <p><a href="/">Home</a>
-        <% breadcrumbs.forEach(breadcrumb => { %>
-          / <a href="/folders/<%= breadcrumb.id %>"><%= breadcrumb.name %></a>
-        <% }) %>
-        </p>
+    <div class="main-layout">
+      <% if (locals.currentUser) { %>
+        <!-- Sidebar  -->
+        <%- include('../partials/sidebar.ejs') %>
 
+        <!-- Main content-->
+        <main class="main">
+          <div class="file-info">
+
+            <% if(locals.breadcrumbs) { %>
+              <nav class="breadcrumbs" aria-label="Breadcrumbs">
+                <ol class="breadcrumbs__list" role="list">
+                  <li class="breadcrumbs__item">
+                    <a class="link--home" href="/">Home</a>
+                  </li>
+                  <% breadcrumbs.forEach(breadcrumb => { %>
+                    <li class="breadcrumbs__item">
+                       <span class="breadcrumbs__separator" aria-hidden="true">&nbsp;»&nbsp;</span> 
+                       <a class="breadcrumbs__link" href="/folders/<%= breadcrumb.id %>"><%= breadcrumb.name %></a>
+                    </li>
+                  <% }) %>
+                </ol>
+              </nav>
+            <% } %>
+
+            
+            <!-- Show file details -->
+            <% if (locals.file ) { %>
+              <div class="file-info__container">
+                <div class="file-info__wrapper">
+                  <div class="file-info__preview">
+                    <% if (locals.previewType) { %>
+                      <% if (previewType === 'image') { %>
+                        <img class="file-info__img" src="<%= locals.previewUrl %>" alt="" width="400" height="250">
+                      <% } else if(previewType === 'audio'){ %>
+                        <audio class="file-info__audio" controls  src="<%= locals.previewUrl %>"></audio>
+                      <% } else if (previewType === 'video') { %>
+                        <video src="<%= locals.previewUrl %>"></video>
+                      <% } else { %>
+                        <img src="<%= locals.previewUrl %>" alt="" width="400" height="250">
+                      <% } %>
+                    <% } %>
+                  </div>
+                  <ul class="file-info__list">
+                    <li class="file-info__item file-info__name " data-name="<%= file.name %>"><span><strong>Name:</strong> </span><span id="file-name"><%= file.name %></span></li>
+                    <li class="file-info__item file-info__size" data-size="<%= file.size %>"><span><strong>Size:</strong> </span><span id="file-size"><%= file.size %></span></li>
+                    <li class="file-info__item file-info__type" data-type="<%= file.type %>"><span><strong>Type:</strong> </span><span id="file-type"><%= file.type %></span></li>
+                    <li class="file-info__item file-info__date" data-date="<%= file.uploadedAt.toISOString() %>"><span><strong>Time uploaded:</strong> </span><span id="file-date"><%= file.uploadedAt.toUTCString() %></span></li>
+                  </ul>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        </main>
       <% } %>
+    </div>
 
-      <div class="preview">
-        <% if (locals.previewType) { %>
-          <% if (previewType === 'image') { %>
-            <img src="<%= locals.previewUrl %>" alt="">
-          <% } else if(previewType === 'audio'){ %>
-            <audio controls src="<%= locals.previewUrl %>"></audio>
-          <% } else if (previewType === 'video') { %>
-            <video src="<%= locals.previewUrl %>"></video>
-          <% } else { %>
-            <img src="<%= locals.previewUrl %>" alt="">
-          <% } %>
-        <% } %>
-        
-      </div>
-      <!-- Show file details -->
-      <% if (locals.file ) { %>
-        <ul>
-          <li class="file__name" data-name="<%= file.name %>">Name: <%= file.name %></li>
-          <li class="file__size" data-size="<%= file.size %>"><%= file.size %></li>
-          <li class="file__type" data-type="<%= file.type %>"><%= file.type %></li>
-          <li class="file__date" data-date="<%= file.uploadedAt.toISOString() %>"><%= file.uploadedAt.toUTCString() %></li>
-        </ul>
-      <% } %>
-
-      
-    </main>
+    
 
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
@@ -50,24 +71,33 @@
 
    <script>
 
-    const fileType = document.querySelector('.file__type')
-    const fileName = document.querySelector('.file__name')
-    const fileNameValue = fileName.getAttribute('data-name')
-    const fileSize = document.querySelector('.file__size')
-    const fileSizeValue = fileSize.getAttribute('data-size')
-    const fileDate = document.querySelector('.file__date')
-    const fileDateValue = fileDate.getAttribute('data-date')
+    const fileType = document.querySelector('#file-type')
+    
+
+    const fileNameDisplay = document.querySelector('.file-info__name')
+    const originalFileName = fileNameDisplay.getAttribute('data-name')
+    const fileName = document.querySelector('#file-name')
+
+    const fileSizeDisplay = document.querySelector('.file-info__size')
+    const originalFileSize = fileSizeDisplay.getAttribute('data-size')
+    const fileSize = document.querySelector('#file-size')
+
+    const fileDateDisplay = document.querySelector('.file-info__date')
+    const originalFileDate = fileDateDisplay.getAttribute('data-date')
+    // console.log(originalFileDate)
+    const fileDate = document.querySelector('#file-date')
+
 
     function removeFileExtensionAndDisplayFileType(fullName) {
       const fileNameArr = fullName.split('.')
 
       // Remove file extension
       const baseName = fileNameArr[0]
-      fileName.textContent = `Name: ${baseName}`
+      fileName.textContent = `${baseName}`
 
       // Show file type
       const extension = fileNameArr[1]
-      fileType.textContent = `Type: ${extension}`
+      fileType.textContent = `${extension}`
     }
     
     function displayFileSize(bytes) {
@@ -82,17 +112,17 @@
         number = `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
       }
       
-      fileSize.textContent = `Size: ${number}`
+      fileSize.textContent = `${number}`
     }
 
     function displayDate(date) {
       // Convert the date into local date and time
       const localDate = new Date(date).toLocaleString()
-      fileDate.textContent = `Time uploaded: ${localDate}`
+      fileDate.textContent = `${localDate}`
     }
 
-    removeFileExtensionAndDisplayFileType(fileNameValue)
-    displayFileSize(fileSizeValue)
-    displayDate(fileDateValue)
+    removeFileExtensionAndDisplayFileType(originalFileName)
+    displayFileSize(originalFileSize)
+    displayDate(originalFileDate)
   </script>  
 </html>

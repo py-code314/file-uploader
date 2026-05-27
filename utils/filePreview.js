@@ -7,13 +7,13 @@ async function generateFilePreview(file) {
   const fileType = file.type.toLowerCase()
 
   if (['png', 'avif', 'gif', 'jpg', 'jpeg', 'svg', 'webp', 'pdf'].includes(fileType)) { // For images and pdf files
-    console.log('image')
     previewType = 'image'
     previewUrl = cloudinary.url(file.storedName, {
       resource_type: 'image',
-      width: 300,
+      width: 400,
       crop: 'scale',
-      format: 'jpg'
+      format: 'jpg',
+      
     })
   } else if (['aac', 'mid', 'midi', 'mp3', 'wav', 'flac', 'm4p', 'ogg', 'wma'].includes(fileType)) { // Audio files
     previewType = 'audio'
@@ -23,7 +23,7 @@ async function generateFilePreview(file) {
     previewType = 'video'
     previewUrl = cloudinary.url(file.storedName, {
       resource_type: 'video',
-      width: 300,
+      width: 400,
       crop: 'scale',
       start_offset: '1',
     })
@@ -31,7 +31,7 @@ async function generateFilePreview(file) {
   
   else { // For .doc and .docx files
     previewType = 'icon'
-    previewUrl = `images/icons/${fileType}_icon.svg`
+    previewUrl = `/icons/${fileType}-icon.svg`
   }
 
   return {previewUrl, previewType}

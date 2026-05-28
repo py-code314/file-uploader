@@ -6,21 +6,21 @@ const { prisma } = require('../lib/prisma.js')
 /* Verify email and password before logging in */
 const verifyCallback = async (email, password, done) => {
   try {
+    const user = await prisma.user.findUnique({ where: { email } })
 
-    const user = await prisma.user.findUnique({ where: {email} })
-    
     // User doesn't exist
     if (!user) {
       return done(null, false, { message: 'Incorrect Email' })
     }
 
+    // Passwords don't match
     const match = await bcrypt.compare(password, user.passwordHash)
     if (!match) {
       // Passwords don't match
       return done(null, false, { message: 'Incorrect Password' })
     }
 
-    // email and password match
+    // Email and password match
     return done(null, user)
   } catch (err) {
     return done(err)
@@ -28,7 +28,7 @@ const verifyCallback = async (email, password, done) => {
 }
 
 // Define usernameField as email
-const strategy = new LocalStrategy({usernameField: 'email'}, verifyCallback)
+const strategy = new LocalStrategy({ usernameField: 'email' }, verifyCallback)
 
 passport.use(strategy)
 
@@ -40,8 +40,7 @@ passport.serializeUser((user, done) => {
 // Retrieve user data from db
 passport.deserializeUser(async (id, done) => {
   try {
-    // const { rows } = await pool.query('SELECT * FROM users WHERE id = $1', [id])
-    const user = await prisma.user.findUnique({where: {id}})
+    const user = await prisma.user.findUnique({ where: { id } })
 
     done(null, user)
   } catch (err) {

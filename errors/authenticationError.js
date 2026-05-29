@@ -1,4 +1,4 @@
-/* Throw custom error if incorrect login credentials entered */
+/* Throw custom error if user is not authenticated */
 class AuthenticationError extends Error {
   constructor(
     message = 'Please log in to upload a file.',

@@ -259,7 +259,7 @@ async function delete_folder_post(req, res, next) {
     })
 
     // Delete all files in cloudinary
-    filesToDelete.forEach((file) => {
+    filesToDelete.forEach(async (file) => {
       await cloudinary.uploader.destroy(file.storedName, {
         resource_type: file.resourceType,
       })

@@ -1,8 +1,10 @@
 const path = require('node:path')
 const { uploadToCloudinary } = require('../middleware/upload')
 
+/* Function to upload files to Cloudinary */
 async function uploadFiles(files) {
   const uploadPromises = files.map((file) => {
+    // Generate a unique filename
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
     const extension = path.extname(file.originalname)
     const sanitizedName = path
@@ -14,6 +16,7 @@ async function uploadFiles(files) {
       uniqueFileName = `${sanitizedName}-${uniqueSuffix}${extension}`
     }
 
+    // Upload file
     return uploadToCloudinary(file.buffer, {
       resource_type: 'auto',
       asset_folder: 'file-uploader',

@@ -1,19 +1,20 @@
-const { prisma } = require("../lib/prisma")
+const { prisma } = require('../lib/prisma')
 
+/* Get all nested folder ids */
 async function getNestedFolderIds(parentId, userId) {
   // Get child folder ids
   const childrenIds = await prisma.folder.findMany({
     where: {
       parentId,
-      userId
+      userId,
     },
     select: {
-      id: true
-    }
+      id: true,
+    },
   })
 
   // Children ids array
-  let childrenIdsArr = childrenIds.map(child => child.id)
+  let childrenIdsArr = childrenIds.map((child) => child.id)
   // console.log("🚀 ~ getNestedFolderIds ~ childrenIdsArr:", childrenIdsArr)
 
   // Get all nested folder ids recursively
@@ -26,4 +27,4 @@ async function getNestedFolderIds(parentId, userId) {
   return childrenIdsArr
 }
 
-module.exports = {getNestedFolderIds}
+module.exports = { getNestedFolderIds }

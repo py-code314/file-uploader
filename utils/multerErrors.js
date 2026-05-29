@@ -1,3 +1,6 @@
+const fs = require('fs')
+
+/* Handle Multer errors */
 async function handleMulterErrors(files, err) {
   // Clean up any partial uploads
   if (files && files.length > 0) {

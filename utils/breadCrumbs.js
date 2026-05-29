@@ -1,17 +1,18 @@
-const { prisma } = require("../lib/prisma")
+const { prisma } = require('../lib/prisma')
 
+/* Get all parent folders */
 async function getBreadcrumbs(folderId, userId, breadcrumbs = []) {
   // Get current folder
   const currentFolder = await prisma.folder.findUnique({
     where: {
       id: folderId,
-      userId
-    }, 
+      userId,
+    },
     select: {
       id: true,
       parentId: true,
-      name: true
-    }
+      name: true,
+    },
   })
 
   // For home folder
@@ -28,7 +29,6 @@ async function getBreadcrumbs(folderId, userId, breadcrumbs = []) {
   }
 
   return breadcrumbs
-
 }
 
-module.exports = {getBreadcrumbs}
+module.exports = { getBreadcrumbs }

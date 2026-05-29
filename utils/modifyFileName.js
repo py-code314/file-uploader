@@ -1,6 +1,7 @@
 const path = require('node:path')
 const { prisma } = require('../lib/prisma')
 
+/* Get modified file name by adding an incrementing number */
 async function getModifiedFileName(fullName, folderId, userId) {
   const extension = fullName.split('.').pop()
   const fileName = fullName.split('.')[0]

@@ -12,6 +12,7 @@ datasource db {
   provider = "postgresql"
 }
 
+/* Create tables */
 model User {
   id           Int    @id @default(autoincrement())
   name         String
@@ -75,6 +76,7 @@ model Folder {
   @@unique([name, userId, parentId])
 }
 
+/* Create sessions */
 model Session {
   id        String   @id
   sid       String   @unique

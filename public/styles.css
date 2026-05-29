@@ -126,19 +126,19 @@ a {
 
   /* Font sizes */
   --font-base-unit: var(--base-unit);
-  --fs-12: calc(var(--font-base-unit) * 3);
+  /* --fs-12: calc(var(--font-base-unit) * 3); */
   --fs-16: calc(var(--font-base-unit) * 4);
   --fs-18: calc(var(--font-base-unit) * 4.5);
   --fs-20: calc(var(--font-base-unit) * 5);
   --fs-24: calc(var(--font-base-unit) * 6);
   --fs-32: calc(var(--font-base-unit) * 8);
-  --fs-40: calc(var(--font-base-unit) * 10);
+  /* --fs-40: calc(var(--font-base-unit) * 10); */
   --fs-48: calc(var(--font-base-unit) * 12);
-  --fs-64: calc(var(--font-base-unit) * 16);
+  /* --fs-64: calc(var(--font-base-unit) * 16); */
 
   /* Font weights */
-  --fw-regular: 400;
-  --fw-medium: 500;
+  /* --fw-regular: 400; */
+  /* --fw-medium: 500; */
   --fw-semi-bold: 600;
   --fw-bold: 700;
 
@@ -155,32 +155,35 @@ a {
   --space-24: calc(var(--space-base-unit) * 6);
   --space-32: calc(var(--space-base-unit) * 8);
   --space-48: calc(var(--space-base-unit) * 12);
-  --space-64: calc(var(--space-base-unit) * 16);
-  --space-96: calc(var(--space-base-unit) * 24);
-  --space-128: calc(var(--space-base-unit) * 32);
-  --space-144: calc(var(--space-base-unit) * 36);
-  --space-350: calc(var(--space-base-unit) * 87.5);
+  /* --space-64: calc(var(--space-base-unit) * 16); */
+  /* --space-96: calc(var(--space-base-unit) * 24); */
+  /* --space-128: calc(var(--space-base-unit) * 32); */
+  /* --space-144: calc(var(--space-base-unit) * 36); */
+  --space-56: calc(var(--space-base-unit) * 14);
   --space-200: calc(var(--space-base-unit) * 50);
-  --space-280: calc(var(--space-base-unit) * 70);
   --space-250: calc(var(--space-base-unit) * 62.5);
+  --space-280: calc(var(--space-base-unit) * 70);
+  --space-300: calc(var(--space-base-unit) * 75);
+  --space-350: calc(var(--space-base-unit) * 87.5);
   --space-400: calc(var(--space-base-unit) * 100);
   --space-500: calc(var(--space-base-unit) * 125);
   --space-700: calc(var(--space-base-unit) * 175);
-  --space-300: calc(var(--space-base-unit) * 75);
   --space-1200: calc(var(--space-base-unit) * 300);
-  --space-56: calc(var(--space-base-unit) * 14);
 
   /* color
   ========= */
-  --clr-gray-1: #ffffff;
+  /* --clr-gray-1: #ffffff; */
   --clr-gray-2: #eeeeee;
   --clr-gray-3: #d5d5d5;
-  --clr-gray-7: #6f6f6f;
+  /* --clr-gray-7: #6f6f6f; */
   --clr-white: #fff;
   --clr-black: #000;
   --clr-accent: #044eac;
   --clr-bg: #f0f8ff;
   --clr-red: #ff0000;
+  --clr-upload: #e0f2fe;
+  --clr-privacy: #e4f9f5;
+  --clr-delivery: #feecd2;
 
   /* Border
   ========== */
@@ -188,14 +191,14 @@ a {
   --radius-base-unit: 0.3125rem;
   --bd-radius-small: calc(var(--radius-base-unit) * 1);
   --bd-radius-medium: calc(var(--radius-base-unit) * 2);
-  --bd-radius-large: calc(var(--radius-base-unit) * 4);
-  --bd-radius-round: 50%;
+  /* --bd-radius-large: calc(var(--radius-base-unit) * 4); */
+  /* --bd-radius-round: 50%; */
 
   /* Box shadow */
-  --box-shadow-1: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
-  --box-shadow-2: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  --box-shadow-3: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
-  --shadow-4: rgba(0, 0, 0, 0.45) 10px 25px 20px -20px;
+  /* --box-shadow-1: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px; */
+  --shadow-1: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  --shadow-2: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+  --shadow-3: rgba(0, 0, 0, 0.45) 10px 25px 20px -20px;
 }
 
 body {
@@ -224,6 +227,7 @@ body {
   color: var(--clr-accent, mediumblue);
 }
 
+/* Primary navigation in header */
 .nav {
   flex: 2;
   display: flex;
@@ -249,6 +253,7 @@ body {
   position: relative;
 }
 
+/* Add a hover effect */
 .nav__link::before {
   content: '';
   position: absolute;
@@ -277,6 +282,7 @@ body {
   font-weight: var(--fw-bold, 700);
 }
 
+/* Style active link */
 .active {
   border-bottom: 2px solid var(--clr-black, black);
   border-radius: 0;
@@ -294,6 +300,7 @@ body {
   padding: var(--space-6, 0.375rem) 0 var(--space-4, 0.5rem) 0;
 }
 
+/* Place sidebar and main content side by side  */
 .main-layout {
   flex: 1;
   display: flex;
@@ -303,15 +310,17 @@ body {
   flex: 1;
 }
 
+/* Style main content */
 .main {
   flex: 5;
   height: 85svh;
   overflow-y: auto;
   margin-inline-end: var(--space-32, 2rem);
   border-radius: var(--bd-radius-small, 0.3125rem);
-  box-shadow: var(--shadow-4, rgba(0, 0, 0, 0.45) 10px 25px 20px -20px);
+  box-shadow: var(--shadow-3, rgba(0, 0, 0, 0.45) 10px 25px 20px -20px);
 }
 
+/* Style sidebar */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -323,6 +332,7 @@ body {
     var(--bd-radius-medium, 0.625rem) 0;
 }
 
+/* Secondary navigation in sidebar */
 .nav__actions,
 .nav__utilities {
   display: grid;
@@ -336,6 +346,7 @@ body {
   gap: var(--space-10, 0.625rem);
 }
 
+/* Style hero section */
 .hero {
   display: flex;
   flex-direction: column;
@@ -354,7 +365,7 @@ body {
   height: var(--space-200, 12.5rem);
   border-radius: var(--bd-radius-, 1.25rem);
   overflow: hidden;
-  box-shadow: var(--box-shadow-2, rgba(0, 0, 0, 0.35) 0px 5px 15px);
+  box-shadow: var(--shadow-1, rgba(0, 0, 0, 0.35) 0px 5px 15px);
 }
 
 .hero__img {
@@ -373,6 +384,7 @@ body {
   bottom: -15rem;
 }
 
+/* Style features section */
 .features {
   display: flex;
   justify-content: center;
@@ -400,17 +412,18 @@ body {
 }
 
 .feature__container--upload {
-  background-color: #e0f2fe;
+  background-color: var(--clr-upload, lightblue);
 }
 
 .feature__container--privacy {
-  background-color: #e4f9f5;
+  background-color: var(--clr-privacy, lightgreen);
 }
 
 .feature__container--delivery {
-  background-color: #feecd2;
+  background-color: var(--clr-delivery, lightsalmon);
 }
 
+/* Style footer */
 .footer {
   padding: var(--space-16, 1rem);
   display: flex;
@@ -426,12 +439,13 @@ body {
   align-items: center;
 }
 
+/* Styles for login and signup forms */
 .login,
 .signup {
   width: 600px;
   border: 1px solid var(--clr-gray-3, lightgray);
   border-radius: var(--bd-radius-medium, 0.625rem);
-  box-shadow: var(--box-shadow-2, rgba(0, 0, 0, 0.35) 0px 5px 15px);
+  box-shadow: var(--shadow-1, rgba(0, 0, 0, 0.35) 0px 5px 15px);
   padding: var(--space-32, 2rem) var(--space-48, 3rem);
   font-size: var(--fs-20, 1.25rem);
   display: grid;
@@ -498,6 +512,7 @@ body {
   padding: var(--space-16, 1rem);
 }
 
+/* Styles for file upload form */
 .upload__form {
   padding: var(--space-32, 2rem);
   border: 1px solid var(--clr-black, black);
@@ -542,6 +557,7 @@ hr:last-child {
   background-color: var(--clr-black, black);
 }
 
+/* Styles for folder form */
 .form--new-folder,
 .form--file-rename {
   width: var(--space-500, 31.25rem);
@@ -559,6 +575,7 @@ hr:last-child {
   margin-block-end: var(--space-8, 0.5rem);
 }
 
+/* Styles for list of folders and files */
 .folders,
 .files {
   padding: var(--space-32, 2rem);
@@ -589,6 +606,7 @@ hr:last-child {
   font-size: var(--fs-18, 1.125rem);
 }
 
+/* Styles for folder and file buttons */
 .folder__btns,
 .file__btns {
   display: flex;
@@ -601,7 +619,7 @@ hr:last-child {
 .btn--download {
   border: 1px solid var(--clr-black, black);
   background-color: transparent;
-  box-shadow: var(--box-shadow-3, rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px);
+  box-shadow: var(--shadow-2, rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px);
   cursor: pointer;
   padding: var(--space-4, 0.25rem);
 }
@@ -614,6 +632,7 @@ hr:last-child {
   gap: var(--space-16, 1rem);
 }
 
+/* Styles for breadcrumbs navigation */
 .breadcrumbs {
   padding: var(--space-8);
   background-color: var(--clr-gray-2);
@@ -640,11 +659,13 @@ hr:last-child {
   color: var(--clr-accent, mediumblue);
 }
 
+/* Add hover effect to breadcrumb links */
 .link--home:hover,
 .breadcrumbs__link:hover {
   text-decoration: underline;
 }
 
+/* Styles for file info section */
 .file-info {
   height: 100%;
 }
@@ -687,33 +708,39 @@ hr:last-child {
   object-fit: contain;
 }
 
-
+/* Animation for file uploading */
 .loader {
   width: 70px;
   height: 40px;
   color: #269af2;
-  --c: radial-gradient(farthest-side,currentColor 96%,#0000);
-  background: 
+  --c: radial-gradient(farthest-side, currentColor 96%, #0000);
+  background:
     var(--c) 100% 100% /30% 60%,
-    var(--c) 70%  0    /50% 100%,
-    var(--c) 0    100% /36% 68%,
-    var(--c) 27%  18%  /26% 40%,
+    var(--c) 70% 0 /50% 100%,
+    var(--c) 0 100% /36% 68%,
+    var(--c) 27% 18% /26% 40%,
     linear-gradient(currentColor 0 0) bottom/67% 58%;
   background-repeat: no-repeat;
   position: relative;
 }
+
 .loader:after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   background: inherit;
   opacity: 0.4;
   animation: l7 1s infinite;
 }
+
 @keyframes l7 {
-  to {transform:scale(1.8);opacity:0}
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
 }
 
+/* Styles for error page */
 .error {
   height: 100%;
   display: flex;
@@ -725,9 +752,6 @@ hr:last-child {
   display: grid;
   gap: var(--space-24, 1.5rem);
   align-content: start;
-  /* display: flex;
-  flex-direction: column;
-  gap: var(--space-24); */
 }
 
 /* Style error page */

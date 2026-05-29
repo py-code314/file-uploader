@@ -21,8 +21,8 @@
 
         <div class="new-folder">
         
-          <form class="form form--new-folder" action="<%= locals.isUpdate ? `/folders/${folder.id}/update` : locals.folderId ? `/folders/${folderId}/new` : `/folders/new` %>" method="POST">
-            <h2 ><%= locals.isUpdate ? 'Update Folder' : 'New Folder' %></h2>
+          <form class="form form--new-folder" action="<%= locals.isRename ? `/folders/${folder.id}/update` : locals.folderId ? `/folders/${folderId}/new` : `/folders/new` %>" method="POST">
+            <h2 ><%= locals.isRename ? 'Update Folder' : 'New Folder' %></h2>
             <div class="form__control">
               <label class="form__label new-folder__label" for="folderName">Folder Name (required)
               </label>
@@ -33,7 +33,7 @@
                 name="name"
                 placeholder="Name"
                 type="text"
-                value="<%= locals.isUpdate || locals.errors ? `${locals.folder?.name}` : '' %>"
+                value="<%= locals.isRename || locals.errors ? `${locals.folder?.name}` : '' %>"
                 pattern="[a-zA-Z0-9\s_\-]+"
                 autofocus
                 required
@@ -43,7 +43,7 @@
               <a href="<%= locals.parentId ? `/folders/${parentId}` : locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
 
               <button class="btn  btn--submit" type="submit">
-                <%= locals.isUpdate ? 'Update' : 'Create' %>
+                <%= locals.isRename ? 'Update' : 'Create' %>
               </button>
             </div>
           </form>

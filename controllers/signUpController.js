@@ -1,8 +1,6 @@
-/* Imports */
-
 const bcrypt = require('bcryptjs')
-const { body, validationResult, matchedData } = require('express-validator')
 const { prisma } = require('../lib/prisma.js')
+const { body, validationResult, matchedData } = require('express-validator')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -13,7 +11,7 @@ const passwordInvalidErr =
   'must contain an uppercase letter, a number, and a special character.'
 const alphaErr = 'must contain only letters.'
 
-/* Validate user data */
+/* Validate sign up form data */
 const validateUser = [
   body('email')
     .trim()
@@ -57,6 +55,8 @@ const validateUser = [
     .isLength({ min: 8 })
     .withMessage(`Password ${lengthErr}`)
     .bail()
+    // Password must contain at least 8 characters with
+    // an uppercase letter, a number, and a special character
     .matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/)
     .withMessage(`Password ${passwordInvalidErr}`),
   body('confirmPassword')
@@ -70,7 +70,7 @@ const validateUser = [
     .withMessage('Passwords do not match.'),
 ]
 
-/* Show sign up page */
+/* Show sign up form */
 async function sign_up_get(req, res) {
   res.render('pages/signUp', {
     title: 'Sign Up',
@@ -84,7 +84,7 @@ const sign_up_post = [
   async (req, res, next) => {
     // Get form data except password
     const { email, firstName, lastName } = req.body
-    const userData = {
+    const signUpData = {
       email: email,
       firstName: firstName,
       lastName: lastName,
@@ -97,7 +97,7 @@ const sign_up_post = [
     if (!errors.isEmpty()) {
       return res.status(400).render('pages/signUp', {
         title: 'Sign Up',
-        user: userData,
+        user: signUpData,
         errors: errors.array(),
       })
     }

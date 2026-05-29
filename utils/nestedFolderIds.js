@@ -14,12 +14,12 @@ async function getNestedFolderIds(parentId, userId) {
 
   // Children ids array
   let childrenIdsArr = childrenIds.map(child => child.id)
-  console.log("🚀 ~ getNestedFolderIds ~ childrenIdsArr:", childrenIdsArr)
+  // console.log("🚀 ~ getNestedFolderIds ~ childrenIdsArr:", childrenIdsArr)
 
   // Get all nested folder ids recursively
   for (const childId of childrenIdsArr) {
     const nestedFolderIds = await getNestedFolderIds(childId, userId)
-    console.log("🚀 ~ getNestedFolderIds ~ nestedFolderIds:", nestedFolderIds)
+    // console.log("🚀 ~ getNestedFolderIds ~ nestedFolderIds:", nestedFolderIds)
     childrenIdsArr = childrenIdsArr.concat(nestedFolderIds)
   }
 

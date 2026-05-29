@@ -1,9 +1,8 @@
-/* Imports */
-const { body, validationResult, matchedData } = require('express-validator')
+const fs = require('fs')
 const { prisma } = require('../lib/prisma.js')
+const { body, validationResult, matchedData } = require('express-validator')
 const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
 const { getNestedFolderIds } = require('../utils/nestedFolderIds.js')
-const fs = require('fs')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -17,6 +16,7 @@ const validateFolderName = [
     .withMessage(`Folder name ${emptyErr}`)
     .bail()
     .custom(async (name, { req }) => {
+      // Throw error if folder name contains invalid characters
       const folderNameRegex = /^[a-zA-Z0-9\s_-]+$/
       if (!folderNameRegex.test(name)) {
         throw new Error(
@@ -42,7 +42,7 @@ const validateFolderName = [
         parentId = folderId
       }
 
-      // Throw error if folder already exists
+      // Throw error if folder name already exists
       let folder
 
       // When updating
@@ -51,12 +51,14 @@ const validateFolderName = [
           where: {
             name,
             parentId,
-            NOT: { // Exclude current folder id
+            NOT: {
+              // Exclude current folder id
               id: folderId,
             },
           },
         })
-      } else { // There is no current folder id, only parent id when adding a new folder
+      } else {
+        // When adding a new folder, there is no current folder id, only parent id
         folder = await prisma.folder.findFirst({
           where: {
             name,
@@ -64,7 +66,6 @@ const validateFolderName = [
           },
         })
       }
-      
 
       if (folder) {
         throw new Error(`Folder name is ${existsErr}`)
@@ -74,6 +75,7 @@ const validateFolderName = [
     }),
 ]
 
+/* Show add folder form */
 async function add_folder_get(req, res, next) {
   const folderId = Number(req.params.folderId)
 
@@ -83,11 +85,13 @@ async function add_folder_get(req, res, next) {
   })
 }
 
+/* Create folder */
 const add_folder_post = [
   validateFolderName,
 
   async (req, res, next) => {
     const folderId = Number(req.params.folderId)
+
     // Get form data
     const { name } = req.body
     const folderData = {
@@ -112,6 +116,7 @@ const add_folder_post = [
       const { name } = matchedData(req)
       const userId = req.user.id
 
+      // Add folder to database
       await prisma.folder.create({
         data: {
           name,
@@ -120,9 +125,9 @@ const add_folder_post = [
         },
       })
 
-      if (folderId) {
+      if (folderId) { // If adding folder to existing folder
         res.redirect(`/folders/${folderId}`)
-      } else {
+      } else { // If adding folder to root
         res.redirect('/')
       }
     } catch (err) {
@@ -132,45 +137,47 @@ const add_folder_post = [
   },
 ]
 
-/* Show update folder form */
-async function update_folder_get(req, res) {
+/* Show update folder name form */
+async function rename_folder_get(req, res) {
   const folderId = Number(req.params.folderId)
   const userId = req.user.id
 
-  // Get folder data
-  const folder = await prisma.folder.findFirst({
+  // Get current folder data
+  const currentFolder = await prisma.folder.findFirst({
     where: {
       id: folderId,
       userId,
     },
   })
-  const parentId = folder.parentId
+  const parentId = currentFolder.parentId
 
+  // Render form with current folder name
   res.render('pages/folderForm', {
-    title: 'Update Folder',
-    folder,
+    title: 'Rename Folder',
+    currentFolder,
     parentId,
-    isUpdate: true,
+    isRename: true,
   })
 }
 
 /* Update folder name */
-const update_folder_post = [
+const rename_folder_post = [
   validateFolderName,
 
   async (req, res, next) => {
     const folderId = Number(req.params.folderId)
     const userId = req.user.id
     let parentId = null
-    // Get folder data
-    const folder = await prisma.folder.findFirst({
+
+    // Get current folder data
+    const currentFolder = await prisma.folder.findFirst({
       where: {
         id: folderId,
         userId,
       },
     })
 
-    parentId = folder.parentId
+    parentId = currentFolder.parentId
 
     // Get form data
     const { name } = req.body
@@ -184,7 +191,7 @@ const update_folder_post = [
     // Show errors if validation fails
     if (!errors.isEmpty()) {
       return res.status(400).render('pages/folderForm', {
-        title: 'Update Folder',
+        title: 'Rename Folder',
         folder: folderData,
         folderId: parentId, // Pass it to be used in Cancel link
         errors: errors.array(),
@@ -195,7 +202,7 @@ const update_folder_post = [
       // Get validated form data
       const { name } = matchedData(req)
 
-      // Update folder
+      // Update folder name
       await prisma.folder.update({
         where: {
           id: folderId,
@@ -206,9 +213,9 @@ const update_folder_post = [
         },
       })
 
-      if (parentId) {
+      if (parentId) { // If updating folder name in existing folder
         res.redirect(`/folders/${parentId}`)
-      } else {
+      } else { // If updating folder name in root
         res.redirect('/')
       }
     } catch (err) {
@@ -224,7 +231,7 @@ async function delete_folder_post(req, res, next) {
   const userId = req.user.id
   let parentId = null
 
-  // Get folder data
+  // Get current folder data
   const currentFolder = await prisma.folder.findFirst({
     where: {
       id: folderId,
@@ -237,7 +244,7 @@ async function delete_folder_post(req, res, next) {
   try {
     // Get all nested folder ids
     let nestedFolderIds = await getNestedFolderIds(folderId, userId)
-    nestedFolderIds.push(folderId)
+    nestedFolderIds.push(folderId) // Add current folder id
 
     // Get all files to be deleted
     const filesToDelete = await prisma.file.findMany({
@@ -251,21 +258,17 @@ async function delete_folder_post(req, res, next) {
       },
     })
 
-    // Delete files in uploads folder
+    // Delete all files in cloudinary
     filesToDelete.forEach((file) => {
-      const uploadsDir = req.app.get('UPLOAD_PATH')
-      const fullPath = uploadsDir + file.url
-
-      fs.unlink(fullPath, (err) => {
-        if (err) {
-          console.error('Failed to delete file:', err)
-        }
+      await cloudinary.uploader.destroy(file.storedName, {
+        resource_type: file.resourceType,
       })
     })
 
+
     // Delete folder in db
-    // All nested folders and files in parent folder will be deleted
-    // because of cascade deletion 
+    // All nested folders and files inside parent folder in database
+    // will be deleted because of cascade deletion
     await prisma.folder.delete({
       where: {
         id: folderId,
@@ -273,9 +276,9 @@ async function delete_folder_post(req, res, next) {
       },
     })
 
-    if (parentId) {
+    if (parentId) { // If deleting folder in existing folder
       res.redirect(`/folders/${parentId}`)
-    } else {
+    } else { // If deleting folder in root
       res.redirect('/')
     }
   } catch (err) {
@@ -284,11 +287,12 @@ async function delete_folder_post(req, res, next) {
   }
 }
 
+/* Open folder */
 async function open_folder_get(req, res, next) {
   const folderId = Number(req.params.folderId)
   const userId = req.user.id
 
-  // Get folder data
+  // Get current folder data including files and nested folders
   const currentFolder = await prisma.folder.findFirst({
     where: {
       id: folderId,
@@ -297,28 +301,26 @@ async function open_folder_get(req, res, next) {
     include: {
       files: {
         orderBy: {
-          uploadedAt: 'desc'
-        }
+          uploadedAt: 'desc',
+        },
       },
       children: {
         orderBy: {
-          createdAt: 'desc'
-        }
+          createdAt: 'desc',
+        },
       },
-    
     },
-    
   })
 
+  // Get all parent folders including current folder
   const breadcrumbs = await getBreadcrumbs(folderId, userId)
   // console.log("🚀 ~ open_folder_get ~ breadcrumbs:", breadcrumbs)
-
 
   try {
     res.render('pages/folderContent', {
       title: `${currentFolder.name}`,
       folder: currentFolder,
-      breadcrumbs
+      breadcrumbs,
     })
   } catch (err) {
     console.error(err)
@@ -329,8 +331,8 @@ async function open_folder_get(req, res, next) {
 module.exports = {
   add_folder_get,
   add_folder_post,
-  update_folder_get,
-  update_folder_post,
+  rename_folder_get,
+  rename_folder_post,
   delete_folder_post,
   open_folder_get,
 }

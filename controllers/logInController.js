@@ -1,4 +1,3 @@
-/* Imports */
 const { body, validationResult, matchedData } = require('express-validator')
 
 /* Error messages */
@@ -10,9 +9,8 @@ const validateLogIn = [
   body('password').trim().notEmpty().withMessage(`Password ${emptyErr}`),
 ]
 
-/* Show log in page */
+/* Show log in form */
 async function log_in_get(req, res) {
-
   // User is already logged in
   if (req.user) {
     return res.redirect('/')
@@ -26,11 +24,12 @@ async function log_in_get(req, res) {
   // )
   const email = req.session.email || ''
 
+  // Get error messages if authentication fails
   const errors = messages
-    .filter((message) => !message.includes('established'))
+    // .filter((message) => !message.includes('established'))
     .map((message) => ({ msg: message }))
 
-  // Clear messages
+  // Clear messages and email
   req.session.messages = []
   req.session.email = ''
 
@@ -42,7 +41,7 @@ async function log_in_get(req, res) {
   })
 }
 
-/* Validate log in data */
+/* Validate and authenticate user */
 const log_in_post = [
   validateLogIn,
   async (req, res, next) => {

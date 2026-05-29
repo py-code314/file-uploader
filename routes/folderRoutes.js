@@ -6,8 +6,8 @@ const fileRouter = require('./fileRoutes')
 const {
   add_folder_get,
   add_folder_post,
-  update_folder_get,
-  update_folder_post,
+  rename_folder_get,
+  rename_folder_post,
   delete_folder_post,
   open_folder_get,
 } = require('../controllers/folderController')
@@ -18,8 +18,8 @@ folderRouter.use(isAuth)
 /* Folder routes */
 folderRouter.post('/new', add_folder_post)
 folderRouter.get('/new', add_folder_get)
-folderRouter.get('/:folderId/update', update_folder_get)
-folderRouter.post('/:folderId/update', update_folder_post)
+folderRouter.get('/:folderId/update', rename_folder_get)
+folderRouter.post('/:folderId/update', rename_folder_post)
 folderRouter.post('/:folderId/delete', delete_folder_post)
 folderRouter.get('/:folderId/new', add_folder_get)
 folderRouter.post('/:folderId/new', add_folder_post)

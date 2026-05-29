@@ -1,17 +1,18 @@
 const multer = require('multer')
-const { upload, uploadToCloudinary } = require('../middleware/upload')
-const { prisma } = require('../lib/prisma')
-const { body, validationResult, matchedData } = require('express-validator')
 const path = require('node:path')
-const { getModifiedFileName } = require('../utils/modifyFileName')
-const fs = require('fs')
+const { prisma } = require('../lib/prisma')
+const { cloudinary } = require('../config/cloudinaryConfig')
+const { upload, uploadToCloudinary } = require('../middleware/upload')
+const { body, validationResult, matchedData } = require('express-validator')
 
-const https = require('https')
-const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
-const uploadFiles = require('../utils/uploadFiles.js')
-const handleMulterErrors = require('../utils/multerErrors.js')
-const { cloudinary } = require('../config/cloudinaryConfig.js')
-const generateFilePreview = require('../utils/filePreview.js')
+/* Import helper functions */
+const { getModifiedFileName } = require('../utils/modifyFileName')
+// const fs = require('fs')
+// const https = require('https')
+const { getBreadcrumbs } = require('../utils/breadCrumbs')
+const uploadFiles = require('../utils/uploadFiles')
+const handleMulterErrors = require('../utils/multerErrors')
+const generateFilePreview = require('../utils/filePreview')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'
@@ -25,11 +26,12 @@ const validateFileName = [
     .withMessage(`File name ${emptyErr}`)
     .bail()
     .custom(async (name, { req }) => {
+      // Check if file name already exists in database
       const fileId = Number(req.params.fileId)
       const userId = req.user.id
       let folderId = null
 
-      // Get folder id if updating
+      // Get folder id if renaming a file
       if (req.originalUrl.includes('/update')) {
         const currentFile = await prisma.file.findFirst({
           where: {
@@ -43,7 +45,7 @@ const validateFileName = [
         folderId = currentFile.folderId
       }
 
-      // Throw error if file already exists
+      // Throw error if file name already exists
       const fileNameExists = await prisma.file.findFirst({
         where: {
           name,
@@ -72,6 +74,7 @@ async function upload_file_get(req, res) {
   })
 }
 
+/* Upload files to cloudinary and save to db */
 async function upload_file_post(req, res, next) {
   // Manually invoke multer middleware function
   const uploadHandler = upload.array('fileUpload', 5)
@@ -79,25 +82,22 @@ async function upload_file_post(req, res, next) {
   uploadHandler(req, res, async function (err) {
     try {
       // Handle Multer errors
-
       if (err instanceof multer.MulterError) {
+        // Get error information based on Multer error
         const errorInfo = await handleMulterErrors(req.files, err)
 
         return res.status(errorInfo.status).render('pages/fileForm', {
           title: 'Upload File',
           errors: [{ msg: errorInfo.message }],
         })
-      }
-      // Invalid file type, message will return from fileFilter callback
-      else if (err) {
+      } else if (err) {
+        // Invalid file type, message will return from fileFilter callback
         return res.status(415).render('pages/fileForm', {
           title: 'Upload File',
           errors: [{ msg: err.message }],
         })
-      }
-
-      // Check for files length
-      else if (!req.files.length) {
+      } else if (!req.files.length) {
+        // Check for files length
         return res.status(400).render('pages/fileForm', {
           title: 'Upload File',
           errors: [{ msg: 'Choose at least one file to upload.' }],
@@ -106,23 +106,24 @@ async function upload_file_post(req, res, next) {
 
       // Upload files to cloudinary
       const results = await uploadFiles(req.files)
-      console.log("🚀 ~ upload_file_post ~ results:", results)
+      // console.log('🚀 ~ upload_file_post ~ results:', results)
 
       const folderId = req.params.folderId ? Number(req.params.folderId) : null
       const userId = req.user.id
 
-      // Add file data to db
+      // Add files to db
       for (const result of results) {
         const extension = result.format || result.url.split('.').pop()
         const fullName = `${result.original_filename}.${extension}`
 
-        // Check for same file name
+        // Add a number next to file name if file name already exists
         const modifiedFileName = await getModifiedFileName(
           fullName,
           folderId,
           userId,
         )
 
+        // Add file data to db
         await prisma.file.create({
           data: {
             name: modifiedFileName,
@@ -139,8 +140,10 @@ async function upload_file_post(req, res, next) {
 
       // Successful upload
       if (folderId) {
+        // If file is uploaded to a sub-folder
         res.redirect(`/folders/${folderId}`)
       } else {
+        // If file is uploaded to root folder
         res.redirect('/')
       }
     } catch (err) {
@@ -150,12 +153,13 @@ async function upload_file_post(req, res, next) {
   })
 }
 
-async function update_file_get(req, res, next) {
+/* Show file rename form */
+async function rename_file_get(req, res, next) {
   const fileId = Number(req.params.fileId)
   const userId = req.user.id
   const folderId = Number(req.params.folderId)
 
-  // Get file data
+  // Get current file data
   const currentFile = await prisma.file.findFirst({
     where: {
       id: fileId,
@@ -163,21 +167,23 @@ async function update_file_get(req, res, next) {
       folderId,
     },
   })
+
   const originalName = currentFile.name
   const extension = path.extname(originalName)
   const baseName = path.basename(originalName, extension)
 
-  res.render('pages/fileUpdateForm', {
-    title: 'Update File',
+  // Render file rename form with current file data
+  res.render('pages/fileRenameForm', {
+    title: 'Rename File',
     fileName: baseName,
     fileId,
     folderId,
-    isUpdate: true,
+    isRename: true,
   })
 }
 
 /* Update file name */
-const update_file_post = [
+const rename_file_post = [
   validateFileName,
 
   async (req, res, next) => {
@@ -185,7 +191,7 @@ const update_file_post = [
     const userId = req.user.id
     let folderId = null
 
-    // Get folder id
+    // Get current file data
     const currentFile = await prisma.file.findFirst({
       where: {
         id: fileId,
@@ -232,8 +238,10 @@ const update_file_post = [
       })
 
       if (folderId) {
+        // If file is uploaded to a sub-folder
         res.redirect(`/folders/${folderId}`)
       } else {
+        // If file is uploaded to root folder
         res.redirect('/')
       }
     } catch (err) {
@@ -243,13 +251,13 @@ const update_file_post = [
   },
 ]
 
-/* Delete file */
+/* Delete a file */
 async function delete_file_post(req, res, next) {
   const fileId = Number(req.params.fileId)
   const userId = req.user.id
   let folderId = null
 
-  // Get folder data
+  // Get current file data
   const currentFile = await prisma.file.findFirst({
     where: {
       id: fileId,
@@ -257,18 +265,18 @@ async function delete_file_post(req, res, next) {
     },
     select: {
       storedName: true,
-      resourceType: true
-    }
+      resourceType: true,
+    },
   })
 
-  if(!currentFile) throw new Error('File not found')
+  if (!currentFile) throw new Error('File not found')
 
   folderId = currentFile.folderId
 
   try {
     // Delete file in cloudinary
     await cloudinary.uploader.destroy(currentFile.storedName, {
-      resource_type: currentFile.resourceType
+      resource_type: currentFile.resourceType,
     })
 
     // Delete file data in db
@@ -280,8 +288,10 @@ async function delete_file_post(req, res, next) {
     })
 
     if (folderId) {
+      // If file is uploaded to a sub-folder
       res.redirect(`/folders/${folderId}`)
     } else {
+      // If file is uploaded to root folder
       res.redirect('/')
     }
   } catch (err) {
@@ -290,14 +300,15 @@ async function delete_file_post(req, res, next) {
   }
 }
 
-// Download file
+// Download a file
 async function download_file_get(req, res, next) {
-  console.log('download file')
+  // console.log('download file')
   const fileId = Number(req.params.fileId)
   const userId = req.user.id
   const folderId = Number(req.params.folderId)
 
   try {
+    // Get current file data
     const currentFile = await prisma.file.findFirst({
       where: {
         id: fileId,
@@ -307,15 +318,16 @@ async function download_file_get(req, res, next) {
         name: true,
         url: true,
         storedName: true,
-        resourceType: true
+        resourceType: true,
       },
     })
 
-    if(!currentFile) throw new Error('File not found')
+    if (!currentFile) throw new Error('File not found')
 
     // Download file from cloudinary
     const downloadUrl = cloudinary.url(currentFile.storedName, {
-      // Downloaded file name reflects updated file name if user changes a file name
+      // Downloaded file name reflects updated file name in db
+      // even though file name in cloudinary is the original file name
       flags: `attachment:${currentFile.name.split('.')[0]}`,
       resource_type: currentFile.resourceType,
     })
@@ -327,6 +339,7 @@ async function download_file_get(req, res, next) {
   }
 }
 
+/* Open a file link to show file details */
 async function open_file_get(req, res, next) {
   const fileId = Number(req.params.fileId)
   const folderId = Number(req.params.folderId)
@@ -341,12 +354,14 @@ async function open_file_get(req, res, next) {
     },
   })
 
-  const {previewUrl, previewType} = await generateFilePreview(currentFile)
+  // Get cloudinary url with transformations
+  const { previewUrl, previewType } = await generateFilePreview(currentFile)
 
   let breadcrumbs = []
   // Run getBreadcrumbs only if folder id is a number to prevent error
   // folderId must be a number for prisma.create() to work
   if (folderId) {
+    // Get all parent folders including current folder
     breadcrumbs = await getBreadcrumbs(folderId, userId)
   }
 
@@ -367,8 +382,8 @@ async function open_file_get(req, res, next) {
 module.exports = {
   upload_file_get,
   upload_file_post,
-  update_file_get,
-  update_file_post,
+  rename_file_get,
+  rename_file_post,
   delete_file_post,
   download_file_get,
   open_file_get,

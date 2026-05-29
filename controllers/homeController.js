@@ -7,7 +7,7 @@ async function home_page_get(req, res, next) {
     if (req.user) {
       const userId = req.user.id
 
-      // Get all folders
+      // Get all folders in root folder
       const folders = await prisma.folder.findMany({
         where: {
           userId,
@@ -17,6 +17,7 @@ async function home_page_get(req, res, next) {
           createdAt: 'desc'
         }
       })
+
       // Get all files in root folder
       const files = await prisma.file.findMany({
         where: {
@@ -33,7 +34,7 @@ async function home_page_get(req, res, next) {
         folders,
         files,
       })
-    } else { // User not logged in
+    } else { // Show landing page if user not logged in
       res.render('pages/home', {
         title: 'Home',
       })

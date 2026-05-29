@@ -12,15 +12,15 @@ const {
 const { isAuth } = require('./auth')
 const upload = require('../middleware/upload')
 
+// Authenticate user for file routes
 fileRouter.use(isAuth)
 
-/* New message routes */
+/* File routes */
 fileRouter.get('/upload', upload_file_get)
 fileRouter.post('/upload', upload_file_post)
 fileRouter.get('/:fileId', open_file_get)
 fileRouter.get('/:fileId/update', rename_file_get)
 fileRouter.post('/:fileId/update', rename_file_post)
-
 fileRouter.post('/:fileId/delete', delete_file_post)
 fileRouter.get('/:fileId/download', download_file_get)
 

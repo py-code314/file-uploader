@@ -1,8 +1,6 @@
 const express = require('express')
 const folderRouter = express.Router()
-// Import fileRouter
 const fileRouter = require('./fileRoutes')
-
 const {
   add_folder_get,
   add_folder_post,
@@ -13,6 +11,7 @@ const {
 } = require('../controllers/folderController')
 const { isAuth } = require('./auth')
 
+// Authenticate user for folder routes
 folderRouter.use(isAuth)
 
 /* Folder routes */
@@ -25,6 +24,7 @@ folderRouter.get('/:folderId/new', add_folder_get)
 folderRouter.post('/:folderId/new', add_folder_post)
 folderRouter.get('/:folderId', open_folder_get)
 
+/* Nested file routes */
 folderRouter.use('/:folderId/files', fileRouter)
 
 module.exports = folderRouter

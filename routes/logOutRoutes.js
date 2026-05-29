@@ -1,6 +1,6 @@
 const express = require('express')
-const { log_out_post } = require('../controllers/logOutController')
 const logOutRouter = express.Router()
+const { log_out_post } = require('../controllers/logOutController')
 
 /* Log out route */
 /* Use post method to prevent accidental or malicious logouts */

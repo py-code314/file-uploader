@@ -3,41 +3,39 @@
   <!-- Head -->
   <%- include('../partials/head.ejs') %>
   <body>
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+    <div class="main-layout">
+      <% if (locals.currentUser) { %>
+        <!-- Sidebar  -->
+        <%- include('../partials/sidebar.ejs') %>
 
-      <!-- Header -->
-      <%- include('../partials/header.ejs') %>
-      <div class="main-layout">
-        <% if (locals.currentUser) { %>
-          <!-- Sidebar  -->
-          <%- include('../partials/sidebar.ejs') %>
+        <!-- Main content-->
+        <main class="main">
+          <!-- Show folders -->
+          <% if(locals.folders && locals.folders.length > 0) { %>
+            <%- include('../partials/folders.ejs') %>
+          <% }  %>
 
-          <!-- Main content-->
-          <main class="main">
-            <!-- Show folders -->
-            <% if(locals.folders && locals.folders.length > 0) { %>
-              <%- include('../partials/folders.ejs') %>
-            <% }  %>
-            <!-- Show files -->
-            <% if(locals.files && locals.files.length > 0) { %>
-              <%- include('../partials/files.ejs') %>
-            <% }  %>
-          </main>
-        <% } else { %>
-          <main class="main">
-            <!-- Landing page  -->
-            <%- include('../partials/landing.ejs') %>
-          </main>
-        <% } %>
-      </div>
-      <!-- Footer -->
-      <%- include('../partials/footer.ejs') %>
+          <!-- Show files -->
+          <% if(locals.files && locals.files.length > 0) { %>
+            <%- include('../partials/files.ejs') %>
+          <% }  %>
+        </main>
+      <% } else { %>
+        <main class="main">
+          <!-- Landing page  -->
+          <%- include('../partials/landing.ejs') %>
+        </main>
+      <% } %>
+    </div>
 
+    <!-- Footer -->
+    <%- include('../partials/footer.ejs') %>
   </body>
   <script>
     const fileLinks = document.querySelectorAll('.file__link')
     
-
-
     fileLinks.forEach(fileLink => {
       const fileLinkValue = fileLink.getAttribute('data-name')
       const fileLinkArr = fileLinkValue.split('.')
@@ -47,6 +45,7 @@
       fileLink.textContent = `${baseName}`
     })
 
+    /* Add underline for active link */
     window.addEventListener('DOMContentLoaded', () => {
       const currentPath = window.location.pathname
       const navLinks = document.querySelectorAll('.nav__link')
@@ -58,6 +57,5 @@
         }
       })
     })
-    
   </script>
 </html>

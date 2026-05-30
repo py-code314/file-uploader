@@ -19,10 +19,11 @@
             <%- include('../partials/errors.ejs') %>
           <% }  %>
 
+        <!-- New folder form -->
         <div class="new-folder">
-        
           <form class="form form--new-folder" action="<%= locals.isRename ? `/folders/${folder.id}/update` : locals.folderId ? `/folders/${folderId}/new` : `/folders/new` %>" method="POST">
             <h2 ><%= locals.isRename ? 'Update Folder' : 'New Folder' %></h2>
+            <!-- Folder name -->
             <div class="form__control">
               <label class="form__label new-folder__label" for="folderName">Folder Name (required)
               </label>
@@ -39,16 +40,17 @@
                 required
                   />
             </div>
+            <!-- Form buttons -->
             <div class="form__btns">
+              <!-- Cancel link -->
               <a href="<%= locals.parentId ? `/folders/${parentId}` : locals.folderId ? `/folders/${folderId}` : `/` %>" class="btn  btn--cancel">Cancel</a>
-
+              <!-- Rename button -->
               <button class="btn  btn--submit" type="submit">
                 <%= locals.isRename ? 'Update' : 'Create' %>
               </button>
             </div>
           </form>
         </div>
-        
       </main>
     </div>
 
@@ -57,6 +59,7 @@
   </body>
 
   <script>
+    /* Add underline for active link */
      window.addEventListener('DOMContentLoaded', () => {
       const currentPath = window.location.pathname
       const navLinks = document.querySelectorAll('.nav__link')
@@ -69,6 +72,4 @@
       })
     })
   </script>
-  
- 
 </html>

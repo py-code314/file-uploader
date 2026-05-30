@@ -13,8 +13,9 @@
 
         <!-- Main content-->
         <main class="main">
+          <!-- File Details -->
           <div class="file-info">
-
+            <!-- Breadcrumbs navigation -->
             <% if(locals.breadcrumbs) { %>
               <nav class="breadcrumbs" aria-label="Breadcrumbs">
                 <ol class="breadcrumbs__list" role="list">
@@ -31,11 +32,11 @@
               </nav>
             <% } %>
 
-            
             <!-- Show file details -->
             <% if (locals.file ) { %>
               <div class="file-info__container">
                 <div class="file-info__wrapper">
+                  <!-- File preview -->
                   <div class="file-info__preview">
                     <% if (locals.previewType) { %>
                       <% if (previewType === 'image') { %>
@@ -49,6 +50,7 @@
                       <% } %>
                     <% } %>
                   </div>
+                  <!-- File info -->
                   <ul class="file-info__list">
                     <li class="file-info__item file-info__name " data-name="<%= file.name %>"><span><strong>Name:</strong> </span><span id="file-name"><%= file.name %></span></li>
                     <li class="file-info__item file-info__size" data-size="<%= file.size %>"><span><strong>Size:</strong> </span><span id="file-size"><%= file.size %></span></li>
@@ -62,8 +64,6 @@
         </main>
       <% } %>
     </div>
-
-    
 
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
@@ -87,7 +87,7 @@
     // console.log(originalFileDate)
     const fileDate = document.querySelector('#file-date')
 
-
+    /* Remove file extension from name and get file type */
     function removeFileExtensionAndDisplayFileType(fullName) {
       const fileNameArr = fullName.split('.')
 
@@ -100,6 +100,7 @@
       fileType.textContent = `${extension}`
     }
     
+    /* Display file size */
     function displayFileSize(bytes) {
       bytes = Number(bytes)
       let number = ''
@@ -115,6 +116,7 @@
       fileSize.textContent = `${number}`
     }
 
+    /* Display file date uploaded */
     function displayDate(date) {
       // Convert the date into local date and time
       const localDate = new Date(date).toLocaleString()

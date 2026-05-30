@@ -4,25 +4,27 @@
     <!-- Files list -->
     <ul class="files__list">
       <% files.forEach((file) => { %>
+        <!-- File -->
         <li class="file" >
           <a class=" file__name" href="/files/<%= file.id %>" data-name="<%= file.name %>">
             <img src="/icons/file-icon.svg" alt="" width="35" height="35" />
             <%= file.name %>
           </a>
+          <!-- File buttons -->
           <div class="file__btns">
-            <!-- Update file name -->
+            <!-- Update link -->
             <a class=" link link--update file__update" aria-label="Rename"  href="/files/<%= file.id %>/update">
                <img src="/icons/edit-icon.svg" alt="" width="25" height="25" focusable="false" />
             </a>
             
-            <!-- Download file -->
+            <!-- Download button -->
             <form action="/files/<%= file.id %>/download" method="get">
               <button class=" btn--download" type="submit" aria-label="Download">
                  <img src="/icons/download-icon.svg" alt="" width="25" height="25" focusable="false" />
               </button>
             </form>
 
-            <!-- Delete file -->
+            <!-- Delete button -->
             <form id="file-form" action="/files/<%= file.id %>/delete" method="POST" >
               <button class=" btn--primary btn--delete" type="submit" aria-label="Delete">
                  <img src="/icons/delete-icon.svg" alt="" width="25" height="25" focusable="false" />

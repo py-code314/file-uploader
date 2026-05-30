@@ -16,11 +16,6 @@
           <div class="sub-folder">
             <!-- Breadcrumbs navigation -->
             <% if(locals.breadcrumbs) { %>
-              <!-- <p class="breadcrumbs"><a href="/">Home</a>
-              <% breadcrumbs.forEach(breadcrumb => { %>
-                / <a href="/folders/<%= breadcrumb.id %>"><%= breadcrumb.name %></a>
-              <% }) %>
-              </p> -->
               <nav class="breadcrumbs" aria-label="Breadcrumbs">
                 <ol class="breadcrumbs__list" role="list">
                   <li class="breadcrumbs__item">
@@ -38,77 +33,80 @@
 
             <h2 class="sub-folder__heading"><%= locals.folder ? `${folder.name}` : '' %></h2>
               
-              <!-- Show folders -->
-              <% if (locals.folder && folder.children.length > 0) { %>
-                <section>
-                  <h3 class="folders__heading">Folders</h3>
-                  <ul class="folders__list">
-                    <% folder.children.forEach(folder => { %>
-                      <li class="folder">
-                        <a class="folder__name" href="/folders/<%= folder.id %>">
-                          <img src="/icons/folder-icon.svg" alt="" width="30" height="30" />
-                          <%= folder.name %>
+            <!-- Show folders -->
+            <% if (locals.folder && folder.children.length > 0) { %>
+              <section>
+                <h3 class="folders__heading">Folders</h3>
+                <!-- Folders list -->
+                <ul class="folders__list">
+                  <% folder.children.forEach(folder => { %>
+                    <li class="folder">
+                      <a class="folder__name" href="/folders/<%= folder.id %>">
+                        <img src="/icons/folder-icon.svg" alt="" width="30" height="30" />
+                        <%= folder.name %>
+                      </a>
+                      <!-- Folder buttons -->
+                      <div class="folder__btns">
+                        <!-- Update link -->
+                        <a class="link link--update folder__update" aria-label="Rename"   href="/folders/<%= folder.id %>/update">
+                          <img src="/icons/edit-icon.svg" alt="" width="25" height="25" title="Rename" focusable="false" />
                         </a>
-                        <div class="folder__btns">
-                          <!-- Update folder name -->
-                          <a class="link link--update folder__update" aria-label="Rename"   href="/folders/<%= folder.id %>/update">
-                            <img src="/icons/edit-icon.svg" alt="" width="25" height="25" title="Rename" focusable="false" />
-                          </a>
-                          <!-- Delete folder -->
-                          <form  action="/folders/<%= folder.id %>/delete" method="POST" >
-                            <button class=" btn--delete" type="submit" aria-label="Delete" onclick="return confirm('This will delete ALL data inside this folder. Are you sure you want to continue?')">
-                              <img src="/icons/delete-icon.svg" alt="" width="25" height="25" title="Delete" focusable="false" />
-                            </button>
-                        </form>
-                        </div>
-                      </li>
-                      <hr>
-                    <% }) %>
-                  </ul>
-                </section>
-              <% } %>
+                        <!-- Delete button -->
+                        <form  action="/folders/<%= folder.id %>/delete" method="POST" >
+                          <button class=" btn--delete" type="submit" aria-label="Delete" onclick="return confirm('This will delete ALL data inside this folder. Are you sure you want to continue?')">
+                            <img src="/icons/delete-icon.svg" alt="" width="25" height="25" title="Delete" focusable="false" />
+                          </button>
+                      </form>
+                      </div>
+                    </li>
+                    <hr>
+                  <% }) %>
+                </ul>
+              </section>
+            <% } %>
               
-              <!-- Show files -->
-              <% if (locals.folder && folder.files.length > 0) { %>
-                <section>
-                  <h3 class="files__heading" >Files</h3>
-                  <ul class="files__list">
-                    <% folder.files.forEach(file => { %>
-                      <li class="file">
-                        <a class="file__name" href="/folders/<%= file.folderId %>/files/<%= file.id %>" data-name="<%= file.name %>">
-                          <img src="/icons/file-icon.svg" alt="" width="35" height="35" />
-                          <%= file.name %>
+            <!-- Show files -->
+            <% if (locals.folder && folder.files.length > 0) { %>
+              <section>
+                <h3 class="files__heading" >Files</h3>
+                <!-- Files list -->
+                <ul class="files__list">
+                  <% folder.files.forEach(file => { %>
+                    <li class="file">
+                      <a class="file__name" href="/folders/<%= file.folderId %>/files/<%= file.id %>" data-name="<%= file.name %>">
+                        <img src="/icons/file-icon.svg" alt="" width="35" height="35" />
+                        <%= file.name %>
+                      </a>
+                      <!-- File buttons -->
+                      <div class="file__btns">
+                        <!-- Update link -->
+                        <a class=" link link--update file__update" aria-label="Rename"  href="/folders/<%= file.folderId %>/files/<%= file.id %>/update">
+                          <img src="/icons/edit-icon.svg" alt="" width="25" height="25" focusable="false" />
                         </a>
-                        <div class="file__btns">
-                          <!-- Update file name -->
-                          <a class=" link link--update file__update" aria-label="Rename"  href="/folders/<%= file.folderId %>/files/<%= file.id %>/update">
-                            <img src="/icons/edit-icon.svg" alt="" width="25" height="25" focusable="false" />
-                          </a>
-                          <!-- Download file -->
-                          <form action="/files/<%= file.id %>/download" method="get">
-                            <button class=" btn--download" type="submit" aria-label="Download">
-                              <img src="/icons/download-icon.svg" alt="" width="25" height="25" focusable="false" />
-                            </button>
-                          </form>
-                          <!-- Delete file -->
-                          <form  action="/files/<%= file.id %>/delete" method="POST" >
-                            <button class=" btn--delete" type="submit" aria-label="Delete">
-                              <img src="/icons/delete-icon.svg" alt="" width="25" height="25" focusable="false" />
-                            </button>
-                          </form>
-                        </div>
-                      </li>
-                      <hr>
-                    <% }) %>
-                  </ul>
-                </section>
-              <% } %>
+                        <!-- Download button -->
+                        <form action="/files/<%= file.id %>/download" method="get">
+                          <button class=" btn--download" type="submit" aria-label="Download">
+                            <img src="/icons/download-icon.svg" alt="" width="25" height="25" focusable="false" />
+                          </button>
+                        </form>
+                        <!-- Delete button -->
+                        <form  action="/files/<%= file.id %>/delete" method="POST" >
+                          <button class=" btn--delete" type="submit" aria-label="Delete">
+                            <img src="/icons/delete-icon.svg" alt="" width="25" height="25" focusable="false" />
+                          </button>
+                        </form>
+                      </div>
+                    </li>
+                    <hr>
+                  <% }) %>
+                </ul>
+              </section>
+            <% } %>
           </div>
         </main>
       <% } %>
     </div>
    
-
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
   </body>
@@ -119,10 +117,9 @@
       const fileLinkValue = fileLink.getAttribute('data-name')
       const fileLinkArr = fileLinkValue.split('.')
 
-      // Remove file extension
+      // Remove file extension from file name
       const baseName = fileLinkArr[0]
       fileLink.textContent = `${baseName}`
     })
-    
   </script>
 </html>

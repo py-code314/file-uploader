@@ -1,5 +1,8 @@
+<!-- Sidebar/Secondary Navigation -->
 <nav aria-label="Secondary" class=" sidebar">
+  <!-- Actions -->
   <ul class="nav__list nav__actions">
+    <!-- Add file -->
     <li class="nav__item">
       <a class="nav__link" 
       href="<%= locals.folder ? `/folders/${folder.id}/files/upload` : `/files/upload` %>">
@@ -7,6 +10,8 @@
         Add File
       </a>
     </li>
+
+    <!-- Add folder -->
     <li class="nav__item">
       <a class="nav__link" 
       href="<%= locals.folder ? `/folders/${folder.id}/new` : `/folders/new` %>">
@@ -32,6 +37,8 @@
         height="30" />Favorites
     </li>
   </ul>
+
+  <!-- Utilities -->
   <ul class="nav__list nav__utilities">
     <li class="nav__item">
       <img src="/icons/trash-icon.svg" alt="" width="30" height="30" />Trash

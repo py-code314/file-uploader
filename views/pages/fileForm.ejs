@@ -7,52 +7,51 @@
     <%- include('../partials/header.ejs') %>
 
     <div class="main-layout">
-        <% if (locals.currentUser) { %>
-          <!-- Sidebar  -->
-        <%- include('../partials/sidebar.ejs') %>
-        <% } %>
+      <% if (locals.currentUser) { %>
+        <!-- Sidebar  -->
+      <%- include('../partials/sidebar.ejs') %>
+      <% } %>
 
-    <!-- Main content-->
-    <main class="main">
-      <!-- Show errors -->
-      <% if(locals.errors) { %>
-        <%- include('../partials/errors.ejs') %>
-      <% }  %>
+      <!-- Main content-->
+      <main class="main">
+        <!-- Show errors -->
+        <% if(locals.errors) { %>
+          <%- include('../partials/errors.ejs') %>
+        <% }  %>
 
-      <div class="upload">
-        <form class="form upload__form" action="<%= locals.folderId ? `/folders/${folderId}/files/upload` : `/files/upload` %>" method="post" enctype="multipart/form-data" novalidate>
-          <div class="form__control">
-            <label class="upload__label btn" for="fileUpload">Select files to upload </label>
-            <ul class="upload__list">
-              <li><strong>Supported formats: </strong>Images, audio, video, PDF, DOC, and DOCX.</li>
-              <li><strong>Limits: </strong>Up to 5 files at a time, max 20 MB per file.</li>
-            </ul>
-            
-            <!-- Many mobile devices also let the user take a picture with the camera when 'image/*' is used -->
-          
-            <input class="form__input" type="file" id="fileUpload" name="fileUpload" accept=".doc, .docx, .pdf, image/*, audio/*, video/*" multiple />
-          </div>
-          <div class="upload__preview">
-            <p class="upload__text">No files currently selected for upload</p>
-          </div>
-          <div class="errors">
-            <ul class="errors__list"></ul>
-          </div>
-          
-          <div class="form__btns">
-            <button class=" btn btn--cancel" type="button">Clear</button>
-            <button class=" btn btn--submit">Submit</button>
-          </div>
-        </form>
-        
-      </div>
-    </main>
+        <!-- File upload form -->
+        <div class="upload">
+          <form class="form upload__form" action="<%= locals.folderId ? `/folders/${folderId}/files/upload` : `/files/upload` %>" method="post" enctype="multipart/form-data" novalidate>
+            <div class="form__control">
+              <label class="upload__label btn" for="fileUpload">Select files to upload </label>
+              <!-- Upload limits -->
+              <ul class="upload__list">
+                <li><strong>Supported formats: </strong>Images, audio, video, PDF, DOC, and DOCX.</li>
+                <li><strong>Limits: </strong>Up to 5 files at a time, max 20 MB per file.</li>
+              </ul>
+              <!-- Many mobile devices also let the user take a picture with the camera when 'image/*' is used -->
+              <input class="form__input" type="file" id="fileUpload" name="fileUpload" accept=".doc, .docx, .pdf, image/*, audio/*, video/*" multiple />
+            </div>
+            <!-- Preview files to be uploaded -->
+            <div class="upload__preview">
+              <p class="upload__text">No files currently selected for upload</p>
+            </div>
+            <!-- Show errors -->
+            <div class="errors">
+              <ul class="errors__list"></ul>
+            </div>
+            <!-- Form buttons -->
+            <div class="form__btns">
+              <button class=" btn btn--cancel" type="button">Clear</button>
+              <button class=" btn btn--submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </main>
     </div>
 
     <!-- Footer -->
     <%- include('../partials/footer.ejs') %>
-
-    
   </body>
 
   <script>
@@ -63,7 +62,7 @@
     const clearBtn = document.querySelector('.btn--cancel')
     const formBtns = document.querySelector('.form__btns')
 
-
+    // Initial values
     fileInput.style.opacity = 0;
     submitBtn.disabled = true
     clearBtn.disabled = true
@@ -80,6 +79,7 @@
       "application/pdf",
     ];
 
+    /* Validate file type and size */
     function validateFileTypeAndSize() {
       currentFilesArr = [];
       const currentFiles = fileInput.files;
@@ -112,17 +112,17 @@
       }
     }
 
-    //  Remove files if there are more than 5
+    /* Validate file list length */
     function validateFileListLength() {
       if(currentFilesArr.length > 5) {
-        currentFilesArr.splice(5)
+        currentFilesArr.splice(5) // Remove extra files
         displayError(null, 'tooMany')
       }
 
       submitBtn.disabled = currentFilesArr.length === 0
     }
 
-    // Display error messages for invalid files
+    /* Display error messages for invalid files */
     function displayError(file, errorType) {
       const listItem = document.createElement('li')
 
@@ -136,7 +136,7 @@
       errorsList.appendChild(listItem)
     }
 
-    // Update FileList
+    /* Update FileList that will be sent to the server */
     function updateFileList() {
       // Use DataTransfer object to modify FileList
       const dt = new DataTransfer();
@@ -151,8 +151,9 @@
     }
 
 
-    // Preview files to be uploaded
+    /* Preview files to be uploaded */
     function previewFiles() {
+      // Clear previous previews
       while (preview.firstChild) {
         preview.removeChild(preview.firstChild);
       }
@@ -166,6 +167,7 @@
       for(const file of currentFiles) {
         const listItem = document.createElement("li");
         listItem.classList.add('upload__item')
+        // Display file info
         const para = document.createElement("p");
         para.innerHTML = `<strong>File name:</strong> ${file.name}, 
           <strong>File size:</strong> ${returnFileSize(file.size,)} (${file.size} bytes).`;
@@ -218,24 +220,24 @@
           listItem.appendChild(image);
           listItem.appendChild(para);
 
-        } else if (fileType === 'application/pdf') {
-         
+        } else if (fileType === 'application/pdf') { 
+          // Show pdf preview
           const pdf = document.createElement('iframe')
           pdf.src = fileURL
           pdf.width = '120px'
           pdf.height = '80px'
 
           listItem.appendChild(pdf)
-          
           listItem.appendChild(para);
         }
+
         list.appendChild(listItem);
         const hr = document.createElement('hr')
         list.appendChild(hr)
       }
     }
 
-    // Calculate file size
+    /* Calculate file size and format it */
     function returnFileSize(number) {
       if (number < 1024) {
         return `${number} bytes`;
@@ -245,8 +247,10 @@
       return `${(number / (1024 * 1024)).toFixed(2)} MB`;
     }
 
+    /* Event listeners */
+    
+    // Upon file selection
     fileInput.addEventListener("change", 
-      
       () => {
         errorsList.innerHTML = ''
         validateFileTypeAndSize()
@@ -256,6 +260,7 @@
       }
     );
 
+    // Reset form
     clearBtn.addEventListener('click', () => {
       currentFilesArr = []
       updateFileList()
@@ -270,8 +275,9 @@
       preview.appendChild(para)
     })
 
+    // Show loading spinner upon form submit
     submitBtn.addEventListener('click', () => {
-      console.log('form submitted')
+      // console.log('form submitted')
       const loadingDiv = document.createElement('div')
       loadingDiv.classList.add('loader')
 

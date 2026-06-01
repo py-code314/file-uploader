@@ -273,6 +273,11 @@
       para.classList.add('upload__text')
       para.textContent = `No files currently selected for upload`
       preview.appendChild(para)
+
+      // Clear error messages
+      while (errorsList.firstChild) {
+        errorsList.removeChild(errorsList.firstChild);
+      }
     })
 
     // Show loading spinner upon form submit

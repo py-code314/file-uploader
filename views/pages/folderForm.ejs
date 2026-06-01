@@ -22,7 +22,7 @@
         <!-- New folder form -->
         <div class="new-folder">
           <form class="form form--new-folder" action="<%= locals.isRename ? `/folders/${folder.id}/update` : locals.folderId ? `/folders/${folderId}/new` : `/folders/new` %>" method="POST">
-            <h2 ><%= locals.isRename ? 'Update Folder' : 'New Folder' %></h2>
+            <h2 ><%= locals.isRename ? 'Rename Folder' : 'New Folder' %></h2>
             <!-- Folder name -->
             <div class="form__control">
               <label class="form__label new-folder__label" for="folderName">Folder Name (required)

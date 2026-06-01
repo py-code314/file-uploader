@@ -154,7 +154,7 @@ async function rename_folder_get(req, res) {
   // Render form with current folder name
   res.render('pages/folderForm', {
     title: 'Rename Folder',
-    currentFolder,
+    folder:currentFolder,
     parentId,
     isRename: true,
   })

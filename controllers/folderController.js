@@ -3,6 +3,7 @@ const { prisma } = require('../lib/prisma.js')
 const { body, validationResult, matchedData } = require('express-validator')
 const { getBreadcrumbs } = require('../utils/breadCrumbs.js')
 const { getNestedFolderIds } = require('../utils/nestedFolderIds.js')
+const {cloudinary} = require('../config/cloudinaryConfig')
 
 /* Error messages */
 const emptyErr = 'can not be empty.'

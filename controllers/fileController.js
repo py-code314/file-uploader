@@ -266,6 +266,7 @@ async function delete_file_post(req, res, next) {
     select: {
       storedName: true,
       resourceType: true,
+      folderId: true,
     },
   })
 

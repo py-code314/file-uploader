@@ -33,26 +33,26 @@ All data is stored in a PostgreSQL database and files are stored in Cloudinary.
 <table>
   <tr>
     <td align="center">
-      <img src="" alt="" width="400">
+      <img src="./public/screenshots/homepage-2.png" alt="Visitor homepage" width="400">
       <br>
-      <em></em>
+      <em>Visitor homepage</em>
     </td>
     <td align="center">
-      <img src="" alt="" width="400">
+      <img src="./public/screenshots/homepage-1.png" alt="User homepage" width="400">
       <br>
-      <em> </em>
+      <em>User homepage</em>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="" alt="" width="400">
+      <img src="./public/screenshots/sub-folder.png" alt="Sub folder" width="400">
       <br>
-      <em></em>
+      <em>Sub folder</em>
     </td>
     <td align="center">
-      <img src="" alt="" width="400">
+      <img src="./public/screenshots/image-file.png" alt="Image file" width="400">
       <br>
-      <em></em>
+      <em>Image file</em>
     </td>
   </tr>
 </table>
@@ -61,7 +61,7 @@ All data is stored in a PostgreSQL database and files are stored in Cloudinary.
 ### Links
 
 - [Solution URL](https://github.com/py-code314/file-uploader)
-- [Live Site URL]()
+- [Live Site URL](https://file-uploader-um68.onrender.com/)
 
 
 ## Credits

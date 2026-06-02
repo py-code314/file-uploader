@@ -520,8 +520,9 @@ body {
 
 .upload__label {
   display: inline-block;
-  border: 1px solid var(--clr-black, black);
   margin-block-end: var(--space-16, 1rem);
+  background-color: var(--clr-accent, mediumblue);
+  color: var(--clr-white, white);
 }
 
 .upload__preview {
